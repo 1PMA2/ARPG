@@ -457,6 +457,8 @@ MonoBehaviour:
   Distance: 5
   xmove: 0
   ymove: 0
+  targetRotation: {x: 0, y: 0, z: 0, w: 0}
+  rotationSpeed: 5
 --- !u!81 &1173582030
 AudioListener:
   m_ObjectHideFlags: 0

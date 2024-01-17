@@ -14,6 +14,11 @@ public class UnitCamera : MonoBehaviour
     [SerializeField] private float xmove = 0;
     [SerializeField] private float ymove = 0;
 
+    [SerializeField] Quaternion targetRotation;
+    [SerializeField] float rotationSpeed = 0;
+
+    bool isKeydown = false;
+
     void Start()
     {
         transform.LookAt(target.position);
@@ -29,13 +34,48 @@ public class UnitCamera : MonoBehaviour
     private void LateUpdate()
     {
 
-        if(Input.GetMouseButton(1))
+        if (Input.GetMouseButton(1))
         {
+            isKeydown = false;
+
             xmove += Input.GetAxis("Mouse X") * 2.57f;
             ymove -= Input.GetAxis("Mouse Y") * 2.25f;
+
+            transform.rotation = Quaternion.Euler(ymove, xmove, 0);
         }
 
-        transform.rotation = Quaternion.Euler(ymove, xmove, 0);
+
+        if (Input.GetKey("q"))
+        {
+            isKeydown = true;
+            xmove -= 10;
+            targetRotation = Quaternion.Euler(ymove, xmove, 0);
+        }
+        else if (Input.GetKey("e"))
+        {
+            isKeydown = true;
+            xmove += 10;
+            targetRotation = Quaternion.Euler(ymove, xmove, 0);
+        }
+
+        if (Input.GetKey("r"))
+        {
+            isKeydown = true;
+            targetRotation = Quaternion.Euler(ymove - 15f, xmove, 0);
+        }
+        else if (Input.GetKey("f"))
+        {
+            isKeydown = true;
+            targetRotation = Quaternion.Euler(ymove + 15f, xmove, 0);
+        }
+
+        if (isKeydown)
+        {
+            xmove = transform.rotation.eulerAngles.y;
+            ymove = transform.rotation.eulerAngles.x;
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 0.2f);
+        }
+
 
         Distance -= Input.GetAxis("Mouse ScrollWheel") * 10;
         if (Distance < 5f) Distance = 5f;
