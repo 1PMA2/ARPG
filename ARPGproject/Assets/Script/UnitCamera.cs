@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class UnitCamera : MonoBehaviour
 {
@@ -15,14 +16,16 @@ public class UnitCamera : MonoBehaviour
     [SerializeField] private float ymove = 0;
 
     [SerializeField] Quaternion targetRotation;
-    [SerializeField] float rotationSpeed = 0;
 
-    bool isKeydown = false;
+    [SerializeField] float CameraSpeed = 10;
+    [SerializeField] float XSpeed = 30;
+    [SerializeField] float YSpeed = 15;
+
+    float TargetY = -1f;
 
     void Start()
     {
         transform.LookAt(target.position);
-        transform.parent = target;
     }
 
     // Update is called once per frame
@@ -36,51 +39,59 @@ public class UnitCamera : MonoBehaviour
 
         if (Input.GetMouseButton(1))
         {
-            isKeydown = false;
-
-            xmove += Input.GetAxis("Mouse X") * 2.57f;
-            ymove -= Input.GetAxis("Mouse Y") * 2.25f;
+            xmove += Input.GetAxis("Mouse X") * 2.5f;
+            ymove -= Input.GetAxis("Mouse Y") * 2.2f;
 
             transform.rotation = Quaternion.Euler(ymove, xmove, 0);
+
+            targetRotation = transform.rotation;
         }
 
 
         if (Input.GetKey("q"))
         {
-            isKeydown = true;
-            xmove -= 10;
-            targetRotation = Quaternion.Euler(ymove, xmove, 0);
+            xmove -= XSpeed;        
         }
         else if (Input.GetKey("e"))
         {
-            isKeydown = true;
-            xmove += 10;
-            targetRotation = Quaternion.Euler(ymove, xmove, 0);
+            xmove += XSpeed;
         }
 
         if (Input.GetKey("r"))
         {
-            isKeydown = true;
-            targetRotation = Quaternion.Euler(ymove - 15f, xmove, 0);
+            ymove -= YSpeed;
         }
         else if (Input.GetKey("f"))
         {
-            isKeydown = true;
-            targetRotation = Quaternion.Euler(ymove + 15f, xmove, 0);
+            ymove += YSpeed;
         }
 
-        if (isKeydown)
+        if(Input.GetKey("v"))
         {
-            xmove = transform.rotation.eulerAngles.y;
-            ymove = transform.rotation.eulerAngles.x;
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 0.2f);
+            targetRotation = target.rotation;
         }
 
+        targetRotation = Quaternion.Euler(ymove, xmove, 0);
 
-        Distance -= Input.GetAxis("Mouse ScrollWheel") * 10;
-        if (Distance < 5f) Distance = 5f;
-        if (Distance > 20f) Distance = 20f;
+        float t = Mathf.Clamp(Time.deltaTime * CameraSpeed, 0f, 0.99f);
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, t);
 
-        transform.position = target.position - transform.rotation * new Vector3(0, 0, Distance);
+
+        Distance -= Input.GetAxis("Mouse ScrollWheel") * 5;
+
+        if (Distance > 10f)
+        {
+            Distance = 10f;
+        }
+        if (Distance < 2f)
+        {
+            TargetY = Mathf.Lerp(TargetY, -1.7f, Time.deltaTime * 5); 
+        }
+        else
+            TargetY = Mathf.Lerp(TargetY, -1.5f, Time.deltaTime * 5);
+
+        transform.position = target.position - transform.rotation * new Vector3(0, TargetY, Distance);
+
+
     }
 }
