@@ -36,6 +36,16 @@ public class UnitController : MonoBehaviour
     [SerializeField]
     Vector3 inputDir;
 
+    public enum UnitState
+    {
+        IDLE,
+        MOVE,
+        COMBAT_IDLE,
+        ATTACK,
+        SMASH,
+        END
+    }
+
     //Animator animator;
     void Start()
     {
@@ -58,10 +68,17 @@ public class UnitController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        MoveDiraction();
+        switch(animator.GetInteger("State"))
+        {
+            case (int)UnitState.IDLE:           
+            case (int)UnitState.MOVE:
+                MoveDiraction();
+                break;
+            default:
+                break;
+        }
 
         
-
         
         if (Input.GetKey(KeyCode.LeftShift))
         {
@@ -76,10 +93,13 @@ public class UnitController : MonoBehaviour
         LookAround();
     }
 
-    private void MoveDiraction()
+    private void MoveDiraction() //카메라 방향이 정면으로 되는 움직임 구현
     {
         bool isMove = Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow) ||
             Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow);
+
+        if (isMove) { animator.SetInteger("State", (int)UnitState.MOVE); }
+        else { animator.SetInteger("State", (int)UnitState.IDLE); }
 
         float hAxis = 0f;
         float vAxis = 0f;
@@ -91,8 +111,6 @@ public class UnitController : MonoBehaviour
         if (Input.GetKey(KeyCode.RightArrow)) { hAxis = 1f; }
 
         if (Input.GetKey(KeyCode.LeftArrow)) { hAxis = -1f; }
-
-        animator.SetBool("isMove", isMove);
 
         Vector3 cameraForward = unitCamera.forward;
         Vector3 cameraRight = unitCamera.right;
@@ -108,7 +126,6 @@ public class UnitController : MonoBehaviour
 
             transform.rotation = Quaternion.Slerp(transform.rotation, moveRotation, 20f * Time.deltaTime);
         }
-
 
         characterController.Move(inputDir * Time.deltaTime * 5);
     }
