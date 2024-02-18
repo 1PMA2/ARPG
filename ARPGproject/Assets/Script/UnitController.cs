@@ -30,6 +30,9 @@ public class UnitController : MonoBehaviour
     [SerializeField]
     private float jumpPower = 10f;
 
+    [SerializeField]
+    UnitState state;
+
     private Animator animator;
     private CharacterController characterController;
 
@@ -42,6 +45,8 @@ public class UnitController : MonoBehaviour
         MOVE,
         COMBAT_IDLE,
         ATTACK,
+        SMASH_START,
+        SMASH_CHARGE,
         SMASH,
         END
     }
@@ -68,38 +73,37 @@ public class UnitController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        switch(animator.GetInteger("State"))
+        state = (UnitState)animator.GetInteger("State");
+
+        switch (animator.GetInteger("State"))
         {
-            case (int)UnitState.IDLE:           
             case (int)UnitState.MOVE:
-                MoveDiraction();
+                Move();
+                LookDiraction();
+                break;
+            case (int)UnitState.SMASH:
                 break;
             default:
+                LookDiraction();
                 break;
         }
 
-        
-        
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            Time.timeScale = 0.1f;
-        }
-        else
-            Time.timeScale = 1;
     }
 
     private void LateUpdate()
     {
         LookAround();
     }
-
-    private void MoveDiraction() //카메라 방향이 정면으로 되는 움직임 구현
+    private void Move()
     {
-        bool isMove = Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow) ||
-            Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow);
 
-        if (isMove) { animator.SetInteger("State", (int)UnitState.MOVE); }
-        else { animator.SetInteger("State", (int)UnitState.IDLE); }
+        characterController.Move(inputDir * Time.deltaTime * 5);
+    }
+
+
+    private void LookDiraction() //카메라 방향이 정면으로 되는 움직임 구현
+    {
+       
 
         float hAxis = 0f;
         float vAxis = 0f;
@@ -127,7 +131,6 @@ public class UnitController : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, moveRotation, 20f * Time.deltaTime);
         }
 
-        characterController.Move(inputDir * Time.deltaTime * 5);
     }
 
     private void LookAround()
