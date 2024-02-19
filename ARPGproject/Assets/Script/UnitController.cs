@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -25,7 +26,8 @@ public class UnitController : MonoBehaviour
     [SerializeField]
     private Vector2 turnAngle = new Vector2(10, 30);
     [SerializeField] 
-    private float Distance = -4f;
+    private float distance = -4f;
+    private float actionZoom = 0f;
 
     [SerializeField]
     private float jumpPower = 10f;
@@ -178,8 +180,21 @@ public class UnitController : MonoBehaviour
         cameraArm.position = new Vector3(cameraArm.position.x, transform.position.y, cameraArm.position.z);
 
         //»Ÿ∑Œ ƒ≥∏Ø≈Õ ¡‹
-        Distance += Input.GetAxis("Mouse ScrollWheel") * 5;
-        unitCamera.localPosition = new Vector3(0, 2, Distance);
+        distance += Input.GetAxis("Mouse ScrollWheel") * 5;
+
+        switch (animator.GetInteger("State"))
+        {
+            case (int)UnitState.SMASH:
+                actionZoom = Mathf.Lerp(actionZoom, distance + 1.5f, Time.deltaTime * 10f);
+                break;
+            default:
+                actionZoom = Mathf.Lerp(actionZoom, distance, Time.deltaTime);
+                break;
+        }
+        
+
+        unitCamera.localPosition = new Vector3(0, 2, actionZoom);
+
 
     }
 
