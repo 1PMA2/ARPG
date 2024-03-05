@@ -26,7 +26,7 @@ public class UnitController : MonoBehaviour
     [SerializeField]
     private Vector2 turnAngle = new Vector2(10, 30);
     [SerializeField] 
-    private float distance = -4f;
+    private float distance = -5f;
     private float actionZoom = 0f;
 
     [SerializeField]
@@ -185,10 +185,10 @@ public class UnitController : MonoBehaviour
         switch (animator.GetInteger("State"))
         {
             case (int)UnitState.SMASH:
-                actionZoom = Mathf.Lerp(actionZoom, distance + 1.5f, Time.deltaTime * 10f);
+                actionZoom = Mathf.Lerp(actionZoom, distance + 3f, Time.deltaTime * 50f);
                 break;
             default:
-                actionZoom = Mathf.Lerp(actionZoom, distance, Time.deltaTime);
+                actionZoom = Mathf.Lerp(actionZoom, distance, Time.deltaTime * 10f);
                 break;
         }
         
