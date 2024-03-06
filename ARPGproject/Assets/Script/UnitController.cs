@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnitController;
 using static UnityEngine.GraphicsBuffer;
+using PlayerController;
 
 public class UnitController : MonoBehaviour
 {
@@ -26,8 +28,9 @@ public class UnitController : MonoBehaviour
     [SerializeField]
     private Vector2 turnAngle = new Vector2(10, 30);
     [SerializeField] 
+    private Vector3 actionZoom = Vector3.zero;
+    [SerializeField]
     private float distance = -5f;
-    private float actionZoom = 0f;
 
     [SerializeField]
     private float jumpPower = 10f;
@@ -37,26 +40,17 @@ public class UnitController : MonoBehaviour
 
     private Animator animator;
     private CharacterController characterController;
-
+    private smashBehaviour _smashBehaviour;
     [SerializeField]
     Vector3 inputDir;
 
-    public enum UnitState
-    {
-        IDLE,
-        MOVE,
-        COMBAT_IDLE,
-        ATTACK,
-        SMASH_START,
-        SMASH_CHARGE,
-        SMASH,
-        END
-    }
+
 
     //Animator animator;
     void Start()
     {
         animator = GetComponent<Animator>();
+        _smashBehaviour = animator.GetBehaviour<smashBehaviour>();
         characterController = GetComponent<CharacterController>();
 
         cameraArm = Instantiate(cameraPrefeb).transform;
@@ -185,17 +179,31 @@ public class UnitController : MonoBehaviour
         switch (animator.GetInteger("State"))
         {
             case (int)UnitState.SMASH:
-                actionZoom = Mathf.Lerp(actionZoom, distance + 3f, Time.deltaTime * 50f);
+ 
+
                 break;
             default:
-                actionZoom = Mathf.Lerp(actionZoom, distance, Time.deltaTime * 10f);
+                
                 break;
         }
-        
 
-        unitCamera.localPosition = new Vector3(0, 2, actionZoom);
+        ActionZoom();
+
+        //unitCamera.localPosition = actionZoom;
 
 
+    }
+    public bool activeZoom { get; set; }
+
+
+
+    private void ActionZoom()
+    {
+
+        if (activeZoom)
+            unitCamera.localPosition = Vector3.Slerp(unitCamera.localPosition, new Vector3(0, 1, distance + 2f), Time.deltaTime * 50f);
+        else
+            unitCamera.localPosition = Vector3.Lerp(unitCamera.localPosition, new Vector3(0, 2, distance), Time.deltaTime * 30f);
     }
 
 }
