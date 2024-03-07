@@ -14,7 +14,7 @@ namespace PlayerController
 
         public override void OnEnterState()
         {
-
+            
         }
 
         public override void OnFixedUpdateState()
@@ -24,7 +24,7 @@ namespace PlayerController
 
         public override void OnUpdateState()
         {
-
+            controller.LookDiraction();
         }
 
         public override void OnLateUpdateState()

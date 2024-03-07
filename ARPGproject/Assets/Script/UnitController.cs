@@ -31,16 +31,12 @@ public class UnitController : MonoBehaviour
 
     //[SerializeField] private float jumpPower = 10f;
 
-    private Animator animator;
-    private CharacterController characterController;
-    private StateMachine stateMachine;
+    public Animator animator;
+    public CharacterController characterController;
+    public StateMachine stateMachine;
 
 
-
-
-
-    //Animator animator;
-    void Start()
+    private void Awake()
     {
         animator = GetComponent<Animator>();
         characterController = GetComponent<CharacterController>();
@@ -49,23 +45,30 @@ public class UnitController : MonoBehaviour
         unitCamera = cameraArm.GetChild(0);
 
         UnityEngine.Rendering.DebugManager.instance.enableRuntimeUI = false;
-        //stateMachine = new StateMachine(UnitState.MOVE, new)
+    }
+    void Start()
+    {
+        InitStateMachine();
     }
 
     private void FixedUpdate()
     {
-   
+        stateMachine?.OnFixedUpdateState();
     }
 
     // Update is called once per frame
     void Update()
     {
-        LookDiraction();
+        stateMachine?.OnUpdateState();
+
+        //LookDiraction();
         Move();
     }
 
     private void LateUpdate()
     {
+        stateMachine?.OnLateUpdateState();
+
         LookAround();
     }
     private void Move()
@@ -93,7 +96,7 @@ public class UnitController : MonoBehaviour
     }
 
 
-    private void LookDiraction() //카메라 방향이 정면으로 되는 움직임 구현
+    public void LookDiraction() //카메라 방향이 정면으로 되는 움직임 구현
     {
        
 
@@ -176,6 +179,11 @@ public class UnitController : MonoBehaviour
         distance += Input.GetAxis("Mouse ScrollWheel") * 5;
 
         unitCamera.localPosition = Vector3.Lerp(unitCamera.localPosition, new Vector3(0, 2, distance), Time.deltaTime * 30f);
+    }
+
+    private void InitStateMachine()
+    {
+        stateMachine = new StateMachine(UnitState.IDLE, new IdleState(this));
     }
 
 
