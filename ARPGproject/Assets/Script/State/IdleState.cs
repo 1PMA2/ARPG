@@ -6,7 +6,7 @@ namespace PlayerController
 {
     public class IdleState : BaseState
     {
- 
+        private int hashMoveAnimation;
         public IdleState(UnitController controller) : base(controller)
         {
 
@@ -14,7 +14,7 @@ namespace PlayerController
 
         public override void OnEnterState()
         {
-            
+
         }
 
         public override void OnFixedUpdateState()
@@ -24,7 +24,12 @@ namespace PlayerController
 
         public override void OnUpdateState()
         {
-            controller.LookDiraction();
+            
+
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                controller.stateMachine.ChangeState(UnitState.MOVE);
+            }
         }
 
         public override void OnLateUpdateState()
@@ -36,5 +41,6 @@ namespace PlayerController
         {
 
         }
+
     }
 }

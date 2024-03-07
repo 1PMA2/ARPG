@@ -24,6 +24,9 @@ namespace PlayerController
 
         public override void OnUpdateState()
         {
+            controller.Move();
+            controller.LookDiraction();
+
 
         }
 
@@ -36,5 +39,8 @@ namespace PlayerController
         {
             
         }
+
+       
+      
     }
 }

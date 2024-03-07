@@ -60,9 +60,6 @@ public class UnitController : MonoBehaviour
     void Update()
     {
         stateMachine?.OnUpdateState();
-
-        //LookDiraction();
-        Move();
     }
 
     private void LateUpdate()
@@ -71,7 +68,7 @@ public class UnitController : MonoBehaviour
 
         LookAround();
     }
-    private void Move()
+    public void Move()
     {
         float lerpSpeed = 10f;
         float moveSync = 5f;
@@ -89,10 +86,10 @@ public class UnitController : MonoBehaviour
             characterController.Move(transform.forward * Time.deltaTime * moveSpeed * moveSync);
         }
 
-        float animSpeed = Mathf.Max(1f, moveSpeed);
+        
 
         animator.SetFloat("MoveSpeed", moveSpeed);
-        animator.SetFloat("AnimSpeed", animSpeed);
+        animator.SetFloat("AnimSpeed", moveSpeed);
     }
 
 
@@ -184,6 +181,8 @@ public class UnitController : MonoBehaviour
     private void InitStateMachine()
     {
         stateMachine = new StateMachine(UnitState.IDLE, new IdleState(this));
+        stateMachine.AddState(UnitState.MOVE, new MoveState(this));
+
     }
 
 
