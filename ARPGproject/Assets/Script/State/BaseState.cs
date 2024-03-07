@@ -27,8 +27,8 @@ namespace PlayerController
         }
 
         public abstract void OnEnterState();
-        public abstract void OnUpdateState();
         public abstract void OnFixedUpdateState();
+        public abstract void OnUpdateState();
         public abstract void OnLateUpdateState();
         public abstract void OnExitState();
     }

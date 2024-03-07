@@ -6,43 +6,36 @@ using UnityEngine;
 using static UnitController;
 using static UnityEngine.GraphicsBuffer;
 using PlayerController;
+using StateMachine = PlayerController.StateMachine;
 
 public class UnitController : MonoBehaviour
 {
     // Start is called before the first frame update
-    [SerializeField]
-    private GameObject cameraPrefeb;
-    [SerializeField]
-    private Transform cameraArm;
-    [SerializeField]
-    private Transform unitCamera;
+    [SerializeField] private GameObject cameraPrefeb;
+    [SerializeField] private Transform cameraArm;
+    [SerializeField] private Transform unitCamera;
+     
+    [SerializeField] private Quaternion targetRotation;
+    [SerializeField] private Vector2 keyDelta = Vector2.zero;
+    [SerializeField] private Vector3 inputDir;
+    [SerializeField] private float rotationSpeed = 150f;
+    private float moveSpeed = 0f;
+    //private float animSpeed = 0f;
+    [SerializeField] float targetMoveSpeed = 5;
 
-    [SerializeField]
-    private Quaternion targetRotation;
 
-    [SerializeField]
-    private Vector2 keyDelta = Vector2.zero;
+    [SerializeField] private Vector2 turnAngle = new Vector2(10, 30);
+    [SerializeField] private Vector3 actionZoom = Vector3.zero;
 
-    [SerializeField]
-    private float rotationSpeed = 150f;
-    [SerializeField]
-    private Vector2 turnAngle = new Vector2(10, 30);
-    [SerializeField] 
-    private Vector3 actionZoom = Vector3.zero;
-    [SerializeField]
-    private float distance = -5f;
+    [SerializeField] private float distance = -5f;
 
-    [SerializeField]
-    private float jumpPower = 10f;
-
-    [SerializeField]
-    UnitState state;
+    //[SerializeField] private float jumpPower = 10f;
 
     private Animator animator;
     private CharacterController characterController;
-    private smashBehaviour _smashBehaviour;
-    [SerializeField]
-    Vector3 inputDir;
+    private StateMachine stateMachine;
+
+
 
 
 
@@ -50,40 +43,25 @@ public class UnitController : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
-        _smashBehaviour = animator.GetBehaviour<smashBehaviour>();
         characterController = GetComponent<CharacterController>();
 
         cameraArm = Instantiate(cameraPrefeb).transform;
         unitCamera = cameraArm.GetChild(0);
 
-        Application.targetFrameRate = 144;
+        UnityEngine.Rendering.DebugManager.instance.enableRuntimeUI = false;
+        //stateMachine = new StateMachine(UnitState.MOVE, new)
     }
 
     private void FixedUpdate()
     {
-       
-        //unitRigidbody.MovePosition(transform.position + inputDir * Time.deltaTime * 5f);
-        //unitRigidbody.AddForce(inputDir * 100f);
+   
     }
 
     // Update is called once per frame
     void Update()
     {
-        state = (UnitState)animator.GetInteger("State");
-
-        switch (animator.GetInteger("State"))
-        {
-            case (int)UnitState.MOVE:
-                Move();
-                LookDiraction();
-                break;
-            case (int)UnitState.SMASH:
-                break;
-            default:
-                LookDiraction();
-                break;
-        }
-
+        LookDiraction();
+        Move();
     }
 
     private void LateUpdate()
@@ -92,8 +70,26 @@ public class UnitController : MonoBehaviour
     }
     private void Move()
     {
+        float lerpSpeed = 10f;
+        float moveSync = 5f;
 
-        characterController.Move(inputDir * Time.deltaTime * 5);
+        if(0f < inputDir.magnitude)
+        {
+            moveSpeed = Mathf.Lerp(moveSpeed, targetMoveSpeed, Time.deltaTime * lerpSpeed);
+
+            characterController.Move(inputDir * Time.deltaTime * moveSpeed * moveSync);
+        }
+        else
+        {
+            moveSpeed = Mathf.Lerp(moveSpeed, 0f, Time.deltaTime * lerpSpeed);
+
+            characterController.Move(transform.forward * Time.deltaTime * moveSpeed * moveSync);
+        }
+
+        float animSpeed = Mathf.Max(1f, moveSpeed);
+
+        animator.SetFloat("MoveSpeed", moveSpeed);
+        animator.SetFloat("AnimSpeed", animSpeed);
     }
 
 
@@ -113,14 +109,17 @@ public class UnitController : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftArrow)) { hAxis = -1f; }
 
         Vector3 cameraForward = unitCamera.forward;
+        cameraForward.y = 0;
+        cameraForward.Normalize();
+
         Vector3 cameraRight = unitCamera.right;
+        cameraRight.y = 0;
+        cameraRight.Normalize();
 
         inputDir = cameraForward * vAxis + cameraRight * hAxis;
-
-        inputDir.y = 0;
         inputDir = inputDir.normalized;
 
-        if (inputDir != Vector3.zero)
+        if (inputDir.magnitude != 0f)
         {
             Quaternion moveRotation = Quaternion.LookRotation(inputDir);
 
@@ -176,34 +175,18 @@ public class UnitController : MonoBehaviour
         //ÈÙ·Î Ä³¸¯ÅÍ ÁÜ
         distance += Input.GetAxis("Mouse ScrollWheel") * 5;
 
-        switch (animator.GetInteger("State"))
-        {
-            case (int)UnitState.SMASH:
- 
-
-                break;
-            default:
-                
-                break;
-        }
-
-        ActionZoom();
-
-        //unitCamera.localPosition = actionZoom;
-
-
+        unitCamera.localPosition = Vector3.Lerp(unitCamera.localPosition, new Vector3(0, 2, distance), Time.deltaTime * 30f);
     }
-    public bool activeZoom { get; set; }
 
 
 
     private void ActionZoom()
     {
 
-        if (activeZoom)
-            unitCamera.localPosition = Vector3.Slerp(unitCamera.localPosition, new Vector3(0, 1, distance + 2f), Time.deltaTime * 50f);
-        else
-            unitCamera.localPosition = Vector3.Lerp(unitCamera.localPosition, new Vector3(0, 2, distance), Time.deltaTime * 30f);
+        //if (activeZoom)
+        //    unitCamera.localPosition = Vector3.Slerp(unitCamera.localPosition, new Vector3(0, 1, distance + 2f), Time.deltaTime * 50f);
+        //else
+        //    
     }
 
 }

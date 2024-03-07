@@ -15,17 +15,17 @@ public class smashToidleBehaviour : StateMachineBehaviour
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         
-        if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.7f)
-        {
-            bool isMove = Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow) ||
-               Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow);
+        //if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.7f)
+        //{
+        //    bool isMove = Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow) ||
+        //       Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow);
 
 
-            if (isMove)
-                animator.SetInteger("State", (int)UnitState.MOVE);
-            else
-                animator.SetInteger("State", (int)UnitState.IDLE);
-        }
+        //    if (isMove)
+        //        animator.SetInteger("State", (int)UnitState.MOVE);
+        //    else
+        //        animator.SetInteger("State", (int)UnitState.IDLE);
+        //}
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state

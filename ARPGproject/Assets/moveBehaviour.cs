@@ -14,16 +14,16 @@ public class moveBehaviour : StateMachineBehaviour
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        bool isMove = Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow) ||
-       Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow);
+       // bool isMove = Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow) ||
+       //Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow);
 
-        if (isMove) { animator.SetInteger("State", (int)UnitState.MOVE); }
-        else { animator.SetInteger("State", (int)UnitState.IDLE); }
+       // if (isMove) { animator.SetInteger("State", (int)UnitState.MOVE); }
+       // else { animator.SetInteger("State", (int)UnitState.IDLE); }
 
-        if (Input.GetKey("d"))
-        {
-            animator.SetInteger("State", (int)UnitState.SMASH_START);
-        }
+       // if (Input.GetKey("d"))
+       // {
+       //     animator.SetInteger("State", (int)UnitState.SMASH_START);
+       // }
 
     }
 

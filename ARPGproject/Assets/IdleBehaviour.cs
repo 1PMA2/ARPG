@@ -14,16 +14,16 @@ public class IdleBehaviour : StateMachineBehaviour
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
 
-        bool isMove = Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow) ||
-               Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow);
+        //bool isMove = Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow) ||
+        //       Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow);
 
-        if (isMove) { animator.SetInteger("State", (int)UnitState.MOVE); }
-        else { animator.SetInteger("State", (int)UnitState.IDLE); }
+        //if (isMove) { animator.SetInteger("State", (int)UnitState.MOVE); }
+        //else { animator.SetInteger("State", (int)UnitState.IDLE); }
 
-        if (Input.GetKey("d"))
-        {
-            animator.SetInteger("State", (int)UnitState.SMASH_START);
-        }
+        //if (Input.GetKey("d"))
+        //{
+        //    animator.SetInteger("State", (int)UnitState.SMASH_START);
+        //}
     }
 
     //OnStateExit is called when a transition ends and the state machine finishes evaluating this state

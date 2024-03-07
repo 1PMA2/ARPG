@@ -14,14 +14,14 @@ public class smashBehaviour : StateMachineBehaviour
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if(Input.GetKey("d"))
-        {
-            animator.SetInteger("State", (int)UnitState.SMASH_CHARGE);
-        }
-        else
-        {
-            animator.SetInteger("State", (int)UnitState.SMASH);
-        }
+        //if(Input.GetKey("d"))
+        //{
+        //    animator.SetInteger("State", (int)UnitState.SMASH_CHARGE);
+        //}
+        //else
+        //{
+        //    animator.SetInteger("State", (int)UnitState.SMASH);
+        //}
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
