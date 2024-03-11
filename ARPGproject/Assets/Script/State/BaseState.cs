@@ -7,14 +7,11 @@ namespace PlayerController
 {
     public enum UnitState
     {
-        IDLE = 0,
-        MOVE = 1,
-        COMBAT_IDLE = 2,
-        ATTACK = 3,
-        SMASH_START = 4,
-        SMASH_CHARGE = 5,
-        SMASH = 6,
-        END = 7
+        IDLE = 100,
+        MOVE,
+        ATTACK_00,
+        SMASH_00,
+        END
     }
 
     public abstract class BaseState

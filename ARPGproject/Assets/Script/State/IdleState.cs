@@ -14,7 +14,7 @@ namespace PlayerController
 
         public override void OnEnterState()
         {
-
+            Debug.Log("idle");
         }
 
         public override void OnFixedUpdateState()
@@ -24,11 +24,13 @@ namespace PlayerController
 
         public override void OnUpdateState()
         {
-            
-
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if(controller.IsMove())
             {
                 controller.stateMachine.ChangeState(UnitState.MOVE);
+            }
+            else
+            {
+                controller.Idle();
             }
         }
 

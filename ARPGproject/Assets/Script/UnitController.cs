@@ -19,6 +19,7 @@ public class UnitController : MonoBehaviour
     [SerializeField] private Vector2 keyDelta = Vector2.zero;
     [SerializeField] private Vector3 inputDir;
     [SerializeField] private float rotationSpeed = 150f;
+    private Vector3 velocity = Vector3.zero;
     private float moveSpeed = 0f;
     //private float animSpeed = 0f;
     [SerializeField] float targetMoveSpeed = 5;
@@ -35,68 +36,88 @@ public class UnitController : MonoBehaviour
     public CharacterController characterController;
     public StateMachine stateMachine;
 
+    private float unitMass;
+    private Vector3 Velocity = Vector3.zero;
+
 
     private void Awake()
     {
-        animator = GetComponent<Animator>();
-        characterController = GetComponent<CharacterController>();
-
-        cameraArm = Instantiate(cameraPrefeb).transform;
-        unitCamera = cameraArm.GetChild(0);
-
         UnityEngine.Rendering.DebugManager.instance.enableRuntimeUI = false;
     }
     void Start()
     {
+        characterController = GetComponent<CharacterController>();
+        animator = GetComponent<Animator>();
+
         InitStateMachine();
+        InitCamera();
+
+        unitMass = 80f;
     }
 
     private void FixedUpdate()
     {
+
         stateMachine?.OnFixedUpdateState();
     }
 
     // Update is called once per frame
     void Update()
     {
+        CheckInputDir();
+
         stateMachine?.OnUpdateState();
     }
 
     private void LateUpdate()
     {
-        stateMachine?.OnLateUpdateState();
-
         LookAround();
+
+        stateMachine?.OnLateUpdateState();
     }
+    public bool IsMove()
+    {
+        if (0.01f < inputDir.magnitude)
+            return true;
+
+        return false;
+    }
+
     public void Move()
     {
         float lerpSpeed = 10f;
         float moveSync = 5f;
 
-        if(0f < inputDir.magnitude)
-        {
-            moveSpeed = Mathf.Lerp(moveSpeed, targetMoveSpeed, Time.deltaTime * lerpSpeed);
+        moveSpeed = Mathf.Lerp(moveSpeed, targetMoveSpeed, Time.deltaTime * lerpSpeed);
 
-            characterController.Move(inputDir * Time.deltaTime * moveSpeed * moveSync);
-        }
-        else
-        {
-            moveSpeed = Mathf.Lerp(moveSpeed, 0f, Time.deltaTime * lerpSpeed);
-
-            characterController.Move(transform.forward * Time.deltaTime * moveSpeed * moveSync);
-        }
-
-        
+        characterController.Move(inputDir * Time.deltaTime * moveSpeed * moveSync);
 
         animator.SetFloat("MoveSpeed", moveSpeed);
-        animator.SetFloat("AnimSpeed", moveSpeed);
+        animator.SetFloat("AnimSpeed", targetMoveSpeed);
     }
 
-
-    public void LookDiraction() //카메라 방향이 정면으로 되는 움직임 구현
+    public void Idle()
     {
-       
+        float lerpSpeed = 10f;
+        float moveSync = 5f;
 
+        moveSpeed = Mathf.Lerp(moveSpeed, 0f, Time.deltaTime * lerpSpeed);
+
+        characterController.Move(transform.forward * Time.deltaTime * moveSpeed * moveSync);
+
+        animator.SetFloat("MoveSpeed", moveSpeed);
+        animator.SetFloat("AnimSpeed", 1);
+    }
+
+    private Vector3 GetVelocity(Vector3 diraction, float speed)
+    {
+        velocity = diraction * speed;
+
+        return velocity;
+    }
+
+    public void CheckInputDir()
+    {
         float hAxis = 0f;
         float vAxis = 0f;
 
@@ -118,8 +139,13 @@ public class UnitController : MonoBehaviour
 
         inputDir = cameraForward * vAxis + cameraRight * hAxis;
         inputDir = inputDir.normalized;
+    }
 
-        if (inputDir.magnitude != 0f)
+
+    public void LookDiraction() //카메라 방향이 정면으로 되는 움직임 구현
+    {
+
+        if (0f < inputDir.magnitude)
         {
             Quaternion moveRotation = Quaternion.LookRotation(inputDir);
 
@@ -183,6 +209,12 @@ public class UnitController : MonoBehaviour
         stateMachine = new StateMachine(UnitState.IDLE, new IdleState(this));
         stateMachine.AddState(UnitState.MOVE, new MoveState(this));
 
+    }
+
+    private void InitCamera()
+    {
+        cameraArm = Instantiate(cameraPrefeb).transform;
+        unitCamera = cameraArm.GetChild(0);
     }
 
 

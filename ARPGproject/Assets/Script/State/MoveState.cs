@@ -14,7 +14,7 @@ namespace PlayerController
 
         public override void OnEnterState()
         {
-            
+            Debug.Log("Move");
         }
 
         public override void OnFixedUpdateState()
@@ -24,10 +24,15 @@ namespace PlayerController
 
         public override void OnUpdateState()
         {
-            controller.Move();
-            controller.LookDiraction();
-
-
+            if (controller.IsMove())
+            {
+                controller.Move();
+                controller.LookDiraction();
+            }
+            else
+            {
+                controller.stateMachine.ChangeState(UnitState.IDLE);
+            }           
         }
 
         public override void OnLateUpdateState()
