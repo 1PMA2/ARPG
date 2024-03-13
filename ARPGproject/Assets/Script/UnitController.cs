@@ -33,7 +33,9 @@ public class UnitController : MonoBehaviour
     //[SerializeField] private float jumpPower = 10f;
 
     public Animator animator;
-    public CharacterController characterController;
+    [SerializeField] private GameObject palmWeapon;
+    //public CharacterController characterController;
+    Rigidbody rb;
     public StateMachine stateMachine;
 
     private float unitMass;
@@ -46,24 +48,24 @@ public class UnitController : MonoBehaviour
     }
     void Start()
     {
-        characterController = GetComponent<CharacterController>();
+        //characterController = GetComponent<CharacterController>();
+        rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
+        ActiveWeapon(false);
 
         InitStateMachine();
         InitCamera();
-
-        unitMass = 80f;
     }
 
     private void FixedUpdate()
     {
-
         stateMachine?.OnFixedUpdateState();
     }
 
     // Update is called once per frame
     void Update()
     {
+
         CheckInputDir();
 
         stateMachine?.OnUpdateState();
@@ -90,10 +92,11 @@ public class UnitController : MonoBehaviour
 
         moveSpeed = Mathf.Lerp(moveSpeed, targetMoveSpeed, Time.deltaTime * lerpSpeed);
 
-        characterController.Move(inputDir * Time.deltaTime * moveSpeed * moveSync);
+        //characterController.Move(inputDir * Time.deltaTime * moveSpeed * moveSync);
+        transform.position += inputDir * 5f * Time.deltaTime;
 
         animator.SetFloat("MoveSpeed", moveSpeed);
-        animator.SetFloat("AnimSpeed", targetMoveSpeed);
+        animator.SetFloat("AnimSpeed", targetMoveSpeed * Time.timeScale);
     }
 
     public void Idle()
@@ -103,17 +106,11 @@ public class UnitController : MonoBehaviour
 
         moveSpeed = Mathf.Lerp(moveSpeed, 0f, Time.deltaTime * lerpSpeed);
 
-        characterController.Move(transform.forward * Time.deltaTime * moveSpeed * moveSync);
+        // characterController.Move(transform.forward * Time.deltaTime * moveSpeed * moveSync);
+        transform.position += inputDir * 5f * Time.deltaTime;
 
         animator.SetFloat("MoveSpeed", moveSpeed);
-        animator.SetFloat("AnimSpeed", 1);
-    }
-
-    private Vector3 GetVelocity(Vector3 diraction, float speed)
-    {
-        velocity = diraction * speed;
-
-        return velocity;
+        animator.SetFloat("AnimSpeed", Time.timeScale);
     }
 
     public void CheckInputDir()
@@ -217,6 +214,11 @@ public class UnitController : MonoBehaviour
         unitCamera = cameraArm.GetChild(0);
     }
 
+
+    private void ActiveWeapon(bool active)
+    {
+        palmWeapon.SetActive(active);
+    }
 
 
     private void ActionZoom()

@@ -10,7 +10,7 @@ namespace PlayerController
     public class StateMachine
     {
         public BaseState CurrentState { get; private set; }
-        private Dictionary<UnitState, BaseState> states = new Dictionary<UnitState, BaseState>();
+        private Dictionary<UnitState, BaseState> states = new Dictionary<UnitState, BaseState>(new UnitStateComparer());
 
         public StateMachine(UnitState stateName, BaseState state)
         {

@@ -14,6 +14,12 @@ namespace PlayerController
         END
     }
 
+    public struct UnitStateComparer : IEqualityComparer<UnitState>
+    {
+        public bool Equals(UnitState a, UnitState b) { return a == b; }
+        public int GetHashCode(UnitState a) { return (int)a; }
+    }
+
     public abstract class BaseState
     {
         protected UnitController controller { get; private set; }
