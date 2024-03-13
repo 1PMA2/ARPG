@@ -55,6 +55,8 @@ public class UnitController : MonoBehaviour
 
         InitStateMachine();
         InitCamera();
+
+        StartCoroutine(CoDelay());
     }
 
     private void FixedUpdate()
@@ -220,6 +222,14 @@ public class UnitController : MonoBehaviour
         palmWeapon.SetActive(active);
     }
 
+    IEnumerator CoDelay()
+    {
+        while(true)
+        {
+            yield return YieldCache.WaitForSecondsRealTime(3);
+            Debug.Log("3sec");
+        }
+    }
 
     private void ActionZoom()
     {
