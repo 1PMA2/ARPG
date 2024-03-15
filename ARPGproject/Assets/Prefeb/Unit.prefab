@@ -1119,8 +1119,7 @@ GameObject:
   - component: {fileID: 4334328948477300873}
   - component: {fileID: 7693993016902765299}
   - component: {fileID: 4299838458339968328}
-  - component: {fileID: 7693993016902765297}
-  - component: {fileID: 7693993016902765298}
+  - component: {fileID: 582396621}
   m_Layer: 0
   m_Name: Unit
   m_TagString: Player
@@ -1135,7 +1134,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3993973352852015667}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1191,24 +1190,9 @@ MonoBehaviour:
   distance: -4
   animator: {fileID: 0}
   palmWeapon: {fileID: 4299838457330927974}
---- !u!54 &7693993016902765297
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3993973352852015667}
-  serializedVersion: 2
-  m_Mass: 80
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 112
-  m_CollisionDetection: 0
---- !u!136 &7693993016902765298
-CapsuleCollider:
+  characterController: {fileID: 0}
+--- !u!143 &582396621
+CharacterController:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1217,9 +1201,13 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5
+  serializedVersion: 2
   m_Height: 2
-  m_Direction: 1
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.01
+  m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &4003140505854203186
 GameObject:
@@ -9307,7 +9295,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4299838458332213395}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.009734419, y: -0.013132355, z: -0.0133207}
+  m_LocalPosition: {x: -0.009667838, y: -0.013142345, z: -0.013344847}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

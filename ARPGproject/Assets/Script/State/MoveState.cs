@@ -19,7 +19,7 @@ namespace PlayerController
 
         public override void OnFixedUpdateState()
         {
-           
+
         }
 
         public override void OnUpdateState()

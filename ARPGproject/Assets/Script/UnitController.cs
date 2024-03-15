@@ -7,6 +7,8 @@ using static UnitController;
 using static UnityEngine.GraphicsBuffer;
 using PlayerController;
 using StateMachine = PlayerController.StateMachine;
+using System.Linq;
+using Unity.Burst.CompilerServices;
 
 public class UnitController : MonoBehaviour
 {
@@ -34,8 +36,7 @@ public class UnitController : MonoBehaviour
 
     public Animator animator;
     [SerializeField] private GameObject palmWeapon;
-    //public CharacterController characterController;
-    Rigidbody rb;
+    public CharacterController characterController;
     public StateMachine stateMachine;
 
     private float unitMass;
@@ -48,25 +49,52 @@ public class UnitController : MonoBehaviour
     }
     void Start()
     {
-        //characterController = GetComponent<CharacterController>();
-        rb = GetComponent<Rigidbody>();
+        characterController = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
         ActiveWeapon(false);
 
         InitStateMachine();
         InitCamera();
 
-        StartCoroutine(CoDelay());
+        //StartCoroutine(CoDelay());
     }
 
     private void FixedUpdate()
     {
         stateMachine?.OnFixedUpdateState();
+        
+
+    }
+
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {    
+        if (hit.rigidbody)
+        {
+            SetVelocity(hit);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        if (Input.GetKey(KeyCode.Tab))
+        {
+            Application.targetFrameRate = 30;
+            //Time.timeScale = 0.1f;
+        }
+        else
+        {
+            Application.targetFrameRate = 144;
+            //Time.timeScale = 1;
+        }
+
+        if (Input.GetKey(KeyCode.Space))
+        {
+            targetMoveSpeed = 5;
+        }
+        else
+            targetMoveSpeed = 1;
 
         CheckInputDir();
 
@@ -94,8 +122,7 @@ public class UnitController : MonoBehaviour
 
         moveSpeed = Mathf.Lerp(moveSpeed, targetMoveSpeed, Time.deltaTime * lerpSpeed);
 
-        //characterController.Move(inputDir * Time.deltaTime * moveSpeed * moveSync);
-        transform.position += inputDir * 5f * Time.deltaTime;
+        characterController.Move(inputDir * Time.deltaTime * moveSpeed * moveSync);
 
         animator.SetFloat("MoveSpeed", moveSpeed);
         animator.SetFloat("AnimSpeed", targetMoveSpeed * Time.timeScale);
@@ -108,8 +135,7 @@ public class UnitController : MonoBehaviour
 
         moveSpeed = Mathf.Lerp(moveSpeed, 0f, Time.deltaTime * lerpSpeed);
 
-        // characterController.Move(transform.forward * Time.deltaTime * moveSpeed * moveSync);
-        transform.position += inputDir * 5f * Time.deltaTime;
+        characterController.Move(transform.forward * Time.deltaTime * moveSpeed * moveSync);
 
         animator.SetFloat("MoveSpeed", moveSpeed);
         animator.SetFloat("AnimSpeed", Time.timeScale);
@@ -222,14 +248,29 @@ public class UnitController : MonoBehaviour
         palmWeapon.SetActive(active);
     }
 
-    IEnumerator CoDelay()
+    private void SetVelocity(ControllerColliderHit hit)
     {
-        while(true)
-        {
-            yield return YieldCache.WaitForSecondsRealTime(3);
-            Debug.Log("3sec");
-        }
+        Vector3 hitPoint = new Vector3(hit.point.x, 0, hit.point.z);
+        Vector3 hitRigidBodyPosition = new Vector3(hit.rigidbody.position.x, 0, hit.rigidbody.position.z);
+        Vector3 forceDir = (hitRigidBodyPosition - hitPoint);
+        float distance = forceDir.magnitude;
+        forceDir = forceDir.normalized;
+
+        float mass = hit.rigidbody.mass;
+        Vector3 torque = Vector3.Cross(inputDir, forceDir) * distance;
+
+        hit.rigidbody.velocity = forceDir * targetMoveSpeed / mass;
+        hit.rigidbody.angularVelocity = torque * targetMoveSpeed / mass;
     }
+
+    //IEnumerator CoDelay()
+    //{
+    //    while(true)
+    //    {
+    //        yield return YieldCache.WaitForSecondsRealTime(3);
+    //        Debug.Log("3sec");
+    //    }
+    //}
 
     private void ActionZoom()
     {
