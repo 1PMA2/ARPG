@@ -7,6 +7,7 @@ using UnityEngine;
 public class CameraManager : Singleton<CameraManager>
 {
     private static GameObject cachedCameraPrefab;
+    private static GameObject cachedMinimapPrefab;
 
     //private List<GameObject> cameras = new List<GameObject>();
 
@@ -19,7 +20,9 @@ public class CameraManager : Singleton<CameraManager>
     private void Start()
     {
         cachedCameraPrefab = Resources.Load("Prefeb/CameraArm") as GameObject;
+        cachedMinimapPrefab = Resources.Load("Prefeb/Minimap") as GameObject;
         CreateCamera();
+
     }
 
     private void CreateCamera()
@@ -33,6 +36,9 @@ public class CameraManager : Singleton<CameraManager>
             unit.StickCamera(unitCamera);
             cameras[key] = unitCamera; // µñ¼Å³Ê¸® ¾÷µ¥ÀÌÆ®
         }
+
+        Instantiate(cachedMinimapPrefab);
+
     }
 
     public void CamRegister(string name, GameObject unit)
