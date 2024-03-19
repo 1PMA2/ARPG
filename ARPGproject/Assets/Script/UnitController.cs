@@ -13,7 +13,7 @@ using Unity.Burst.CompilerServices;
 public class UnitController : MonoBehaviour
 {
     // Start is called before the first frame update
-    [SerializeField] private GameObject cameraPrefeb;
+    //[SerializeField] private GameObject cameraPrefeb;
     [SerializeField] private Transform cameraArm;
     [SerializeField] private Transform unitCamera;
      
@@ -21,7 +21,6 @@ public class UnitController : MonoBehaviour
     [SerializeField] private Vector2 keyDelta = Vector2.zero;
     [SerializeField] private Vector3 inputDir;
     [SerializeField] private float rotationSpeed = 150f;
-    private Vector3 velocity = Vector3.zero;
     private float moveSpeed = 0f;
     //private float animSpeed = 0f;
     [SerializeField] float targetMoveSpeed = 5;
@@ -32,30 +31,23 @@ public class UnitController : MonoBehaviour
 
     [SerializeField] private float distance = -5f;
 
-    //[SerializeField] private float jumpPower = 10f;
-
     public Animator animator;
     [SerializeField] private GameObject palmWeapon;
     public CharacterController characterController;
     public StateMachine stateMachine;
 
-    private float unitMass;
-    private Vector3 Velocity = Vector3.zero;
-
-
     private void Awake()
     {
         UnityEngine.Rendering.DebugManager.instance.enableRuntimeUI = false;
-    }
-    void Start()
-    {
+
         characterController = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
         ActiveWeapon(false);
-
         InitStateMachine();
         InitCamera();
-
+    }
+    void Start()
+    {
         //StartCoroutine(CoDelay());
     }
 
@@ -95,6 +87,15 @@ public class UnitController : MonoBehaviour
         }
         else
             targetMoveSpeed = 1;
+
+
+        if(Input.GetKeyDown("x"))
+        {
+            bool isEquip = animator.GetBool("Equip");
+
+            animator.SetBool("IsFinished", false);
+            animator.SetBool("Equip", !isEquip);
+        }
 
         CheckInputDir();
 
@@ -167,7 +168,7 @@ public class UnitController : MonoBehaviour
     }
 
 
-    public void LookDiraction() //Ä«¸Ş¶ó ¹æÇâÀÌ Á¤¸éÀ¸·Î µÇ´Â ¿òÁ÷ÀÓ ±¸Çö
+    public void LookDiraction() //ì¹´ë©”ë¼ ë°©í–¥ì´ ì •ë©´ìœ¼ë¡œ ë˜ëŠ” ì›€ì§ì„ êµ¬í˜„
     {
 
         if (0f < inputDir.magnitude)
@@ -214,16 +215,16 @@ public class UnitController : MonoBehaviour
         keyDelta.y %= 360f;
 
         targetRotation = Quaternion.Euler(keyDelta.y, keyDelta.x, 0);
-        cameraArm.rotation = Quaternion.Euler(camAngle.x, camAngle.y, 0); //zÃà È¸Àü °íÁ¤
-        // ½Ã°£À» »ç¿ëÇÏ¿© È¸Àü º¸°£
+        cameraArm.rotation = Quaternion.Euler(camAngle.x, camAngle.y, 0); //zì¶• íšŒì „ ê³ ì •
+        // ì‹œê°„ì„ ì‚¬ìš©í•˜ì—¬ íšŒì „ ë³´ê°„
         cameraArm.rotation = Quaternion.Slerp(cameraArm.rotation, targetRotation, Time.deltaTime * 10f);
 
-        // ½º¹«µù Ä«¸Ş¶ó
+        // ìŠ¤ë¬´ë”© ì¹´ë©”ë¼
         //Vector3 targetPos = new Vector3(transform.position.x, transform.position.y + cameraArm.position.y, transform.position.z);
         cameraArm.position = Vector3.Lerp(cameraArm.position, transform.position, Time.deltaTime * 5f);
         cameraArm.position = new Vector3(cameraArm.position.x, transform.position.y, cameraArm.position.z);
 
-        //ÈÙ·Î Ä³¸¯ÅÍ ÁÜ
+        //íœ ë¡œ ìºë¦­í„° ì¤Œ
         distance += Input.GetAxis("Mouse ScrollWheel") * 5;
 
         unitCamera.localPosition = Vector3.Lerp(unitCamera.localPosition, new Vector3(0, 2, distance), Time.deltaTime * 30f);
@@ -238,7 +239,12 @@ public class UnitController : MonoBehaviour
 
     private void InitCamera()
     {
-        cameraArm = Instantiate(cameraPrefeb).transform;
+        CameraManager.Instance.CamRegister("PlayerCamera", this.gameObject);    
+    }
+
+    public void StickCamera(GameObject gameObject)
+    {
+        cameraArm = gameObject.transform;
         unitCamera = cameraArm.GetChild(0);
     }
 
@@ -261,6 +267,11 @@ public class UnitController : MonoBehaviour
 
         hit.rigidbody.velocity = forceDir * targetMoveSpeed / mass;
         hit.rigidbody.angularVelocity = torque * targetMoveSpeed / mass;
+    }
+
+    private void IsAnimationFinished()
+    {
+        animator.SetBool("IsFinished", true);
     }
 
     //IEnumerator CoDelay()
