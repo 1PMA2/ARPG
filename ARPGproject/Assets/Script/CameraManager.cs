@@ -6,12 +6,25 @@ using UnityEngine;
 
 public class CameraManager : Singleton<CameraManager>
 {
+
+    class StringComparer : IEqualityComparer<string>
+    {
+        bool IEqualityComparer<string>.Equals(string x, string y)
+        {
+            return x == y;
+        }
+        int IEqualityComparer<string>.GetHashCode(string obj)
+        {
+            return obj.GetHashCode();
+        }
+    }
+
     private static GameObject cachedCameraPrefab;
     private static GameObject cachedMinimapPrefab;
 
     //private List<GameObject> cameras = new List<GameObject>();
 
-    private Dictionary<string, GameObject> cameras = new Dictionary<string, GameObject>();
+    private Dictionary<string, GameObject> cameras = new Dictionary<string, GameObject>(new StringComparer());
 
     public CameraManager()
     {
@@ -20,7 +33,7 @@ public class CameraManager : Singleton<CameraManager>
     private void Start()
     {
         cachedCameraPrefab = Resources.Load("Prefeb/CameraArm") as GameObject;
-        cachedMinimapPrefab = Resources.Load("Prefeb/Minimap") as GameObject;
+        //cachedMinimapPrefab = Resources.Load("Prefeb/Minimap") as GameObject;
         CreateCamera();
 
     }
@@ -37,7 +50,7 @@ public class CameraManager : Singleton<CameraManager>
             cameras[key] = unitCamera; // µñ¼Å³Ê¸® ¾÷µ¥ÀÌÆ®
         }
 
-        Instantiate(cachedMinimapPrefab);
+        //Instantiate(cachedMinimapPrefab);
 
     }
 

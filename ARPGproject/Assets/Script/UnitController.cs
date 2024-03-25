@@ -48,6 +48,8 @@ public class UnitController : MonoBehaviour
     }
     void Start()
     {
+
+        transform.position = DungeonGenerator.Instance.StartPos;
         //StartCoroutine(CoDelay());
     }
 
