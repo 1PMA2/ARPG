@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using Random = UnityEngine.Random;
 
 public class DungeonGenerator : Singleton<DungeonGenerator>
 {
@@ -11,10 +13,10 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
 
     private GameObject roomPrefeb;
     private GameObject roadPrefeb;
+    private GameObject bossPrefeb;
 
     private ITile tile;
     private ITile cornerTile;
-    public bool up, down, left, right;
 
     int tileSize = 20;
 
@@ -44,6 +46,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
     {
         roomPrefeb = Resources.Load("Prefeb/Terrain/Room") as GameObject;
         roadPrefeb = Resources.Load("Prefeb/Terrain/Road") as GameObject;
+        bossPrefeb = Resources.Load("Prefeb/Terrain/Boss") as GameObject;
 
 
         InitGrid();
@@ -69,6 +72,8 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
             }
         }
 
+        pos = start;
+        startPos = new Vector3(pos.x * tileSize, 1, pos.y * tileSize);
         map[pos.x, pos.y] = (int)TILE.START;
         CreateRoom(pos.x, pos.y);
         stackTile.Push(tile);
@@ -137,8 +142,8 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
         }
         while (pos != end); //현재 위치가 끝 지점일때 종료
 
-        
-
+        tile.OpenWall(Vector2Int.up);
+        Instantiate(bossPrefeb, new Vector3(end.x * tileSize, 0, (end.y + 1) * tileSize + 10), Quaternion.identity);
     }
 
     private bool CheckForRoad(int index)
