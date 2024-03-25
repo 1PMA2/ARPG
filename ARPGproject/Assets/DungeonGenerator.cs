@@ -10,8 +10,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
     enum TILE { ROAD = 0, WALL, CHECK, START };
 
     private GameObject roomPrefeb;
-    private GameObject cornerPrefeb;
-    private GameObject walkWayPrefeb;
+    private GameObject roadPrefeb;
 
     private ITile tile;
     private ITile cornerTile;
@@ -44,8 +43,8 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
     private new void Awake()
     {
         roomPrefeb = Resources.Load("Prefeb/Terrain/Room") as GameObject;
-        cornerPrefeb = Resources.Load("Prefeb/Terrain/Corner") as GameObject;
-        walkWayPrefeb = Resources.Load("Prefeb/Terrain/WalkWay") as GameObject;
+        roadPrefeb = Resources.Load("Prefeb/Terrain/Road") as GameObject;
+
 
         InitGrid();
         StartCoroutine(GenerateRoad());
@@ -70,7 +69,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
             }
         }
 
-        map[pos.x, pos.y] = (int)TILE.START; //RandPosSelect 함수에서 무작위로 선택한 지점을 시작 지점으로 설정
+        map[pos.x, pos.y] = (int)TILE.START;
         CreateRoom(pos.x, pos.y);
         stackTile.Push(tile);
     }
@@ -95,7 +94,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
 
     private IEnumerator GenerateRoad()
     {
-       
+
         do
         {
             int index = -1; //-1은 갈 수 있는 길이 없음을 의미
@@ -114,12 +113,13 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
             if (index != -1) //갈 수 있는 길이 있을 경우
             {
                 stackDir.Push(direction[index]); //스택에 방향 저장
-                stackTile.Push(tile);
+                stackTile.Push(tile); //스택에 현재 타일 저장
+                tile.OpenWall(direction[index]); // 현재 타일의 진행방향 문을 열음
+
                 pos += direction[index]; //위치 변수 수정
-                tile.OpenWall(direction[index]);
-                map[pos.x, pos.y] = (int)TILE.CHECK; //타일 생성
-                CreateRoom(pos.x, pos.y); //타일 색상 변경
-                tile.OpenWall(direction[index] * -1);
+                map[pos.x, pos.y] = (int)TILE.CHECK; 
+                CreateRoom(pos.x, pos.y); //다음 타일 생성
+                tile.OpenWall(direction[index] * -1); // 다음 타일의 지나온 방향의 문을 열음
             }
             else //갈 수 있는 길이 없을 경우
             {
@@ -129,13 +129,15 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
                 tile = stackTile.Pop();
                 if (map[pos.x, pos.y] == (int)TILE.ROAD)
                 {
-                    tile.OpenWall(reverseDir);
+                    tile.OpenWall(reverseDir); //되돌아 온길의 문을 열음
                 }
             }
 
             yield return null;
         }
-        while (pos != end);
+        while (pos != end); //현재 위치가 끝 지점일때 종료
+
+        
 
     }
 
@@ -153,8 +155,22 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
 
     void CreateRoom(int x, int z)
     {
-        Vector3 pos = new Vector3(x * tileSize, 0, z * tileSize); 
-        GameObject room = Instantiate(roomPrefeb, pos, Quaternion.identity);
-        tile = room.GetComponent<Room>();
+        Vector3 pos = new Vector3(x * tileSize, 0, z * tileSize);
+        int rand = Random.Range(0, 2);
+
+        if(x == 0 && z == 0)
+            rand = 0;
+
+        if (rand == 0)
+        {
+            GameObject room = Instantiate(roomPrefeb, pos, Quaternion.identity);
+            tile = room.GetComponent<Room>();
+        }
+        else
+        {
+            GameObject road = Instantiate(roadPrefeb, pos, Quaternion.identity);
+            tile = road.GetComponent<Road>();
+        }
+        
     }
 }
