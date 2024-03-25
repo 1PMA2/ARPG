@@ -12,6 +12,11 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
     private GameObject roomPrefeb;
     private GameObject cornerPrefeb;
     private GameObject walkWayPrefeb;
+
+    private ITile tile;
+    private ITile cornerTile;
+    public bool up, down, left, right;
+
     int tileSize = 20;
 
     [SerializeField] private int width = 10;
@@ -20,7 +25,8 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
 
     private Vector2Int[] direction = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
     private Vector2Int pos = Vector2Int.zero;
-    private Stack<Vector2Int> stackDir = new Stack<Vector2Int>(); //지나온 길의 방향 저장
+    private Stack<Vector2Int> stackDir = new Stack<Vector2Int>();
+    private Stack<ITile> stackTile = new Stack<ITile>();
 
     [SerializeField] private Vector2Int start;
     [SerializeField] private Vector2Int end;
@@ -42,13 +48,15 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
         walkWayPrefeb = Resources.Load("Prefeb/Terrain/WalkWay") as GameObject;
 
         InitGrid();
-        //RandPosSelect(); //시작 지점 무작위 선택
-        StartCoroutine(GenerateRoad()); //미로 생성
-
+        StartCoroutine(GenerateRoad());
     }
     private void Start()
     {
+        
+    }
 
+    private void Update()
+    {
     }
 
     void InitGrid()
@@ -61,11 +69,19 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
                 map[x, y] = (int)TILE.WALL;
             }
         }
+
+        map[pos.x, pos.y] = (int)TILE.START; //RandPosSelect 함수에서 무작위로 선택한 지점을 시작 지점으로 설정
+        CreateRoom(pos.x, pos.y);
+        stackTile.Push(tile);
     }
+
     private void RandPosSelect()
     {
+
         pos = new Vector2Int(Random.Range(0, width), Random.Range(0, height)); //미로 범위 내에서 무작위 선택
+
     }
+
     private void RandDirection() //무작위로 방향을 섞는 메소드
     {
         for (int i = 0; i < direction.Length; i++)
@@ -79,8 +95,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
 
     private IEnumerator GenerateRoad()
     {
-        map[pos.x, pos.y] = (int)TILE.START; //RandPosSelect 함수에서 무작위로 선택한 지점을 시작 지점으로 설정
-        CreateRoom(pos.x, pos.y);
+       
         do
         {
             int index = -1; //-1은 갈 수 있는 길이 없음을 의미
@@ -98,26 +113,35 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
 
             if (index != -1) //갈 수 있는 길이 있을 경우
             {
-                    stackDir.Push(direction[index]); //스택에 방향 저장
-                    pos += direction[index]; //위치 변수 수정
-                    map[pos.x, pos.y] = (int)TILE.CHECK; //타일 생성
-                    CreateRoom(pos.x, pos.y); //타일 색상 변경
+                stackDir.Push(direction[index]); //스택에 방향 저장
+                stackTile.Push(tile);
+                pos += direction[index]; //위치 변수 수정
+                tile.OpenWall(direction[index]);
+                map[pos.x, pos.y] = (int)TILE.CHECK; //타일 생성
+                CreateRoom(pos.x, pos.y); //타일 색상 변경
+                tile.OpenWall(direction[index] * -1);
             }
             else //갈 수 있는 길이 없을 경우
             {
-                    map[pos.x, pos.y] = (int)TILE.ROAD; //완성된 길 의미
-                    //SetTileColor(pos.x, pos.y);
-                    pos += stackDir.Pop() * -1; //방향을 저장하는 스택에서 데이터를 꺼낸뒤 -1을 곱해 방향 반전
+                Vector2Int reverseDir = stackDir.Pop() * -1;
+                map[pos.x, pos.y] = (int)TILE.ROAD; //완성된 길 의미
+                pos += reverseDir; //방향을 저장하는 스택에서 데이터를 꺼낸뒤 -1을 곱해 방향 반전
+                tile = stackTile.Pop();
+                if (map[pos.x, pos.y] == (int)TILE.ROAD)
+                {
+                    tile.OpenWall(reverseDir);
+                }
             }
 
             yield return null;
         }
-        while (pos != end); //스택이 0이라는 것은 모든 길을 순회했다는 것을 의미하므로 반복문 종료
+        while (pos != end);
 
     }
+
     private bool CheckForRoad(int index)
     {
-        if ((pos + direction[index]).x >= width) return false; //4, 0
+        if ((pos + direction[index]).x >= width) return false; 
         if ((pos + direction[index]).x < 0) return false;
         if ((pos + direction[index]).y >= height) return false;
         if ((pos + direction[index]).y < 0) return false;
@@ -129,8 +153,8 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
 
     void CreateRoom(int x, int z)
     {
-        Vector3 pos = new Vector3(x * tileSize, 0, z * tileSize);
-        Quaternion.Euler(0, 1, 0);  // 「
-        Instantiate(roomPrefeb, pos, Quaternion.identity);
+        Vector3 pos = new Vector3(x * tileSize, 0, z * tileSize); 
+        GameObject room = Instantiate(roomPrefeb, pos, Quaternion.identity);
+        tile = room.GetComponent<Room>();
     }
 }
