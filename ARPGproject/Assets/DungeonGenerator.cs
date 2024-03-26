@@ -9,7 +9,7 @@ using Random = UnityEngine.Random;
 public class DungeonGenerator : Singleton<DungeonGenerator>
 {
 
-    enum TILE { ROAD = 0, WALL, CHECK, START };
+    enum TILE { ROAD = 0, WALL, CHECK, START, BOSS };
 
     private GameObject roomPrefeb;
     private GameObject roadPrefeb;
@@ -48,7 +48,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
         roadPrefeb = Resources.Load("Prefeb/Terrain/Road") as GameObject;
         bossPrefeb = Resources.Load("Prefeb/Terrain/Boss") as GameObject;
 
-
+        //RandPosSelect();
         InitGrid();
         StartCoroutine(GenerateRoad());
     }
@@ -69,6 +69,11 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
             for (int y = 0; y < height; y++)
             {
                 map[x, y] = (int)TILE.WALL;
+
+                if(x >= (end.x - 1) && x <= (end.x + 1) && y > end.y)
+                {
+                    map[x, y] = (int)TILE.BOSS;
+                }
             }
         }
 
@@ -81,8 +86,13 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
 
     private void RandPosSelect()
     {
+        width = Random.Range(5, 20);
+        height = Random.Range(5, 20);
 
-        pos = new Vector2Int(Random.Range(0, width), Random.Range(0, height)); //미로 범위 내에서 무작위 선택
+        start = new Vector2Int(Random.Range(0, width), Random.Range(0, height));
+        do{
+            end = new Vector2Int(Random.Range(0, width), Random.Range(0, height));
+        } while (end == start);
 
     }
 
@@ -143,7 +153,10 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
         while (pos != end); //현재 위치가 끝 지점일때 종료
 
         tile.OpenWall(Vector2Int.up);
-        Instantiate(bossPrefeb, new Vector3(end.x * tileSize, 0, (end.y + 1) * tileSize + 10), Quaternion.identity);
+        Instantiate(bossPrefeb, new Vector3(end.x * tileSize, 0, (end.y + 1) * tileSize + 10), Quaternion.identity).transform.SetParent(transform);
+
+        stackDir.Clear();
+        stackTile.Clear();
     }
 
     private bool CheckForRoad(int index)
@@ -169,13 +182,17 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
         if (rand == 0)
         {
             GameObject room = Instantiate(roomPrefeb, pos, Quaternion.identity);
+            room.transform.SetParent(transform);
             tile = room.GetComponent<Room>();
         }
         else
         {
             GameObject road = Instantiate(roadPrefeb, pos, Quaternion.identity);
+            road.transform.SetParent(transform);
             tile = road.GetComponent<Road>();
         }
+
+        
         
     }
 }
