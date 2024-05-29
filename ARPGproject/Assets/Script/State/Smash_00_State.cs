@@ -9,12 +9,12 @@ namespace PlayerController
         private int hashMoveAnimation;
         public Smash_00_State(UnitController controller) : base(controller)
         {
-
+            
         }
 
         public override void OnEnterState()
         {
-            Debug.Log("Smash_00");
+            controller.ChangeAnimation("Smash00");
         }
 
         public override void OnFixedUpdateState()
@@ -24,14 +24,11 @@ namespace PlayerController
 
         public override void OnUpdateState()
         {
-            if (controller.IsMove())
-            {
-                controller.stateMachine.ChangeState(UnitState.MOVE);
-            }
-            else
-            {
-                controller.Idle();
-            }
+            controller.LookDiraction();
+
+            if (controller.CheckAnimation())
+                controller.stateMachine.ChangeState(UnitState.SMASH_01);
+
         }
 
         public override void OnLateUpdateState()
@@ -41,7 +38,7 @@ namespace PlayerController
 
         public override void OnExitState()
         {
-
+            
         }
 
     }

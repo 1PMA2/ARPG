@@ -9,8 +9,14 @@ namespace PlayerController
     {
         IDLE = 100,
         MOVE,
-        ATTACK_00,
+        COMBO_01,
+        COMBO_02,
+        COMBO_03,
         SMASH_00,
+        SMASH_01,
+        GUARD_01,
+        GUARD_02,
+        EVADE,
         END
     }
 

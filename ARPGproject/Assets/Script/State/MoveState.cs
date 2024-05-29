@@ -14,7 +14,7 @@ namespace PlayerController
 
         public override void OnEnterState()
         {
-            Debug.Log("Move");
+            controller.animator.applyRootMotion = false;
         }
 
         public override void OnFixedUpdateState()
@@ -32,7 +32,16 @@ namespace PlayerController
             else
             {
                 controller.stateMachine.ChangeState(UnitState.IDLE);
-            }           
+            }
+
+            if (controller.IsComboAttack())
+                controller.stateMachine.ChangeState(UnitState.COMBO_01);
+
+            if (controller.IsSmash())
+                controller.stateMachine.ChangeState(UnitState.SMASH_00);
+
+            if (controller.IsEvade())
+                controller.stateMachine.ChangeState(UnitState.EVADE);
         }
 
         public override void OnLateUpdateState()

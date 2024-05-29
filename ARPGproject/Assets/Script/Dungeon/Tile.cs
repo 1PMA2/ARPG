@@ -8,3 +8,4 @@ public interface ITile
     void OpenWall(Vector2Int dir);
 
 }
+

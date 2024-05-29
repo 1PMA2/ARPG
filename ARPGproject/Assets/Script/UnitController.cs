@@ -16,6 +16,8 @@ public class UnitController : MonoBehaviour
     //[SerializeField] private GameObject cameraPrefeb;
     [SerializeField] private Transform cameraArm;
     [SerializeField] private Transform unitCamera;
+    [SerializeField] private Katana kanata;
+    private BoxCollider weaponTrigger;
      
     [SerializeField] private Quaternion targetRotation;
     [SerializeField] private Vector2 keyDelta = Vector2.zero;
@@ -32,17 +34,26 @@ public class UnitController : MonoBehaviour
     [SerializeField] private float distance = -5f;
 
     public Animator animator;
-    [SerializeField] private GameObject palmWeapon;
+    private string currentAnimation = "";
+    bool isAnimationFinished = false;
+    bool isCombo = false;
     public CharacterController characterController;
     public StateMachine stateMachine;
 
+
+    public float smashSpeed = 30;
+    float verticalSpeed = -10f;
+    RaycastHit hit;
+
+    public Material material; // 쉐이더가 적용된 소재
+    //public Transform characterTransform; // 캐릭터의 트랜스폼
+
     private void Awake()
     {
-        UnityEngine.Rendering.DebugManager.instance.enableRuntimeUI = false;
-
         characterController = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
-        ActiveWeapon(false);
+        animator.updateMode = AnimatorUpdateMode.Normal;
+        weaponTrigger = kanata.GetComponent<BoxCollider>();
         InitStateMachine();
         InitCamera();
     }
@@ -51,13 +62,13 @@ public class UnitController : MonoBehaviour
 
         transform.position = DungeonGenerator.Instance.StartPos;
         //StartCoroutine(CoDelay());
+        weaponTrigger.enabled = false;
+        ChangeAnimation("Unequip");
     }
 
     private void FixedUpdate()
     {
         stateMachine?.OnFixedUpdateState();
-        
-
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
@@ -71,26 +82,6 @@ public class UnitController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        if (Input.GetKey(KeyCode.Tab))
-        {
-            Application.targetFrameRate = 30;
-            //Time.timeScale = 0.1f;
-        }
-        else
-        {
-            Application.targetFrameRate = 144;
-            //Time.timeScale = 1;
-        }
-
-        if (Input.GetKey(KeyCode.Space))
-        {
-            targetMoveSpeed = 5;
-        }
-        else
-            targetMoveSpeed = 1;
-
-
         if(Input.GetKeyDown("x"))
         {
             bool isEquip = animator.GetBool("Equip");
@@ -101,14 +92,58 @@ public class UnitController : MonoBehaviour
 
         CheckInputDir();
 
+        SetGravity();
+
         stateMachine?.OnUpdateState();
+    }
+    public bool CheckAnimation()
+    {
+        if (isAnimationFinished)
+        {
+            moveSpeed = 0;
+            isAnimationFinished = false;
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool CheckComboAnimation()
+    {
+        if (isCombo)
+        {
+            moveSpeed = 0;
+            isCombo = false;
+            return true;
+        }
+
+        return false;
+    }
+
+
+    public void ChangeAnimation(string animation, float crossfade = 0.2f, float animationSpeed = 1f)
+    {
+        if(currentAnimation != animation)
+        {
+            currentAnimation = animation;
+            animator.CrossFade(animation, crossfade);
+            animator.speed = animationSpeed;
+        }
     }
 
     private void LateUpdate()
     {
         LookAround();
-
+        
         stateMachine?.OnLateUpdateState();
+    }
+
+    private void SetGravity()
+    {
+        //Debug.DrawRay(transform.position, transform.up * -1f, Color.cyan);
+
+        if(!Physics.Raycast(transform.position, transform.up * -1f, out hit, 0.01f))
+            characterController.Move(Vector3.up * verticalSpeed * Time.deltaTime);
     }
     public bool IsMove()
     {
@@ -116,6 +151,52 @@ public class UnitController : MonoBehaviour
             return true;
 
         return false;
+    }
+
+    public bool IsSmash()
+    {
+        if (Input.GetKeyDown("d"))
+            return true;
+
+        return false;
+    }
+
+    public bool IsComboAttack()
+    {
+        if (Input.GetKeyDown("s"))
+            return true;
+
+        return false;
+    }
+
+    public bool IsGuard()
+    {
+        if (Input.GetKey("a") && (0 >= inputDir.magnitude))
+            return true;
+
+        return false;
+    }
+
+    public bool IsEvade()
+    {
+        if (Input.GetKey("a") && (0 < inputDir.magnitude))
+            return true;
+
+        return false;
+    }
+
+    public void SetEquip(bool isEquip, float crossfade = 0.2f)
+    {
+        if(isEquip)
+        {
+            ChangeAnimation("Equip", crossfade);     
+        }
+        else
+        {
+            ChangeAnimation("Unequip", crossfade);
+        }
+
+        animator.SetBool("Equip", isEquip);
     }
 
     public void Move()
@@ -128,7 +209,7 @@ public class UnitController : MonoBehaviour
         characterController.Move(inputDir * Time.deltaTime * moveSpeed * moveSync);
 
         animator.SetFloat("MoveSpeed", moveSpeed);
-        animator.SetFloat("AnimSpeed", targetMoveSpeed * Time.timeScale);
+        animator.SetFloat("AnimSpeed", targetMoveSpeed);
     }
 
     public void Idle()
@@ -141,7 +222,7 @@ public class UnitController : MonoBehaviour
         characterController.Move(transform.forward * Time.deltaTime * moveSpeed * moveSync);
 
         animator.SetFloat("MoveSpeed", moveSpeed);
-        animator.SetFloat("AnimSpeed", Time.timeScale);
+        animator.SetFloat("AnimSpeed", 1f);
     }
 
     public void CheckInputDir()
@@ -180,6 +261,26 @@ public class UnitController : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, moveRotation, 20f * Time.deltaTime);
         }
 
+    }
+
+    public void LookForward()
+    {
+        Quaternion moveRotation;
+
+        if (0f < inputDir.magnitude)
+        {
+            moveRotation = Quaternion.LookRotation(inputDir);   
+        }
+        else
+        {
+            Vector3 cameraForward = unitCamera.forward;
+            cameraForward.y = 0;
+            cameraForward.Normalize();
+
+            moveRotation = Quaternion.LookRotation(cameraForward);
+        }
+
+        transform.rotation = moveRotation;
     }
 
     private void LookAround()
@@ -237,6 +338,18 @@ public class UnitController : MonoBehaviour
         stateMachine = new StateMachine(UnitState.IDLE, new IdleState(this));
         stateMachine.AddState(UnitState.MOVE, new MoveState(this));
 
+        stateMachine.AddState(UnitState.COMBO_01, new Combo_01_State(this));
+        stateMachine.AddState(UnitState.COMBO_02, new Combo_02_State(this));
+        stateMachine.AddState(UnitState.COMBO_03, new Combo_03_State(this));
+
+        stateMachine.AddState(UnitState.SMASH_00, new Smash_00_State(this));
+        stateMachine.AddState(UnitState.SMASH_01, new Smash_01_State(this));
+
+        stateMachine.AddState(UnitState.GUARD_01, new GuardState(this));
+
+        stateMachine.AddState(UnitState.EVADE, new EvadeState(this));
+
+
     }
 
     private void InitCamera()
@@ -249,13 +362,6 @@ public class UnitController : MonoBehaviour
         cameraArm = gameObject.transform;
         unitCamera = cameraArm.GetChild(0);
     }
-
-
-    private void ActiveWeapon(bool active)
-    {
-        palmWeapon.SetActive(active);
-    }
-
     private void SetVelocity(ControllerColliderHit hit)
     {
         Vector3 hitPoint = new Vector3(hit.point.x, 0, hit.point.z);
@@ -271,10 +377,57 @@ public class UnitController : MonoBehaviour
         hit.rigidbody.angularVelocity = torque * targetMoveSpeed / mass;
     }
 
-    private void IsAnimationFinished()
+    private void IsWeaponEquipFinished()
     {
         animator.SetBool("IsFinished", true);
     }
+
+    private void IsAnimationFinished()
+    {
+        isAnimationFinished = true;
+    }
+
+    private void IsCombo()
+    {
+        weaponTrigger.enabled = false;
+        isCombo = true;
+    }
+
+    public void EnableWeaponTrigger()
+    {
+        weaponTrigger.enabled = true;
+    }
+    public void DisableWeaponTrigger()
+    {
+        weaponTrigger.enabled = false;
+    }
+
+    public void SetWeaponDamage(int damage)
+    {
+        if (damage <= 1)
+            kanata.Damage = 1;
+        else
+            kanata.Damage *= damage;
+    }
+
+    public void Smash()
+    {
+        smashSpeed = 0;
+        animator.speed = 1f;
+    }
+
+    public void SmashMove()
+    {
+        characterController.Move(transform.forward * Time.deltaTime * smashSpeed);
+    }
+
+    public GameObject _RenderTargetParticle;
+    private void CreateBrush()
+    {
+        GameObject RenderTextureParticle = Instantiate(_RenderTargetParticle, transform.position, Quaternion.identity);
+        Destroy(RenderTextureParticle, 2f);
+    }
+
 
     //IEnumerator CoDelay()
     //{
