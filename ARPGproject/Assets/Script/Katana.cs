@@ -43,6 +43,9 @@ public class Katana : MonoBehaviour
     {
         if (other.CompareTag("Enemy"))
         {
+            if (!isRecoilActive)
+                StartCoroutine(PauseAnimation(recoilDuration));
+
             TestBox enemy = other.gameObject.GetComponent<TestBox>();
 
             if (enemy != null)
@@ -56,10 +59,6 @@ public class Katana : MonoBehaviour
                 Instantiate(particle, collisionPoint, Quaternion.LookRotation(direction));
 
                 enemy.TakeDamage(Damage);
-
-                if (!isRecoilActive)
-                    StartCoroutine(PauseAnimation(recoilDuration));
-
             }
  
         }
