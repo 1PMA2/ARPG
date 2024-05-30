@@ -1,32 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Security;
 using UnityEngine;
 
-public class Katana : MonoBehaviour
+public class Smash : MonoBehaviour
 {
+    public float recoilDuration = 0.2f;
+    private float smashDamage = 10f;
+
     private Recoil recoil;
-    public float recoilDuration = 0.5f;
-
-    //public GameObject particle;
-
-    private int damage = 1;
-    public int Damage
-    {
-        get
-        {
-            return damage;
-        }
-        set
-        {
-            damage = value;
-        }
-    }
-
-    private void Awake()
-    {
-        
-    }
     // Start is called before the first frame update
     void Start()
     {
@@ -58,13 +39,11 @@ public class Katana : MonoBehaviour
                 Vector3 direction = (enemyCenter - collisionPoint).normalized;
 
 
-                EffectManager.Instance.GetEffect(0, collisionPoint, Quaternion.LookRotation(direction), 1f);
+                EffectManager.Instance.GetEffect(0, enemyCenter, Quaternion.LookRotation(direction), 1f);
 
-                enemy.TakeDamage(Damage);
+                enemy.TakeDamage(smashDamage);
             }
- 
+
         }
     }
-
-
 }

@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.Rendering;
 using UnityEngine;
 
 public class CameraManager : Singleton<CameraManager>
@@ -66,4 +65,32 @@ public class CameraManager : Singleton<CameraManager>
         else
             return null;
     }
+
+    public void ShakeCamera(string name, float duration, float magnitude)
+    {
+        StartCoroutine(Shake(GetCamera(name), duration, magnitude));
+    }
+
+    public IEnumerator Shake(GameObject camera, float duration, float magnitude)
+    {
+        Vector3 originalPosition = camera.transform.localPosition;
+
+        float elapsed = 0.0f;
+
+        while (elapsed < duration)
+        {
+            float x = Random.Range(-1f, 1f) * magnitude * (1f - elapsed / duration);
+            float y = Random.Range(-1f, 1f) * magnitude * (1f - elapsed / duration);
+            float z = Random.Range(-1f, 1f) * magnitude * (1f - elapsed / duration);
+
+            camera.transform.localPosition = new Vector3(originalPosition.x + x, originalPosition.y + y, originalPosition.z + z);
+
+            elapsed += Time.deltaTime;
+
+            yield return null; // 다음 프레임까지 대기
+        }
+
+        camera.transform.localPosition = originalPosition;
+    }
+
 }

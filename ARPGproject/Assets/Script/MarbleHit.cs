@@ -20,7 +20,7 @@ public class MarbleHit : MonoBehaviour
             
             if (glowEffect != null)
             {
-                glowEffect.SetGlowIntensity(2f);
+                glowEffect.SetGlowIntensity(3f);
             }
 
             if (shakeCoroutine != null)

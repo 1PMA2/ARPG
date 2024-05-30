@@ -28,8 +28,8 @@ namespace PlayerController
 
         public override void OnUpdateState()
         {
-
-            controller.SmashMove();
+            if(controller.IsSmashMoveStart())
+                controller.SmashMove();
 
             if (controller.CheckAnimation())
             {

@@ -9,7 +9,7 @@ public class TestBox : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        hp = 100;
     }
 
     // Update is called once per frame

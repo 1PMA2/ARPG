@@ -17,7 +17,9 @@ public class UnitController : MonoBehaviour
     [SerializeField] private Transform cameraArm;
     [SerializeField] private Transform unitCamera;
     [SerializeField] private Katana kanata;
+    [SerializeField] private Smash smash;
     private BoxCollider weaponTrigger;
+    private BoxCollider smashTrigger;
      
     [SerializeField] private Quaternion targetRotation;
     [SerializeField] private Vector2 keyDelta = Vector2.zero;
@@ -54,6 +56,7 @@ public class UnitController : MonoBehaviour
         animator = GetComponent<Animator>();
         animator.updateMode = AnimatorUpdateMode.Normal;
         weaponTrigger = kanata.GetComponent<BoxCollider>();
+        smashTrigger = smash.GetComponent<BoxCollider>();
         InitStateMachine();
         InitCamera();
     }
@@ -63,6 +66,7 @@ public class UnitController : MonoBehaviour
         transform.position = DungeonGenerator.Instance.StartPos;
         //StartCoroutine(CoDelay());
         weaponTrigger.enabled = false;
+        smashTrigger.enabled = false;
         ChangeAnimation("Unequip");
     }
 
@@ -402,6 +406,15 @@ public class UnitController : MonoBehaviour
         weaponTrigger.enabled = false;
     }
 
+    public void EnableSmashTrigger()
+    {
+        smashTrigger.enabled = true;
+    }
+    public void DisableSmashTrigger()
+    {
+        smashTrigger.enabled = false;
+    }
+
     public void SetWeaponDamage(int damage)
     {
         if (damage <= 1)
@@ -415,20 +428,21 @@ public class UnitController : MonoBehaviour
         smashSpeed = 0;
         animator.speed = 1f;
     }
+    public bool IsSmashMoveStart()
+    {
+        return smashTrigger.enabled;
+    }
 
     public void SmashMove()
     {
         characterController.Move(transform.forward * Time.deltaTime * smashSpeed);
     }
-
-    public GameObject _RenderTargetParticle;
     private void CreateBrush()
     {
-        GameObject RenderTextureParticle = Instantiate(_RenderTargetParticle, transform.position, Quaternion.identity);
-        Destroy(RenderTextureParticle, 2f);
+        EffectManager.Instance.GetEffect(1, transform.position, Quaternion.identity, 2f);
     }
 
-
+    
     //IEnumerator CoDelay()
     //{
     //    while(true)
