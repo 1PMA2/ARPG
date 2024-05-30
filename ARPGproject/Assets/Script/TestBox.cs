@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class TestBox : MonoBehaviour
 {
-    float hp = 10;
+    private HealthBar healthBar;
+    float hp = 100;
 
-    // Start is called before the first frame update
     void Start()
     {
-        hp = 100;
+        healthBar = UIManager.Instance.CreateHpBar(transform, 0.005f, hp);
+
     }
 
     // Update is called once per frame
@@ -18,10 +19,16 @@ public class TestBox : MonoBehaviour
         
     }
 
+    void LateUpdate()
+    {
+
+    }
+
     public void TakeDamage(float damage)
     {
+        healthBar.TakeDamageHealthBar(damage);
+
         hp -= damage;
-        Debug.Log(hp);
 
         if (hp <= 0)
         {
@@ -31,7 +38,6 @@ public class TestBox : MonoBehaviour
 
     private void Die()
     {
-        // 적이 죽었을 때의 로직
         Destroy(gameObject);
     }
 

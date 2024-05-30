@@ -12,62 +12,67 @@ using Unity.Burst.CompilerServices;
 
 public class UnitController : MonoBehaviour
 {
+    [SerializeField] private bool isPlayer = false;
     // Start is called before the first frame update
     //[SerializeField] private GameObject cameraPrefeb;
     [SerializeField] private Transform cameraArm;
     [SerializeField] private Transform unitCamera;
     [SerializeField] private Katana kanata;
     [SerializeField] private Smash smash;
-    private BoxCollider weaponTrigger;
-    private BoxCollider smashTrigger;
      
     [SerializeField] private Quaternion targetRotation;
     [SerializeField] private Vector2 keyDelta = Vector2.zero;
     [SerializeField] private Vector3 inputDir;
     [SerializeField] private float rotationSpeed = 150f;
-    private float moveSpeed = 0f;
-    //private float animSpeed = 0f;
-    [SerializeField] float targetMoveSpeed = 5;
 
+    [SerializeField] float targetMoveSpeed = 5;
 
     [SerializeField] private Vector2 turnAngle = new Vector2(10, 30);
     [SerializeField] private Vector3 actionZoom = Vector3.zero;
-
     [SerializeField] private float distance = -5f;
+    
+    private BoxCollider weaponTrigger;
+    private BoxCollider smashTrigger;
 
     public Animator animator;
-    private string currentAnimation = "";
-    bool isAnimationFinished = false;
-    bool isCombo = false;
     public CharacterController characterController;
     public StateMachine stateMachine;
 
+    private float moveSpeed = 0f;
+    private string currentAnimation = "";
+    bool isAnimationFinished = false;
+    bool isCombo = false;
 
     public float smashSpeed = 30;
     float verticalSpeed = -10f;
     RaycastHit hit;
 
-    public Material material; // 쉐이더가 적용된 소재
-    //public Transform characterTransform; // 캐릭터의 트랜스폼
-
     private void Awake()
     {
-        characterController = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
         animator.updateMode = AnimatorUpdateMode.Normal;
-        weaponTrigger = kanata.GetComponent<BoxCollider>();
-        smashTrigger = smash.GetComponent<BoxCollider>();
+
+        if(isPlayer)
+        {
+            characterController = GetComponent<CharacterController>();
+            weaponTrigger = kanata.GetComponent<BoxCollider>();
+            smashTrigger = smash.GetComponent<BoxCollider>();
+            InitCamera();
+        }
+        
+        
         InitStateMachine();
-        InitCamera();
     }
     void Start()
     {
-
-        transform.position = DungeonGenerator.Instance.StartPos;
-        //StartCoroutine(CoDelay());
-        weaponTrigger.enabled = false;
-        smashTrigger.enabled = false;
-        ChangeAnimation("Unequip");
+        if (isPlayer)
+        {
+            transform.position = DungeonGenerator.Instance.StartPos;
+            weaponTrigger.enabled = false;
+            smashTrigger.enabled = false;
+            ChangeAnimation("Unequip");
+        }
+        
     }
 
     private void FixedUpdate()
@@ -86,17 +91,21 @@ public class UnitController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown("x"))
+        if (isPlayer)
         {
-            bool isEquip = animator.GetBool("Equip");
+            if (Input.GetKeyDown("x"))
+            {
+                bool isEquip = animator.GetBool("Equip");
 
-            animator.SetBool("IsFinished", false);
-            animator.SetBool("Equip", !isEquip);
+                animator.SetBool("IsFinished", false);
+                animator.SetBool("Equip", !isEquip);
+            }
+
+            CheckInputDir();
+
+            SetGravity();
+
         }
-
-        CheckInputDir();
-
-        SetGravity();
 
         stateMachine?.OnUpdateState();
     }
@@ -137,7 +146,8 @@ public class UnitController : MonoBehaviour
 
     private void LateUpdate()
     {
-        LookAround();
+        if(isPlayer)
+            LookAround();
         
         stateMachine?.OnLateUpdateState();
     }
@@ -339,20 +349,26 @@ public class UnitController : MonoBehaviour
 
     private void InitStateMachine()
     {
-        stateMachine = new StateMachine(UnitState.IDLE, new IdleState(this));
-        stateMachine.AddState(UnitState.MOVE, new MoveState(this));
+        if (isPlayer)
+        {
+            stateMachine = new StateMachine(UnitState.IDLE, new IdleState(this));
+            stateMachine.AddState(UnitState.MOVE, new MoveState(this));
 
-        stateMachine.AddState(UnitState.COMBO_01, new Combo_01_State(this));
-        stateMachine.AddState(UnitState.COMBO_02, new Combo_02_State(this));
-        stateMachine.AddState(UnitState.COMBO_03, new Combo_03_State(this));
+            stateMachine.AddState(UnitState.COMBO_01, new Combo_01_State(this));
+            stateMachine.AddState(UnitState.COMBO_02, new Combo_02_State(this));
+            stateMachine.AddState(UnitState.COMBO_03, new Combo_03_State(this));
 
-        stateMachine.AddState(UnitState.SMASH_00, new Smash_00_State(this));
-        stateMachine.AddState(UnitState.SMASH_01, new Smash_01_State(this));
+            stateMachine.AddState(UnitState.SMASH_00, new Smash_00_State(this));
+            stateMachine.AddState(UnitState.SMASH_01, new Smash_01_State(this));
 
-        stateMachine.AddState(UnitState.GUARD_01, new GuardState(this));
+            stateMachine.AddState(UnitState.GUARD_01, new GuardState(this));
 
-        stateMachine.AddState(UnitState.EVADE, new EvadeState(this));
+            stateMachine.AddState(UnitState.EVADE, new EvadeState(this));
+        }
+        else
+        {
 
+        }
 
     }
 
