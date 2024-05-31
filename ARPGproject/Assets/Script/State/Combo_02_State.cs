@@ -6,7 +6,7 @@ namespace PlayerController
 {
     public class Combo_02_State : BaseState
     {
-        private static bool isCombo;
+        private bool isCombo;
         public Combo_02_State(UnitController controller) : base(controller)
         {
             
@@ -14,6 +14,8 @@ namespace PlayerController
 
         public override void OnEnterState()
         {
+            controller.UnitInfo.currentState = UnitState.COMBO_02;
+
             controller.ChangeAnimation("Combo2", 0.1f, 1.2f);
 
             isCombo = false;
@@ -38,7 +40,10 @@ namespace PlayerController
                 isCombo = true;
 
             if (controller.CheckComboAnimation() && isCombo)
+            {
                 controller.stateMachine.ChangeState(UnitState.COMBO_03);
+                return;
+            }
 
 
             if (controller.CheckAnimation())

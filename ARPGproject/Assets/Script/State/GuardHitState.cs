@@ -3,20 +3,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GuardState : BaseState
+public class GuardHitState : BaseState
 {
-    public GuardState(UnitController controller) : base(controller)
+    public GuardHitState(UnitController controller) : base(controller)
     {
 
     }
 
     public override void OnEnterState()
     {
-        controller.UnitInfo.currentState = UnitState.GUARD_01;
+        controller.UnitInfo.currentState = UnitState.GUARD_02;
 
-        controller.LookForward();
+        controller.ChangeAnimation("GuardHit", 0.2f, 1f);
 
-        controller.ChangeAnimation("Guard", 0.2f, 1f);
+        controller.animator.applyRootMotion = true;
+
     }
 
     public override void OnFixedUpdateState()
@@ -26,13 +27,19 @@ public class GuardState : BaseState
 
     public override void OnUpdateState()
     {
-
-
-        if (controller.CheckAnimation())
+        if(controller.CheckAnimation())
         {
             controller.stateMachine.ChangeState(UnitState.IDLE);
             return;
         }
+
+        if (controller.IsSmash())
+        {
+            controller.stateMachine.ChangeState(UnitState.SMASH_01);
+            return;
+        }
+
+
     }
 
     public override void OnLateUpdateState()

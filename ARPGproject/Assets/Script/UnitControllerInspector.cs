@@ -24,9 +24,6 @@ public class UnitControllerInspector : Editor
 
 
 
-    bool foldout = true;
-
-
     private void OnEnable()
     {
         _isPlayer = serializedObject.FindProperty("isPlayer");

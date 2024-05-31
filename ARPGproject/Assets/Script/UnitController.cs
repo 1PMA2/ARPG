@@ -38,10 +38,18 @@ public class UnitController : MonoBehaviour
     public CharacterController characterController;
     public StateMachine stateMachine;
 
+    private UnitInformation unitInfo;
+    public UnitInformation UnitInfo
+    {
+        get { return unitInfo; }
+        set { unitInfo = value; }
+    }
+
     private float moveSpeed = 0f;
     private string currentAnimation = "";
     bool isAnimationFinished = false;
     bool isCombo = false;
+    bool isSmash = false;
 
     public float smashSpeed = 30;
     float verticalSpeed = -10f;
@@ -49,9 +57,9 @@ public class UnitController : MonoBehaviour
 
     private void Awake()
     {
+        unitInfo = GetComponent<UnitInformation>();
         animator = GetComponent<Animator>();
         animator.updateMode = AnimatorUpdateMode.Normal;
-
         if(isPlayer)
         {
             characterController = GetComponent<CharacterController>();
@@ -109,40 +117,6 @@ public class UnitController : MonoBehaviour
 
         stateMachine?.OnUpdateState();
     }
-    public bool CheckAnimation()
-    {
-        if (isAnimationFinished)
-        {
-            moveSpeed = 0;
-            isAnimationFinished = false;
-            return true;
-        }
-
-        return false;
-    }
-
-    public bool CheckComboAnimation()
-    {
-        if (isCombo)
-        {
-            moveSpeed = 0;
-            isCombo = false;
-            return true;
-        }
-
-        return false;
-    }
-
-
-    public void ChangeAnimation(string animation, float crossfade = 0.2f, float animationSpeed = 1f)
-    {
-        if(currentAnimation != animation)
-        {
-            currentAnimation = animation;
-            animator.CrossFade(animation, crossfade);
-            animator.speed = animationSpeed;
-        }
-    }
 
     private void LateUpdate()
     {
@@ -151,6 +125,30 @@ public class UnitController : MonoBehaviour
         
         stateMachine?.OnLateUpdateState();
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (isPlayer)
+            if (UnitInfo.currentState == UnitState.GUARD_01)
+            {
+                if (other != null)
+                {
+                    Vector3 direction = other.gameObject.GetComponentInParent<UnitController>().transform.position - transform.position;
+          
+                    direction.y = 0f;
+
+                    
+                    if (direction != Vector3.zero)
+                    {
+                        transform.rotation = Quaternion.LookRotation(direction);
+                    }
+                }
+
+                stateMachine.ChangeState(UnitState.GUARD_02);
+            }
+    }
+
+
 
     private void SetGravity()
     {
@@ -185,7 +183,7 @@ public class UnitController : MonoBehaviour
 
     public bool IsGuard()
     {
-        if (Input.GetKey("a") && (0 >= inputDir.magnitude))
+        if (Input.GetKeyDown("a") && (0 >= inputDir.magnitude))
             return true;
 
         return false;
@@ -362,6 +360,7 @@ public class UnitController : MonoBehaviour
             stateMachine.AddState(UnitState.SMASH_01, new Smash_01_State(this));
 
             stateMachine.AddState(UnitState.GUARD_01, new GuardState(this));
+            stateMachine.AddState(UnitState.GUARD_02, new GuardHitState(this));
 
             stateMachine.AddState(UnitState.EVADE, new EvadeState(this));
         }
@@ -429,6 +428,57 @@ public class UnitController : MonoBehaviour
     public void DisableSmashTrigger()
     {
         smashTrigger.enabled = false;
+    }
+
+    public void AbleComboSmashFrame()
+    {
+        isSmash = true;
+    }
+
+    public bool CheckAnimation()
+    {
+        if (isAnimationFinished)
+        {
+            moveSpeed = 0;
+            isAnimationFinished = false;
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool CheckComboAnimation()
+    {
+        if (isCombo)
+        {
+            moveSpeed = 0;
+            isCombo = false;
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool CheckSmashAnimation()
+    {
+        if (isSmash)
+        {
+            moveSpeed = 0;
+            isSmash = false;
+            return true;
+        }
+
+        return false;
+    }
+
+    public void ChangeAnimation(string animation, float crossfade = 0.2f, float animationSpeed = 1f)
+    {
+        if (currentAnimation != animation)
+        {
+            currentAnimation = animation;
+            animator.CrossFade(animation, crossfade, -1, 0f);
+            animator.speed = animationSpeed;
+        }
     }
 
     public void SetWeaponDamage(int damage)

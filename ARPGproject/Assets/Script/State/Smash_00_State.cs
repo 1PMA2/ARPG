@@ -14,6 +14,8 @@ namespace PlayerController
 
         public override void OnEnterState()
         {
+            controller.UnitInfo.currentState = UnitState.SMASH_00;
+
             controller.ChangeAnimation("Smash00");
         }
 

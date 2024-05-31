@@ -6,7 +6,6 @@ namespace PlayerController
 {
     public class IdleState : BaseState
     {
-        private int hashMoveAnimation;
         public IdleState(UnitController controller) : base(controller)
         {
 
@@ -14,7 +13,10 @@ namespace PlayerController
 
         public override void OnEnterState()
         {
+            controller.UnitInfo.currentState = UnitState.IDLE;
+
             controller.animator.applyRootMotion = false;
+
         }
 
         public override void OnFixedUpdateState()
@@ -39,13 +41,19 @@ namespace PlayerController
             if (controller.IsSmash())
                 controller.stateMachine.ChangeState(UnitState.SMASH_00);
 
-            if(controller.IsGuard())
-                controller.stateMachine.ChangeState(UnitState.GUARD_01);
+            //if(controller.IsGuard())
+            //{
+            //    controller.stateMachine.ChangeState(UnitState.GUARD_01);
+            //}
 
             if (controller.IsEvade())
                 controller.stateMachine.ChangeState(UnitState.EVADE);
 
-
+            if (controller.IsGuard() && !isGuardCooldown)
+            {
+                StartGuardCooldown();
+                controller.stateMachine.ChangeState(UnitState.GUARD_01);
+            }
         }
 
         public override void OnLateUpdateState()
@@ -57,6 +65,24 @@ namespace PlayerController
         {
 
         }
+        private float guardCooldown = 0f;
+        private bool isGuardCooldown = false;
 
+        private void StartGuardCooldown()
+        {
+            isGuardCooldown = true;
+            controller.StartCoroutine(GuardCooldown());
+        }
+
+        private IEnumerator GuardCooldown()
+        {
+            guardCooldown = 1f; // Set the cooldown duration
+            while (guardCooldown > 0)
+            {
+                guardCooldown -= Time.deltaTime;
+                yield return null;
+            }
+            isGuardCooldown = false; // Reset the cooldown flag
+        }
     }
 }

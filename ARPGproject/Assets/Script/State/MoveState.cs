@@ -14,6 +14,8 @@ namespace PlayerController
 
         public override void OnEnterState()
         {
+            controller.UnitInfo.currentState = UnitState.MOVE;
+
             controller.animator.applyRootMotion = false;
         }
 

@@ -14,6 +14,8 @@ namespace PlayerController
 
         public override void OnEnterState()
         {
+            controller.UnitInfo.currentState = UnitState.COMBO_03;
+
             controller.ChangeAnimation("Combo3", 0.2f, 1.5f);
 
             controller.LookForward();

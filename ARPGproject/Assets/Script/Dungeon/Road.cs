@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static ITile;
 
 public class Road : MonoBehaviour, ITile
 {
@@ -42,4 +43,24 @@ public class Road : MonoBehaviour, ITile
         leftRoad.SetActive(left);
         RightRoad.SetActive(right);
     }
+
+    public void CloseDoor(Vector2Int dir)
+    {
+
+    }
+
+    public void OpenDoor()
+    {
+
+    }
+
+    public void SetType(TileType tileType)
+    {
+
+    }
+    public void Dest()
+    {
+
+    }
+
 }

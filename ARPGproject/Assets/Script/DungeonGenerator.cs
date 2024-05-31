@@ -22,6 +22,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
 
     [SerializeField] private int width = 10;
     [SerializeField] private int height = 10;
+    int roomCount;
     private int[,] map;
 
     private Vector2Int[] direction = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
@@ -53,6 +54,8 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
         //RandPosSelect();
         InitGrid();
         StartCoroutine(GenerateRoad());
+
+        roomCount = width + height;
     }
     private void Start()
     {
@@ -132,22 +135,26 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
                 stackDir.Push(direction[index]); 
                 stackTile.Push(tile); 
                 tile.OpenWall(direction[index]);
+                tile.CloseDoor(direction[index]);
 
                 pos += direction[index]; 
                 map[pos.x, pos.y] = (int)TILE.CHECK; 
                 CreateRoom(pos.x, pos.y); 
-                tile.OpenWall(direction[index] * -1); 
+                tile.OpenWall(direction[index] * -1);
+                tile.CloseDoor(direction[index] * -1);
             }
             else //갈 수 있는 길이 없을 경우
             {
+                tile.SetType(0);
                 Vector2Int reverseDir = stackDir.Pop() * -1;
                 map[pos.x, pos.y] = (int)TILE.ROAD; 
                 pos += reverseDir; 
                 tile = stackTile.Pop();
                 if (map[pos.x, pos.y] == (int)TILE.ROAD)
                 {
-                    tile.OpenWall(reverseDir); 
+                    tile.OpenWall(reverseDir);
                 }
+               
             }
 
             yield return null;
@@ -155,6 +162,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
         while (pos != end); //현재 위치가 끝 지점일때 종료
 
         tile.OpenWall(Vector2Int.up);
+        tile.SetType(0);
         Instantiate(bossPrefeb, new Vector3(end.x * tileSize, 0, (end.y + 1) * tileSize + 10), Quaternion.identity).transform.SetParent(transform);
 
         stackDir.Clear();
@@ -178,7 +186,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
         Vector3 pos = new Vector3(x * tileSize, 0, z * tileSize);
         int rand = Random.Range(0, 2);
 
-        if(x == 0 && z == 0)
+        if(x == 0 && z == 0) //시작점은 방
             rand = 0;
 
         if (rand == 0)
@@ -186,6 +194,12 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
             GameObject room = Instantiate(roomPrefeb, pos, Quaternion.identity);
             room.transform.SetParent(transform);
             tile = room.GetComponent<Room>();
+
+            int r = 1;//Random.Range(0, 2);
+
+            tile.SetType((ITile.TileType)r);
+
+        
         }
         else
         {

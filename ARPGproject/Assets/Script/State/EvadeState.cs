@@ -12,6 +12,8 @@ public class EvadeState : BaseState
 
     public override void OnEnterState()
     {
+        controller.UnitInfo.currentState = UnitState.EVADE;
+
         controller.LookForward();
 
         controller.ChangeAnimation("Evade", 0.2f, 1.5f);
