@@ -14,6 +14,13 @@ namespace PlayerController
             set { _currentState = value; }
         }
 
+        [SerializeField] private bool isplayer;
+        public bool IsPlayer
+        {
+            get { return isplayer; }
+            set { isplayer = value; }
+        }
+
         [SerializeField] private float health;
         public float Health
         {

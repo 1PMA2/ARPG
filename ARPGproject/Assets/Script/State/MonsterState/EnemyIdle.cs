@@ -15,7 +15,7 @@ public class EnemyIdle : BaseState
     public override void OnEnterState()
     {
         
-        controller.ChangeAnimation("Idle", 0.2f, 1f);
+        controller.ChangeAnimation("Idle", 0f, 1f);
         idleTime = 0;
 
         maxIdleTime = Random.Range(2f, 4f);

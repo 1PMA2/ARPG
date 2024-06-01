@@ -12,7 +12,7 @@ public class MonsterManager : Singleton<MonsterManager>
     private Queue<GameObject> monsterPool = new Queue<GameObject>();
     void Start()
     {
-        //InitializePool(initialPoolSize);
+        InitializePool(initialPoolSize);
     }
 
     private void InitializePool(int poolSize)
@@ -46,7 +46,8 @@ public class MonsterManager : Singleton<MonsterManager>
         if (pool.Count > 0)
         {
             GameObject obj = pool.Dequeue();
-            obj.SetActive(true);
+            StartCoroutine(Delay(obj, 0.1f));
+            obj.transform.position = position;
             return obj;
         }
         else
@@ -54,6 +55,12 @@ public class MonsterManager : Singleton<MonsterManager>
             GameObject obj = Instantiate(monsterPrefab, position, Quaternion.identity);
             return obj;
         }
+    }
+
+    private IEnumerator Delay(GameObject monster, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        monster.SetActive(true);
     }
 
     public void ReturnMonster(GameObject monster)

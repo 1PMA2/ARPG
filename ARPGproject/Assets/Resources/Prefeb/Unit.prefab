@@ -17484,6 +17484,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _currentState: 0
+  isplayer: 1
   health: 10
   damage: 1
 --- !u!114 &5605604160855553131

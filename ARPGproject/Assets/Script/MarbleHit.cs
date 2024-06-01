@@ -95,9 +95,9 @@ public class MarbleHit : MonoBehaviour
 
         while (count < num)
         {
-            randomX = Random.Range(-9, 10);
+            randomX = Random.Range(-8, 9);
             randomY = Random.Range(0, 360);
-            randomZ = Random.Range(-9, 10);
+            randomZ = Random.Range(-8, 9);
             //summon effect
             randomPos = new Vector3(randomX, 0f, randomZ);
 

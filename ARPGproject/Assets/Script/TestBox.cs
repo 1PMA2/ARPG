@@ -12,14 +12,14 @@ public class TestBox : MonoBehaviour
 
     void Start()
     {
-        
+        unitInformation = GetComponent<UnitInformation>();
+        maxHealth = unitInformation.Health;
+        healthBar = UIManager.Instance.CreateHpBar(transform, 0.005f, unitInformation.Health);
     }
 
     private void OnEnable()
     {
-        unitInformation = GetComponent<UnitInformation>();
-        maxHealth = unitInformation.Health;
-        healthBar = UIManager.Instance.CreateHpBar(transform, 0.005f, unitInformation.Health);
+        
     }
 
     private void OnDisable()
@@ -66,7 +66,8 @@ public class TestBox : MonoBehaviour
 
     private void Die()
     {
-        gameObject.SetActive(false);
+        if(!unitInformation.IsPlayer)
+            MonsterManager.Instance.ReturnMonster(gameObject);
     }
 
 }

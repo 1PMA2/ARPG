@@ -121,10 +121,11 @@ public class UnitController : MonoBehaviour
 
     private void OnEnable()
     {
-        //if (!isPlayer)
-        //{
-        //    stateMachine?.ChangeState(UnitState.ENEMY_MOVE);
-        //}
+        if (!isPlayer)
+        {
+            stateMachine?.ChangeState(UnitState.ENEMY_IDLE);
+            nearUnitTransform = null;
+        }
     }
 
     private void OnDisable()
