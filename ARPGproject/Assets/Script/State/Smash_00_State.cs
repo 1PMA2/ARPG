@@ -16,7 +16,7 @@ namespace PlayerController
         {
             controller.UnitInfo.currentState = UnitState.SMASH_00;
 
-            controller.ChangeAnimation("Smash00");
+            controller.ChangeAnimation("Smash00", 0.2f, 0.8f);
         }
 
         public override void OnFixedUpdateState()

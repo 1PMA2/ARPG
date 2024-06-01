@@ -7,12 +7,13 @@ public class SkeletonSword : MonoBehaviour
 {
     private Recoil recoil;
     public float recoilDuration = 0.5f;
-    
 
+    private UnitInformation unitInformation;
     // Start is called before the first frame update
     void Start()
     {
         recoil = GetComponentInParent<Recoil>();
+        unitInformation = GetComponentInParent<UnitInformation>();
     }
 
     // Update is called once per frame
@@ -36,13 +37,17 @@ public class SkeletonSword : MonoBehaviour
                 switch(info.currentState)
                 {
                     case UnitState.GUARD_01:
-                        HitEffect(other);        
+                        HitEffect(other, 2);        
+                        break;
+                    case UnitState.GUARD_02:      
                         break;
                     case UnitState.EVADE:
                         break;
+                    case UnitState.HIT:
+                        break;
                     default:
-                        HitEffect(other);
-                        enemy.TakeDamage(1);
+                        HitEffect(other, 0);
+                        enemy.TakeDamage(unitInformation.Damage);
                         break;
                 }     
             }
@@ -50,7 +55,7 @@ public class SkeletonSword : MonoBehaviour
         }
     }
 
-    private void HitEffect(Collider other)
+    private void HitEffect(Collider other, int index)
     {
         recoil.StartRecoil(recoilDuration);
 
@@ -62,6 +67,6 @@ public class SkeletonSword : MonoBehaviour
 
         Vector3 direction = (enemyCenter - collisionPoint).normalized;
 
-        EffectManager.Instance.GetEffect(0, collisionPoint, Quaternion.LookRotation(direction), 1f);
+        EffectManager.Instance.GetEffect(index, enemyCenter, Quaternion.LookRotation(direction), 1f);
     }
 }

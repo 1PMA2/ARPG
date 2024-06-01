@@ -6,7 +6,7 @@ namespace PlayerController
 {
     public class Combo_03_State : BaseState
     {
-        private int hashMoveAnimation;
+        private int comboDamage = 3;
         public Combo_03_State(UnitController controller) : base(controller)
         {
             
@@ -16,7 +16,7 @@ namespace PlayerController
         {
             controller.UnitInfo.currentState = UnitState.COMBO_03;
 
-            controller.ChangeAnimation("Combo3", 0.2f, 1.5f);
+            controller.ChangeAnimation("Combo3", 0f, 1.5f);
 
             controller.LookForward();
 
@@ -24,7 +24,7 @@ namespace PlayerController
 
             controller.DisableWeaponTrigger();
 
-            controller.SetWeaponDamage(3);
+            controller.SetWeaponDamage(comboDamage);
 
         }
 

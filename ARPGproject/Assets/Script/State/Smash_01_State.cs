@@ -8,7 +8,6 @@ namespace PlayerController
     {
         private bool isSmash;
         private float initialSmashSpeed = 50f;
-        private float comboSmashSpeed = 30f;
         public Smash_01_State(UnitController controller) : base(controller)
         {
             
@@ -16,9 +15,13 @@ namespace PlayerController
 
         public override void OnEnterState()
         {
+            controller.animator.applyRootMotion = false;
+
             controller.UnitInfo.currentState = UnitState.SMASH_01;
 
             controller.gameObject.layer = 8;
+
+            controller.animator.Play("Smash01", 0, 0);
 
             controller.ChangeAnimation("Smash01",0.2f, 2f);
 
@@ -34,13 +37,21 @@ namespace PlayerController
 
         public override void OnUpdateState()
         {
+            if (controller.IsSmash())
+                isSmash = true;
+
             if(controller.IsSmashMoveStart())
                 controller.SmashMove();
 
-            //ComboSmash();
-
             if (controller.CheckAnimation())
             {
+                if (controller.IsCounter && isSmash)
+                {
+                    ComboSmash();
+                    isSmash = false;
+                    return;
+                }
+
                 controller.stateMachine.ChangeState(UnitState.IDLE);
                 controller.SetEquip(true);
             }
@@ -62,19 +73,22 @@ namespace PlayerController
 
         private void ComboSmash()
         {
-            if (controller.IsSmash())//Å³Á¶°Ç
+
+            controller.animator.CrossFade("Smash01", 0.2f, -1, 0f);
+            controller.animator.speed = 2f;
+            controller.smashSpeed = 50f;
+
+            if(controller.InputDir.magnitude <= 0)
             {
-                isSmash = true;
+                Vector3 currentRotation = controller.transform.rotation.eulerAngles;
+                currentRotation.y += 180;
+                controller.transform.rotation = Quaternion.Euler(currentRotation);
             }
-            if (controller.CheckSmashAnimation() && isSmash)
+            else
             {
-                controller.animator.CrossFade("Smash01", 0.2f, -1, 0f);
-                controller.animator.speed = 2f;
-                controller.smashSpeed = 50f;
-                controller.LookForward();
-                isSmash = false;
-                return;
+                controller.transform.rotation = Quaternion.LookRotation(controller.InputDir);
             }
+            controller.IsCounter = false;
         }
     }
 }

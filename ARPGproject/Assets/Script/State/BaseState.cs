@@ -17,6 +17,11 @@ namespace PlayerController
         GUARD_01,
         GUARD_02,
         EVADE,
+        HIT,
+        ENEMY_IDLE,
+        ENEMY_MOVE,
+        ENEMY_PATROL,
+        ENEMY_ATTACK,
         END
     }
 

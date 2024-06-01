@@ -7,6 +7,7 @@ namespace PlayerController
     public class Combo_02_State : BaseState
     {
         private bool isCombo;
+        private int comboDamage = 1;
         public Combo_02_State(UnitController controller) : base(controller)
         {
             
@@ -16,7 +17,7 @@ namespace PlayerController
         {
             controller.UnitInfo.currentState = UnitState.COMBO_02;
 
-            controller.ChangeAnimation("Combo2", 0.1f, 1.2f);
+            controller.ChangeAnimation("Combo2", 0f, 1.2f);
 
             isCombo = false;
 
@@ -24,7 +25,7 @@ namespace PlayerController
 
             controller.animator.applyRootMotion = true;
 
-            controller.SetWeaponDamage(1);
+            controller.SetWeaponDamage(comboDamage);
         }
 
         public override void OnFixedUpdateState()
@@ -60,7 +61,7 @@ namespace PlayerController
 
         public override void OnExitState()
         {
-            
+            controller.SetEquip(true);
         }
 
     }

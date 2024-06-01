@@ -7,11 +7,25 @@ public class TestBox : MonoBehaviour
 {
 
     private HealthBar healthBar;
-    float hp = 100;
+    private UnitInformation unitInformation;
+    private float maxHealth;
 
     void Start()
     {
-        healthBar = UIManager.Instance.CreateHpBar(transform, 0.005f, hp);
+        unitInformation = GetComponent<UnitInformation>();
+        maxHealth = unitInformation.Health;
+        healthBar = UIManager.Instance.CreateHpBar(transform, 0.005f, unitInformation.Health);
+    }
+
+    private void OnEnable()
+    {
+        
+    }
+
+    private void OnDisable()
+    {
+        unitInformation.Health = maxHealth;
+        healthBar.SetHealth(maxHealth);
     }
 
     // Update is called once per frame
@@ -28,9 +42,9 @@ public class TestBox : MonoBehaviour
     public void TakeDamage(float damage)
     {
         healthBar.TakeDamageHealthBar(damage);
-        hp -= damage;
+        unitInformation.Health -= damage;
 
-        if (hp <= 0)
+        if (unitInformation.Health <= 0)
         {
             Die();
         }
@@ -38,7 +52,7 @@ public class TestBox : MonoBehaviour
 
     private void Die()
     {
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 
 }

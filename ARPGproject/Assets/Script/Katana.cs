@@ -1,3 +1,4 @@
+using PlayerController;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security;
@@ -7,21 +8,7 @@ public class Katana : MonoBehaviour
 {
     private Recoil recoil;
     public float recoilDuration = 0.5f;
-
-    //public GameObject particle;
-
-    private int damage = 1;
-    public int Damage
-    {
-        get
-        {
-            return damage;
-        }
-        set
-        {
-            damage = value;
-        }
-    }
+    private UnitInformation unitInformation;
 
     private void Awake()
     {
@@ -31,6 +18,7 @@ public class Katana : MonoBehaviour
     void Start()
     {
         recoil = GetComponentInParent<Recoil>();
+        unitInformation = GetComponentInParent<UnitInformation>();
     }
 
     // Update is called once per frame
@@ -60,7 +48,7 @@ public class Katana : MonoBehaviour
 
                 EffectManager.Instance.GetEffect(0, collisionPoint, Quaternion.LookRotation(direction), 1f);
 
-                enemy.TakeDamage(Damage);
+                enemy.TakeDamage(unitInformation.Damage);
             }
  
         }

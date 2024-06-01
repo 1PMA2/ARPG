@@ -7,7 +7,7 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private List<GameObject> uiPrefabList;
     private List<Canvas> billboardList = new List<Canvas>();
 
-    float billboardOffset = 2.5f;
+    float billboardOffset = 3f;
     // Start is called before the first frame update
     void Start()
     {

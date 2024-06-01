@@ -19,6 +19,8 @@ public class EvadeState : BaseState
         controller.ChangeAnimation("Evade", 0.2f, 1.5f);
 
         controller.animator.applyRootMotion = true;
+
+        controller.gameObject.layer = 8;
     }
 
     public override void OnFixedUpdateState()
@@ -39,6 +41,7 @@ public class EvadeState : BaseState
 
     public override void OnExitState()
     {
+        controller.gameObject.layer = 0;
         controller.SetEquip(true);
     }
 }

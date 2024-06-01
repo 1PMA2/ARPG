@@ -8,6 +8,7 @@ using UnityEngine;
 public class UnitControllerInspector : Editor
 {
     private SerializedProperty _isPlayer;
+    private SerializedProperty _player;
     private SerializedProperty _cameraArm;
     private SerializedProperty _unitCamera;
     private SerializedProperty _kanata;
@@ -21,12 +22,14 @@ public class UnitControllerInspector : Editor
     private SerializedProperty _actionZoom;
     private SerializedProperty _distance;
     private SerializedProperty _smashSpeed;
+    private SerializedProperty _weaponTrigger;
 
 
 
     private void OnEnable()
     {
         _isPlayer = serializedObject.FindProperty("isPlayer");
+        _player = serializedObject.FindProperty("player");
         _cameraArm = serializedObject.FindProperty("cameraArm");
         _unitCamera = serializedObject.FindProperty("unitCamera");
         _kanata = serializedObject.FindProperty("kanata");
@@ -40,6 +43,8 @@ public class UnitControllerInspector : Editor
         _actionZoom = serializedObject.FindProperty("actionZoom");
         _distance = serializedObject.FindProperty("distance");
         _smashSpeed = serializedObject.FindProperty("smashSpeed");
+        _weaponTrigger = serializedObject.FindProperty("weaponTrigger");
+
     }
     public override void OnInspectorGUI()
     {
@@ -65,6 +70,9 @@ public class UnitControllerInspector : Editor
             EditorGUILayout.PropertyField(_distance);
             EditorGUILayout.PropertyField(_smashSpeed);
         }
+
+        EditorGUILayout.PropertyField(_weaponTrigger);
+        EditorGUILayout.PropertyField(_player);
 
         serializedObject.ApplyModifiedProperties();
     }

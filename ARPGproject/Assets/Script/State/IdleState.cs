@@ -13,6 +13,8 @@ namespace PlayerController
 
         public override void OnEnterState()
         {
+
+
             controller.UnitInfo.currentState = UnitState.IDLE;
 
             controller.animator.applyRootMotion = false;
@@ -40,11 +42,6 @@ namespace PlayerController
 
             if (controller.IsSmash())
                 controller.stateMachine.ChangeState(UnitState.SMASH_00);
-
-            //if(controller.IsGuard())
-            //{
-            //    controller.stateMachine.ChangeState(UnitState.GUARD_01);
-            //}
 
             if (controller.IsEvade())
                 controller.stateMachine.ChangeState(UnitState.EVADE);

@@ -26,8 +26,6 @@ public class GuardState : BaseState
 
     public override void OnUpdateState()
     {
-
-
         if (controller.CheckAnimation())
         {
             controller.stateMachine.ChangeState(UnitState.IDLE);

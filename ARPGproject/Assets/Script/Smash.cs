@@ -1,3 +1,4 @@
+using PlayerController;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,13 +6,16 @@ using UnityEngine;
 public class Smash : MonoBehaviour
 {
     public float recoilDuration = 0.2f;
-    private float smashDamage = 10f;
+    private float smashDamage = 5f;
 
     private Recoil recoil;
+    private UnitInformation unitInformation;
     // Start is called before the first frame update
     void Start()
     {
+        smashDamage = 5f;
         recoil = GetComponentInParent<Recoil>();
+        unitInformation = GetComponentInParent<UnitInformation>();
     }
 
     // Update is called once per frame
@@ -41,7 +45,7 @@ public class Smash : MonoBehaviour
 
                 EffectManager.Instance.GetEffect(0, enemyCenter, Quaternion.LookRotation(direction), 1f);
 
-                enemy.TakeDamage(smashDamage);
+                enemy.TakeDamage(unitInformation.Damage * smashDamage);
             }
 
         }

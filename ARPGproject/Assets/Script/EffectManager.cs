@@ -10,6 +10,7 @@ public class EffectManager : Singleton<EffectManager>
 
     private Queue<GameObject> particlePool = new Queue<GameObject>();
     private Queue<GameObject> BrushPool = new Queue<GameObject>();
+    private Queue<GameObject> guardParticlePool = new Queue<GameObject>();
 
     // Start is called before the first frame update
     void Start()
@@ -17,6 +18,8 @@ public class EffectManager : Singleton<EffectManager>
         InitEffectPool(particleInitialSize, effectPrefabList[0], particlePool);
 
         InitEffectPool(particleInitialSize, effectPrefabList[1], BrushPool);
+
+        InitEffectPool(particleInitialSize, effectPrefabList[2], guardParticlePool);
 
     }
 

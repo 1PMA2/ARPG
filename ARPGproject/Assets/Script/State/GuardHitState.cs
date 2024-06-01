@@ -14,10 +14,11 @@ public class GuardHitState : BaseState
     {
         controller.UnitInfo.currentState = UnitState.GUARD_02;
 
-        controller.ChangeAnimation("GuardHit", 0.2f, 1f);
+        controller.animator.Play("GuardHit", 0, 0);
+
+        controller.ChangeAnimation("GuardHit", 0f, 0.8f);
 
         controller.animator.applyRootMotion = true;
-
     }
 
     public override void OnFixedUpdateState()
@@ -27,18 +28,18 @@ public class GuardHitState : BaseState
 
     public override void OnUpdateState()
     {
-        if(controller.CheckAnimation())
+        if (controller.IsSmash())
+        {
+            controller.stateMachine.ChangeState(UnitState.SMASH_01);
+            controller.IsCounter = true;
+            return;
+        }
+
+        if (controller.CheckAnimation())
         {
             controller.stateMachine.ChangeState(UnitState.IDLE);
             return;
         }
-
-        if (controller.IsSmash())
-        {
-            controller.stateMachine.ChangeState(UnitState.SMASH_01);
-            return;
-        }
-
 
     }
 

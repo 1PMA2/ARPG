@@ -10,8 +10,18 @@ using StateMachine = PlayerController.StateMachine;
 using System.Linq;
 using Unity.Burst.CompilerServices;
 
+
 public class UnitController : MonoBehaviour
 {
+    [SerializeField] private GameObject player;
+    public GameObject Player
+    {
+        get { return player; }
+        set { player = value; }
+    }
+
+    public float attackRange = 1f;
+
     [SerializeField] private bool isPlayer = false;
     // Start is called before the first frame update
     //[SerializeField] private GameObject cameraPrefeb;
@@ -23,6 +33,10 @@ public class UnitController : MonoBehaviour
     [SerializeField] private Quaternion targetRotation;
     [SerializeField] private Vector2 keyDelta = Vector2.zero;
     [SerializeField] private Vector3 inputDir;
+    public Vector3 InputDir
+    {
+        get { return inputDir; }
+    }
     [SerializeField] private float rotationSpeed = 150f;
 
     [SerializeField] float targetMoveSpeed = 5;
@@ -30,8 +44,8 @@ public class UnitController : MonoBehaviour
     [SerializeField] private Vector2 turnAngle = new Vector2(10, 30);
     [SerializeField] private Vector3 actionZoom = Vector3.zero;
     [SerializeField] private float distance = -5f;
-    
-    private BoxCollider weaponTrigger;
+
+    [SerializeField] private BoxCollider weaponTrigger;
     private BoxCollider smashTrigger;
 
     public Animator animator;
@@ -44,12 +58,16 @@ public class UnitController : MonoBehaviour
         get { return unitInfo; }
         set { unitInfo = value; }
     }
-
     private float moveSpeed = 0f;
     private string currentAnimation = "";
     bool isAnimationFinished = false;
     bool isCombo = false;
     bool isSmash = false;
+    bool isCounter;
+    public bool IsCounter
+    {
+        get; set;
+    }
 
     public float smashSpeed = 30;
     float verticalSpeed = -10f;
@@ -57,15 +75,18 @@ public class UnitController : MonoBehaviour
 
     private void Awake()
     {
-        unitInfo = GetComponent<UnitInformation>();
+        
         animator = GetComponent<Animator>();
+        characterController = GetComponent<CharacterController>();
         animator.updateMode = AnimatorUpdateMode.Normal;
+
         if(isPlayer)
         {
-            characterController = GetComponent<CharacterController>();
+            unitInfo = GetComponent<UnitInformation>();
             weaponTrigger = kanata.GetComponent<BoxCollider>();
             smashTrigger = smash.GetComponent<BoxCollider>();
             InitCamera();
+            isCounter = false;
         }
         
         
@@ -76,11 +97,11 @@ public class UnitController : MonoBehaviour
         if (isPlayer)
         {
             transform.position = DungeonGenerator.Instance.StartPos;
-            weaponTrigger.enabled = false;
             smashTrigger.enabled = false;
             ChangeAnimation("Unequip");
         }
-        
+
+        weaponTrigger.enabled = false;
     }
 
     private void FixedUpdate()
@@ -90,9 +111,17 @@ public class UnitController : MonoBehaviour
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {    
-        if (hit.rigidbody)
+        //if (hit.rigidbody)
+        //{
+        //    SetVelocity(hit);
+        //}
+    }
+
+    private void OnDisable()
+    {
+        if(!isPlayer)
         {
-            SetVelocity(hit);
+            stateMachine.ChangeState(UnitState.ENEMY_IDLE);
         }
     }
 
@@ -111,9 +140,9 @@ public class UnitController : MonoBehaviour
 
             CheckInputDir();
 
-            SetGravity();
 
         }
+        SetGravity();
 
         stateMachine?.OnUpdateState();
     }
@@ -129,23 +158,43 @@ public class UnitController : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (isPlayer)
-            if (UnitInfo.currentState == UnitState.GUARD_01)
-            {
+        {
+            if(other.CompareTag("Untagged"))
+                HitChangeState(other);
+        }
+            
+    }
+    private void HitChangeState(Collider other)
+    {
+        switch (UnitInfo.currentState)
+        {
+            case UnitState.GUARD_01:
                 if (other != null)
                 {
                     Vector3 direction = other.gameObject.GetComponentInParent<UnitController>().transform.position - transform.position;
-          
+
                     direction.y = 0f;
 
-                    
                     if (direction != Vector3.zero)
                     {
                         transform.rotation = Quaternion.LookRotation(direction);
                     }
                 }
-
                 stateMachine.ChangeState(UnitState.GUARD_02);
-            }
+                break;
+            case UnitState.GUARD_02:
+                break;
+            case UnitState.EVADE:
+                break;
+            case UnitState.SMASH_00:
+                break;
+            case UnitState.SMASH_01:
+                break;
+            default:
+                stateMachine.ChangeState(UnitState.HIT);
+                break;
+        }
+
     }
 
 
@@ -183,7 +232,7 @@ public class UnitController : MonoBehaviour
 
     public bool IsGuard()
     {
-        if (Input.GetKeyDown("a") && (0 >= inputDir.magnitude))
+        if (Input.GetKey("a") && (0 >= inputDir.magnitude))
             return true;
 
         return false;
@@ -266,7 +315,7 @@ public class UnitController : MonoBehaviour
     public void LookDiraction() //카메라 방향이 정면으로 되는 움직임 구현
     {
 
-        if (0f < inputDir.magnitude)
+        if (0f < inputDir.magnitude) //방향키 입력이 되었을때
         {
             Quaternion moveRotation = Quaternion.LookRotation(inputDir);
 
@@ -362,11 +411,16 @@ public class UnitController : MonoBehaviour
             stateMachine.AddState(UnitState.GUARD_01, new GuardState(this));
             stateMachine.AddState(UnitState.GUARD_02, new GuardHitState(this));
 
+            stateMachine.AddState(UnitState.HIT, new HitState(this));
+
             stateMachine.AddState(UnitState.EVADE, new EvadeState(this));
         }
         else
         {
-
+            stateMachine = new StateMachine(UnitState.ENEMY_IDLE, new EnemyIdle(this));
+            stateMachine.AddState(UnitState.ENEMY_PATROL, new EnemyPatrol(this));
+            stateMachine.AddState(UnitState.ENEMY_ATTACK, new EnemyAttack(this));
+            stateMachine.AddState(UnitState.ENEMY_MOVE, new EnemyMove(this));
         }
 
     }
@@ -484,9 +538,9 @@ public class UnitController : MonoBehaviour
     public void SetWeaponDamage(int damage)
     {
         if (damage <= 1)
-            kanata.Damage = 1;
+            unitInfo.Damage = 1;
         else
-            kanata.Damage *= damage;
+            unitInfo.Damage *= damage;
     }
 
     public void Smash()

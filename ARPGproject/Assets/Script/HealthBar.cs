@@ -14,7 +14,7 @@ public class HealthBar : MonoBehaviour
 
     void Start()
     {
-        
+        lerpSpeed = 3f;
     }
 
     // Update is called once per frame
