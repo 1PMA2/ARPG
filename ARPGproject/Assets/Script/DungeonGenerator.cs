@@ -3,12 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
 
 public class DungeonGenerator : Singleton<DungeonGenerator>
 {
-
+    public GameObject player;
     enum TILE { ROAD = 0, WALL, CHECK, START, BOSS };
 
     private GameObject roomPrefeb;
@@ -55,6 +56,8 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
         InitGrid();
         StartCoroutine(GenerateRoad());
 
+        Instantiate(player);
+
         roomCount = width + height;
     }
     private void Start()
@@ -64,6 +67,15 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            UIManager.Instance.Restart();
+            EffectManager.Instance.Restart();
+
+            Scene currentScene = SceneManager.GetActiveScene();
+            SceneManager.LoadScene(currentScene.name);
+           
+        }
     }
 
     void InitGrid()

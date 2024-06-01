@@ -17,7 +17,7 @@ namespace PlayerController
         {
             controller.UnitInfo.currentState = UnitState.COMBO_01;
 
-            controller.ChangeAnimation("Combo1",0.2f, 1.2f);
+            controller.ChangeAnimation("Combo1", 0.2f, 1.2f);         
 
             isCombo = false;
 

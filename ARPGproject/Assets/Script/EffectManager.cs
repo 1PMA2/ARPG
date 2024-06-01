@@ -84,6 +84,35 @@ public class EffectManager : Singleton<EffectManager>
         ReturnObject(effectPools[effectIndex], effect);
     }
 
+    public void Restart()
+    {
+        foreach (GameObject particle in particlePool)
+        {
+            Destroy(particle);
+        }
+        particlePool.Clear();
+
+        foreach (GameObject Brush in BrushPool)
+        {
+            Destroy(Brush);
+        }
+        BrushPool.Clear();
+
+        foreach (GameObject guardParticle in guardParticlePool)
+        {
+            Destroy(guardParticle);
+        }
+        guardParticlePool.Clear();
+
+        InitEffectPool(particleInitialSize, effectPrefabList[0], particlePool);
+
+        InitEffectPool(particleInitialSize, effectPrefabList[1], BrushPool);
+
+        InitEffectPool(particleInitialSize, effectPrefabList[2], guardParticlePool);
+
+        Destroy(gameObject);
+    }
+
     private IEnumerator ReturnEffectAfterDelay(int effectIndex, GameObject effect, float delay)
     {
         yield return new WaitForSeconds(delay);

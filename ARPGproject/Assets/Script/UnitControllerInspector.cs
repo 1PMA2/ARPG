@@ -25,11 +25,9 @@ public class UnitControllerInspector : Editor
     private SerializedProperty _weaponTrigger;
 
 
-
     private void OnEnable()
     {
         _isPlayer = serializedObject.FindProperty("isPlayer");
-        _player = serializedObject.FindProperty("player");
         _cameraArm = serializedObject.FindProperty("cameraArm");
         _unitCamera = serializedObject.FindProperty("unitCamera");
         _kanata = serializedObject.FindProperty("kanata");
@@ -72,7 +70,9 @@ public class UnitControllerInspector : Editor
         }
 
         EditorGUILayout.PropertyField(_weaponTrigger);
-        EditorGUILayout.PropertyField(_player);
+        UnitController unitController = (UnitController)target;
+
+        unitController.nearUnitTransform = (Transform)EditorGUILayout.ObjectField("Near Transform", unitController.nearUnitTransform, typeof(Transform), true);
 
         serializedObject.ApplyModifiedProperties();
     }

@@ -13,19 +13,11 @@ using Unity.Burst.CompilerServices;
 
 public class UnitController : MonoBehaviour
 {
-    [SerializeField] private GameObject player;
-    public GameObject Player
-    {
-        get { return player; }
-        set { player = value; }
-    }
-
-    public float attackRange = 1f;
-
+   
     [SerializeField] private bool isPlayer = false;
     // Start is called before the first frame update
     //[SerializeField] private GameObject cameraPrefeb;
-    [SerializeField] private Transform cameraArm;
+    [SerializeField] private GameObject cameraArm;
     [SerializeField] private Transform unitCamera;
     [SerializeField] private Katana kanata;
     [SerializeField] private Smash smash;
@@ -52,6 +44,14 @@ public class UnitController : MonoBehaviour
     public CharacterController characterController;
     public StateMachine stateMachine;
 
+    private UnitChecker unitChecker;
+    public UnitChecker UnitChecker
+    {
+        get { return unitChecker; }
+        set { unitChecker = value; }
+    }
+    public Transform nearUnitTransform;
+
     private UnitInformation unitInfo;
     public UnitInformation UnitInfo
     {
@@ -60,13 +60,14 @@ public class UnitController : MonoBehaviour
     }
     private float moveSpeed = 0f;
     private string currentAnimation = "";
-    bool isAnimationFinished = false;
+    public bool isAnimationFinished = false;
     bool isCombo = false;
     bool isSmash = false;
-    bool isCounter;
+    private bool isCounter;
     public bool IsCounter
     {
-        get; set;
+        get { return isCounter; }
+        set { isCounter = value; }
     }
 
     public float smashSpeed = 30;
@@ -79,6 +80,7 @@ public class UnitController : MonoBehaviour
         animator = GetComponent<Animator>();
         characterController = GetComponent<CharacterController>();
         animator.updateMode = AnimatorUpdateMode.Normal;
+        unitChecker = GetComponent<UnitChecker>();
 
         if(isPlayer)
         {
@@ -121,6 +123,7 @@ public class UnitController : MonoBehaviour
     {
         if(!isPlayer)
         {
+            animator.keepAnimatorControllerStateOnDisable = true;
             stateMachine.ChangeState(UnitState.ENEMY_IDLE);
         }
     }
@@ -139,10 +142,10 @@ public class UnitController : MonoBehaviour
             }
 
             CheckInputDir();
-
-
         }
         SetGravity();
+
+        nearUnitTransform = unitChecker.InNearUnitTransform();
 
         stateMachine?.OnUpdateState();
     }
@@ -334,11 +337,20 @@ public class UnitController : MonoBehaviour
         }
         else
         {
-            Vector3 cameraForward = unitCamera.forward;
-            cameraForward.y = 0;
-            cameraForward.Normalize();
-
-            moveRotation = Quaternion.LookRotation(cameraForward);
+            Transform nearUnitTransform = unitChecker.InNearUnitTransform();
+            if (nearUnitTransform != null)
+            {
+                Vector3 directionToNearUnit = nearUnitTransform.position - transform.position;
+                directionToNearUnit.y = 0; // y 축 방향을 무시하고 수평 방향으로만 향하도록 설정
+                moveRotation = Quaternion.LookRotation(directionToNearUnit);
+            }
+            else
+            {
+                Vector3 cameraForward = unitCamera.forward;
+                cameraForward.y = 0;
+                cameraForward.Normalize();
+                moveRotation = Quaternion.LookRotation(cameraForward);
+            }
         }
 
         transform.rotation = moveRotation;
@@ -346,7 +358,7 @@ public class UnitController : MonoBehaviour
 
     private void LookAround()
     {
-        Vector3 camAngle = cameraArm.rotation.eulerAngles;
+        Vector3 camAngle = cameraArm.transform.rotation.eulerAngles;
 
         if (Input.GetKey("q"))
         {
@@ -379,14 +391,14 @@ public class UnitController : MonoBehaviour
         keyDelta.y %= 360f;
 
         targetRotation = Quaternion.Euler(keyDelta.y, keyDelta.x, 0);
-        cameraArm.rotation = Quaternion.Euler(camAngle.x, camAngle.y, 0); //z축 회전 고정
+        cameraArm.transform.rotation = Quaternion.Euler(camAngle.x, camAngle.y, 0); //z축 회전 고정
         // 시간을 사용하여 회전 보간
-        cameraArm.rotation = Quaternion.Slerp(cameraArm.rotation, targetRotation, Time.deltaTime * 10f);
+        cameraArm.transform.rotation = Quaternion.Slerp(cameraArm.transform.rotation, targetRotation, Time.deltaTime * 10f);
 
         // 스무딩 카메라
         //Vector3 targetPos = new Vector3(transform.position.x, transform.position.y + cameraArm.position.y, transform.position.z);
-        cameraArm.position = Vector3.Lerp(cameraArm.position, transform.position, Time.deltaTime * 5f);
-        cameraArm.position = new Vector3(cameraArm.position.x, transform.position.y, cameraArm.position.z);
+        cameraArm.transform.position = Vector3.Lerp(cameraArm.transform.position, transform.position, Time.deltaTime * 5f);
+        cameraArm.transform.position = new Vector3(cameraArm.transform.position.x, transform.position.y, cameraArm.transform.position.z);
 
         //휠로 캐릭터 줌
         distance += Input.GetAxis("Mouse ScrollWheel") * 5;
@@ -427,13 +439,9 @@ public class UnitController : MonoBehaviour
 
     private void InitCamera()
     {
-        CameraManager.Instance.CamRegister("PlayerCamera", this.gameObject);    
-    }
-
-    public void StickCamera(GameObject gameObject)
-    {
-        cameraArm = gameObject.transform;
-        unitCamera = cameraArm.GetChild(0);
+        cameraArm = Instantiate(cameraArm);
+        unitCamera = cameraArm.transform.GetChild(0);
+        CameraManager.Instance.CamRegister("PlayerCamera", cameraArm);
     }
     private void SetVelocity(ControllerColliderHit hit)
     {
@@ -458,6 +466,11 @@ public class UnitController : MonoBehaviour
     private void IsAnimationFinished()
     {
         isAnimationFinished = true;
+    }
+
+    public void IsAnimationStart()
+    {
+        isAnimationFinished = false;
     }
 
     private void IsCombo()
@@ -530,7 +543,9 @@ public class UnitController : MonoBehaviour
         if (currentAnimation != animation)
         {
             currentAnimation = animation;
-            animator.CrossFade(animation, crossfade, -1, 0f);
+
+            animator.CrossFade(animation, crossfade);
+
             animator.speed = animationSpeed;
         }
     }

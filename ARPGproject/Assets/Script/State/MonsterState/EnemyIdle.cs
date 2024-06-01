@@ -19,6 +19,8 @@ public class EnemyIdle : BaseState
         idleTime = 0;
 
         maxIdleTime = Random.Range(2f, 4f);
+
+        
     }
 
     public override void OnFixedUpdateState()
@@ -30,9 +32,13 @@ public class EnemyIdle : BaseState
     {
 
             idleTime += Time.deltaTime;
+
             if (idleTime >= maxIdleTime)
             {
-                controller.stateMachine.ChangeState(UnitState.ENEMY_PATROL);
+                if (controller.nearUnitTransform != null)
+                {
+                    controller.stateMachine.ChangeState(UnitState.ENEMY_PATROL);         
+                }
             }
     }
 

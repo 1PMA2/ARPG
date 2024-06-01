@@ -68,7 +68,7 @@ namespace PlayerController
 
         public override void OnExitState()
         {
-            controller.gameObject.layer = 0;
+            controller.gameObject.layer = 7;
         }
 
         private void ComboSmash()

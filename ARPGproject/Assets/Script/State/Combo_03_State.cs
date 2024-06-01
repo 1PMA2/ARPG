@@ -16,8 +16,8 @@ namespace PlayerController
         {
             controller.UnitInfo.currentState = UnitState.COMBO_03;
 
-            controller.ChangeAnimation("Combo3", 0f, 1.5f);
-
+            controller.ChangeAnimation("Combo3", 0.02f, 1.5f);
+            
             controller.LookForward();
 
             controller.animator.applyRootMotion = true;
@@ -41,6 +41,7 @@ namespace PlayerController
             {
                 controller.stateMachine.ChangeState(UnitState.IDLE);
                 controller.SetEquip(true);
+                return;
             }
 
 

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class UIManager : Singleton<UIManager>
 {
@@ -52,5 +53,11 @@ public class UIManager : Singleton<UIManager>
             }
            
         }
+    }
+
+    public void Restart()
+    {
+        billboardList.Clear();
+        Destroy(gameObject);
     }
 }

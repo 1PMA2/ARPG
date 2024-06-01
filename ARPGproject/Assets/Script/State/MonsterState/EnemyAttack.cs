@@ -43,7 +43,10 @@ public class EnemyAttack : BaseState
 
     private void LookAtPlayer()
     {
-        Quaternion targetRotation = Quaternion.LookRotation(controller.Player.transform.position - controller.transform.position);
-        controller.transform.rotation = Quaternion.Slerp(controller.transform.rotation, targetRotation, 2f * Time.deltaTime);
+        if (controller.nearUnitTransform != null)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(controller.nearUnitTransform.position - controller.transform.position);
+            controller.transform.rotation = Quaternion.Slerp(controller.transform.rotation, targetRotation, 2f * Time.deltaTime);
+        }
     }
 }

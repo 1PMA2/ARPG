@@ -41,7 +41,7 @@ public class EvadeState : BaseState
 
     public override void OnExitState()
     {
-        controller.gameObject.layer = 0;
+        controller.gameObject.layer = 7;
         controller.SetEquip(true);
     }
 }

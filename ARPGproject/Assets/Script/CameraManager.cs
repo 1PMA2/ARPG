@@ -31,31 +31,47 @@ public class CameraManager : Singleton<CameraManager>
     }
     private void Start()
     {
-        cachedCameraPrefab = Resources.Load("Prefeb/CameraArm") as GameObject;
+        //cachedCameraPrefab = Resources.Load("Prefeb/CameraArm") as GameObject;
         //cachedMinimapPrefab = Resources.Load("Prefeb/Minimap") as GameObject;
-        CreateCamera();
+        //CreateCamera();
 
     }
 
-    private void CreateCamera()
-    {
-        foreach (var key in cameras.Keys.ToArray())
-        {
-            GameObject unitCamera = Instantiate(cachedCameraPrefab);
-            unitCamera.name = key;
-            UnitController unit = cameras[key].GetComponent<UnitController>();
+    //private void CreateCamera()
+    //{
+    //    foreach (var key in cameras.Keys.ToArray())
+    //    {
+    //        GameObject unitCamera = Instantiate(cachedCameraPrefab);
+    //        unitCamera.name = key;
+    //        UnitController unit = cameras[key].GetComponent<UnitController>();
 
-            unit.StickCamera(unitCamera);
-            cameras[key] = unitCamera; // 딕셔너리 업데이트
-        }
+    //        if (unit == null)
+    //        {
+    //            Debug.LogWarning("UnitController component not found on camera with key: " + key);
+    //            continue;
+    //        }
 
-        //Instantiate(cachedMinimapPrefab);
+    //        unit.StickCamera(unitCamera);
+    //        cameras[key] = unitCamera; // 딕셔너리 업데이트
+    //    }
 
-    }
+    //    //Instantiate(cachedMinimapPrefab);
+
+    //}
 
     public void CamRegister(string name, GameObject unit)
     {
-        cameras.Add(name, unit);   
+        if (!cameras.ContainsKey(name))
+        {
+            // 존재하지 않으면 추가
+            cameras.Add(name, unit);
+        }
+        else
+        {
+            // 이미 존재하는 경우에 대한 처리
+            Debug.LogWarning("Camera with name " + name + " already exists.");
+            cameras[name] = unit;
+        }
     }
 
     public GameObject GetCamera(string name)
@@ -68,7 +84,10 @@ public class CameraManager : Singleton<CameraManager>
 
     public void ShakeCamera(string name, float duration, float magnitude)
     {
-        StartCoroutine(Shake(GetCamera(name), duration, magnitude));
+        GameObject obj = GetCamera(name);
+
+        if(obj != null)
+            StartCoroutine(Shake(obj, duration, magnitude));
     }
 
     public IEnumerator Shake(GameObject camera, float duration, float magnitude)
