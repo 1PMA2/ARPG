@@ -6,11 +6,14 @@ public class MarbleHit : MonoBehaviour
 {
     private GlowEffect glowEffect;
     private Coroutine shakeCoroutine;
+    private Coroutine summonCoroutine;
 
+    public GameObject mon;
     public float duration = 0.5f; // 진동 지속 시간
     public float magnitude = 0.05f; // 진동 강도
 
     private Room room;
+    private Vector3 roomPos;
 
     private bool IsSummoned = false;
     void Awake()
@@ -18,6 +21,8 @@ public class MarbleHit : MonoBehaviour
         glowEffect = GetComponent<GlowEffect>();
         room = GetComponentInParent<Room>();
         IsSummoned = false;
+
+        roomPos = room.transform.position;
     }
     public GlowEffect GetGlowEffect()
     {
@@ -34,14 +39,42 @@ public class MarbleHit : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+
+    }
+
+
+
     public void Summons()
     {
+        
         if (!IsSummoned)
         {
-            Debug.Log("summon");
+            StartCoroutine(SummomMonster(5));
+
             IsSummoned = true;
         }
     }
+
+    //private void SummomMonster(int num)
+    //{
+    //    Vector3 randomPos;
+    //    int randomX;
+    //    int randomY;
+    //    int randomZ;
+
+        
+    //    for (int i = 0; i < num; i++)
+    //    {
+    //        randomX = Random.Range(-9, 10);
+    //        randomY = Random.Range(0, 360);
+    //        randomZ = Random.Range(-9, 10);
+    //        //summon effect
+    //        randomPos = new Vector3(randomX, 0f, randomZ);
+    //        MonsterManager.Instance.GetMonster(Vector3.zero, Quaternion.Euler(0, randomY, 0));
+    //    }
+    //}
 
     private void ShakeMarble()
     {
@@ -50,6 +83,33 @@ public class MarbleHit : MonoBehaviour
             StopCoroutine(shakeCoroutine);
         }
         shakeCoroutine = StartCoroutine(ShakeObject());
+    }
+
+    private IEnumerator SummomMonster(int num)
+    {
+        int count = 0;
+        Vector3 randomPos;
+        int randomX;
+        int randomY;
+        int randomZ;
+
+        while (count < num)
+        {
+            randomX = Random.Range(-9, 10);
+            randomY = Random.Range(0, 360);
+            randomZ = Random.Range(-9, 10);
+            //summon effect
+            randomPos = new Vector3(randomX, 0f, randomZ);
+
+            //Instantiate(mon, roomPos + randomPos, Quaternion.Euler(0, randomY, 0));
+            MonsterManager.Instance.GetMonster(roomPos + randomPos, Quaternion.Euler(0, randomY, 0));
+
+            count++;
+            yield return null;
+        }
+
+        count = 0;
+        StopCoroutine(SummomMonster(num));
     }
 
 

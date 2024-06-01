@@ -30,7 +30,7 @@ public class EnemyMove : BaseState
             return;
         }
 
-        if (Vector3.Distance(controller.transform.position, controller.nearUnitTransform.position) < 1.5f)
+        if (Vector3.Distance(controller.transform.position, controller.nearUnitTransform.position) < 2f)
         {
             controller.stateMachine.ChangeState(UnitState.ENEMY_ATTACK);
         }

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
@@ -71,11 +72,12 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
         {
             UIManager.Instance.Restart();
             EffectManager.Instance.Restart();
-
+            MonsterManager.Instance.Restart();
             Scene currentScene = SceneManager.GetActiveScene();
             SceneManager.LoadScene(currentScene.name);
-           
+
         }
+
     }
 
     void InitGrid()

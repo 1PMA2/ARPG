@@ -78,13 +78,13 @@ public class UnitController : MonoBehaviour
     {
         
         animator = GetComponent<Animator>();
-        characterController = GetComponent<CharacterController>();
         animator.updateMode = AnimatorUpdateMode.Normal;
+        characterController = GetComponent<CharacterController>();
         unitChecker = GetComponent<UnitChecker>();
+        unitInfo = GetComponent<UnitInformation>();
 
         if(isPlayer)
         {
-            unitInfo = GetComponent<UnitInformation>();
             weaponTrigger = kanata.GetComponent<BoxCollider>();
             smashTrigger = smash.GetComponent<BoxCollider>();
             InitCamera();
@@ -119,13 +119,17 @@ public class UnitController : MonoBehaviour
         //}
     }
 
+    private void OnEnable()
+    {
+        //if (!isPlayer)
+        //{
+        //    stateMachine?.ChangeState(UnitState.ENEMY_MOVE);
+        //}
+    }
+
     private void OnDisable()
     {
-        if(!isPlayer)
-        {
-            animator.keepAnimatorControllerStateOnDisable = true;
-            stateMachine.ChangeState(UnitState.ENEMY_IDLE);
-        }
+
     }
 
     // Update is called once per frame

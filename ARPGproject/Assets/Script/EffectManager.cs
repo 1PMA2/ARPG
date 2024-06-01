@@ -15,11 +15,11 @@ public class EffectManager : Singleton<EffectManager>
     // Start is called before the first frame update
     void Start()
     {
-        InitEffectPool(particleInitialSize, effectPrefabList[0], particlePool);
+        InitEffectPool(5, effectPrefabList[0], particlePool);
 
         InitEffectPool(particleInitialSize, effectPrefabList[1], BrushPool);
 
-        InitEffectPool(particleInitialSize, effectPrefabList[2], guardParticlePool);
+        InitEffectPool(2, effectPrefabList[2], guardParticlePool);
 
     }
 

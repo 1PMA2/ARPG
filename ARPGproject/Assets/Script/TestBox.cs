@@ -12,20 +12,23 @@ public class TestBox : MonoBehaviour
 
     void Start()
     {
+        
+    }
+
+    private void OnEnable()
+    {
         unitInformation = GetComponent<UnitInformation>();
         maxHealth = unitInformation.Health;
         healthBar = UIManager.Instance.CreateHpBar(transform, 0.005f, unitInformation.Health);
     }
 
-    private void OnEnable()
-    {
-        
-    }
-
     private void OnDisable()
     {
-        unitInformation.Health = maxHealth;
-        healthBar.SetHealth(maxHealth);
+        if(unitInformation != null)
+            unitInformation.Health = maxHealth;
+
+        if(healthBar != null)
+            healthBar.SetHealth(maxHealth);
     }
 
     // Update is called once per frame

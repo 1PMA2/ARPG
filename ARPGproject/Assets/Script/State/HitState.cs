@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class HitState : BaseState
 {
+    float hitTime = 0f;
+    float maxHitTime = 0.2f;
     public HitState(UnitController controller) : base(controller)
     {
 
@@ -13,6 +15,8 @@ public class HitState : BaseState
     public override void OnEnterState()
     {
         controller.UnitInfo.currentState = UnitState.HIT;
+
+        controller.animator.applyRootMotion = false;
 
         int rand = Random.Range(0, 5);
 
@@ -35,8 +39,12 @@ public class HitState : BaseState
                 break;
         }
 
+        hitTime = 0f;
+        maxHitTime = 0.2f;
+
         controller.DisableWeaponTrigger();
         controller.DisableSmashTrigger();
+        controller.IsAnimationStart();
     }
 
     public override void OnFixedUpdateState()
@@ -46,8 +54,9 @@ public class HitState : BaseState
 
     public override void OnUpdateState()
     {
+        hitTime += Time.deltaTime;
 
-        if(controller.CheckAnimation())
+        if(hitTime >= maxHitTime)
         {
             controller.stateMachine.ChangeState(UnitState.IDLE);
             controller.SetEquip(true);
