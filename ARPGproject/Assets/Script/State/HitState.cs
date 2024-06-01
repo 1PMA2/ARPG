@@ -50,6 +50,7 @@ public class HitState : BaseState
         if(controller.CheckAnimation())
         {
             controller.stateMachine.ChangeState(UnitState.IDLE);
+            controller.SetEquip(true);
             return;
         }
 

@@ -52,6 +52,7 @@ namespace PlayerController
                     return;
                 }
 
+                controller.IsCounter = false;
                 controller.stateMachine.ChangeState(UnitState.IDLE);
                 controller.SetEquip(true);
             }
@@ -88,6 +89,7 @@ namespace PlayerController
             {
                 controller.transform.rotation = Quaternion.LookRotation(controller.InputDir);
             }
+
             controller.IsCounter = false;
         }
     }

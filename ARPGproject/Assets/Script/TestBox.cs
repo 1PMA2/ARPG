@@ -42,12 +42,23 @@ public class TestBox : MonoBehaviour
     public void TakeDamage(float damage)
     {
         healthBar.TakeDamageHealthBar(damage);
+
         unitInformation.Health -= damage;
 
         if (unitInformation.Health <= 0)
         {
             Die();
         }
+    }
+
+    public void Heal(float heal)
+    {
+        if (unitInformation.Health < maxHealth)
+        {
+            healthBar.TakeHealHealthBar(heal);
+            unitInformation.Health += heal;
+        }
+
     }
 
     private void Die()

@@ -14,7 +14,7 @@ public class HealthBar : MonoBehaviour
 
     void Start()
     {
-        lerpSpeed = 3f;
+        lerpSpeed = 1f;
     }
 
     // Update is called once per frame
@@ -34,6 +34,11 @@ public class HealthBar : MonoBehaviour
     public void TakeDamageHealthBar(float damage)
     {
         health -= damage;
+    }
+
+    public void TakeHealHealthBar(float heal)
+    {
+        health += heal;
     }
 
     public void SetHealth(float unitHealth)

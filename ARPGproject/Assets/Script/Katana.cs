@@ -7,7 +7,7 @@ using UnityEngine;
 public class Katana : MonoBehaviour
 {
     private Recoil recoil;
-    public float recoilDuration = 0.5f;
+    public float recoilDuration = 0.2f;
     private UnitInformation unitInformation;
 
     private void Awake()
@@ -19,6 +19,7 @@ public class Katana : MonoBehaviour
     {
         recoil = GetComponentInParent<Recoil>();
         unitInformation = GetComponentInParent<UnitInformation>();
+        recoilDuration = 0.2f;
     }
 
     // Update is called once per frame

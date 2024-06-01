@@ -31,6 +31,7 @@ public class Smash : MonoBehaviour
             recoil.StartRecoil(recoilDuration);
 
             TestBox enemy = other.gameObject.GetComponent<TestBox>();
+            UnitController unit = GetComponentInParent<UnitController>();
 
             if (enemy != null)
             {
@@ -46,6 +47,9 @@ public class Smash : MonoBehaviour
                 EffectManager.Instance.GetEffect(0, enemyCenter, Quaternion.LookRotation(direction), 1f);
 
                 enemy.TakeDamage(unitInformation.Damage * smashDamage);
+
+                if(unit.IsCounter)
+                    unit.GetComponent<TestBox>().Heal(1);
             }
 
         }
