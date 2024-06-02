@@ -28,6 +28,8 @@ namespace PlayerController
             controller.smashSpeed = initialSmashSpeed;
 
             isSmash = false;
+
+            
         }
 
         public override void OnFixedUpdateState()
@@ -45,14 +47,14 @@ namespace PlayerController
 
             if (controller.CheckAnimation())
             {
-                if (controller.IsCounter && isSmash)
+                if ((controller.IsCounter > 0) && isSmash)
                 {
                     ComboSmash();
                     isSmash = false;
                     return;
                 }
 
-                controller.IsCounter = false;
+                controller.IsCounter = 0;
                 controller.stateMachine.ChangeState(UnitState.IDLE);
                 controller.SetEquip(true);
             }
@@ -90,7 +92,7 @@ namespace PlayerController
                 controller.transform.rotation = Quaternion.LookRotation(controller.InputDir);
             }
 
-            controller.IsCounter = false;
+            controller.IsCounter -= 1;
         }
     }
 }

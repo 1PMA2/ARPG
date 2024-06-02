@@ -9083,8 +9083,8 @@ SkinnedMeshRenderer:
   m_BlendShapeWeights: []
   m_RootBone: {fileID: 0}
   m_AABB:
-    m_Center: {x: -0.24284041, y: -0.57112, z: 0.005230367}
-    m_Extent: {x: 0.68973196, y: 0.9158155, z: 0.11030519}
+    m_Center: {x: 0.14782542, y: -0.66813517, z: -0.004358366}
+    m_Extent: {x: 0.29906613, y: 1.0128306, z: 0.12219332}
   m_DirtyAABB: 0
 --- !u!1 &6280545291530244670
 GameObject:
@@ -16899,8 +16899,8 @@ SkinnedMeshRenderer:
   m_BlendShapeWeights: []
   m_RootBone: {fileID: 0}
   m_AABB:
-    m_Center: {x: 0.19339631, y: -0.13962585, z: -0.7684892}
-    m_Extent: {x: 0.31776977, y: 0.4843213, z: 0.87511295}
+    m_Center: {x: 0.15968236, y: -0.66292024, z: -0.020221293}
+    m_Extent: {x: 0.2971346, y: 1.0076157, z: 0.12684499}
   m_DirtyAABB: 0
 --- !u!1 &6280545292236598755
 GameObject:
@@ -17487,6 +17487,7 @@ MonoBehaviour:
   isplayer: 1
   health: 10
   damage: 1
+  maxCounter: 1
 --- !u!114 &5605604160855553131
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18423,27 +18424,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9187992088965775769, guid: 02130b4f5887a7e4f867cbc3a5299da9, type: 3}
       propertyPath: m_AABB.m_Center.x
-      value: 0.193382
+      value: 0.15968245
       objectReference: {fileID: 0}
     - target: {fileID: 9187992088965775769, guid: 02130b4f5887a7e4f867cbc3a5299da9, type: 3}
       propertyPath: m_AABB.m_Center.y
-      value: -0.13962686
+      value: -0.66292024
       objectReference: {fileID: 0}
     - target: {fileID: 9187992088965775769, guid: 02130b4f5887a7e4f867cbc3a5299da9, type: 3}
       propertyPath: m_AABB.m_Center.z
-      value: -0.7684902
+      value: -0.020221263
       objectReference: {fileID: 0}
     - target: {fileID: 9187992088965775769, guid: 02130b4f5887a7e4f867cbc3a5299da9, type: 3}
       propertyPath: m_AABB.m_Extent.x
-      value: 0.31775543
+      value: 0.2971344
       objectReference: {fileID: 0}
     - target: {fileID: 9187992088965775769, guid: 02130b4f5887a7e4f867cbc3a5299da9, type: 3}
       propertyPath: m_AABB.m_Extent.y
-      value: 0.48432237
+      value: 1.0076158
       objectReference: {fileID: 0}
     - target: {fileID: 9187992088965775769, guid: 02130b4f5887a7e4f867cbc3a5299da9, type: 3}
       propertyPath: m_AABB.m_Extent.z
-      value: 0.8751137
+      value: 0.12684488
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 02130b4f5887a7e4f867cbc3a5299da9, type: 3}
@@ -18595,27 +18596,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9187992088965775769, guid: 02130b4f5887a7e4f867cbc3a5299da9, type: 3}
       propertyPath: m_AABB.m_Center.x
-      value: -0.24284041
+      value: 0.14782542
       objectReference: {fileID: 0}
     - target: {fileID: 9187992088965775769, guid: 02130b4f5887a7e4f867cbc3a5299da9, type: 3}
       propertyPath: m_AABB.m_Center.y
-      value: -0.57112
+      value: -0.66813517
       objectReference: {fileID: 0}
     - target: {fileID: 9187992088965775769, guid: 02130b4f5887a7e4f867cbc3a5299da9, type: 3}
       propertyPath: m_AABB.m_Center.z
-      value: 0.005230367
+      value: -0.004358366
       objectReference: {fileID: 0}
     - target: {fileID: 9187992088965775769, guid: 02130b4f5887a7e4f867cbc3a5299da9, type: 3}
       propertyPath: m_AABB.m_Extent.x
-      value: 0.68973196
+      value: 0.29906613
       objectReference: {fileID: 0}
     - target: {fileID: 9187992088965775769, guid: 02130b4f5887a7e4f867cbc3a5299da9, type: 3}
       propertyPath: m_AABB.m_Extent.y
-      value: 0.9158155
+      value: 1.0128306
       objectReference: {fileID: 0}
     - target: {fileID: 9187992088965775769, guid: 02130b4f5887a7e4f867cbc3a5299da9, type: 3}
       propertyPath: m_AABB.m_Extent.z
-      value: 0.11030519
+      value: 0.12219332
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 02130b4f5887a7e4f867cbc3a5299da9, type: 3}

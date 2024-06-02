@@ -48,7 +48,7 @@ public class Smash : MonoBehaviour
 
                 enemy.TakeDamage(unitInformation.Damage * smashDamage);
 
-                if(unit.IsCounter)
+                if(unit.IsCounter == unitInformation.MaxCounter)
                     unit.GetComponent<TestBox>().Heal(1);
             }
 

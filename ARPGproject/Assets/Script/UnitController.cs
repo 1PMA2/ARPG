@@ -63,13 +63,12 @@ public class UnitController : MonoBehaviour
     public bool isAnimationFinished = false;
     bool isCombo = false;
     bool isSmash = false;
-    private bool isCounter;
-    public bool IsCounter
+    private int isCounter;
+    public int IsCounter
     {
         get { return isCounter; }
         set { isCounter = value; }
     }
-
     public float smashSpeed = 30;
     float verticalSpeed = -10f;
     RaycastHit hit;
@@ -87,8 +86,7 @@ public class UnitController : MonoBehaviour
         {
             weaponTrigger = kanata.GetComponent<BoxCollider>();
             smashTrigger = smash.GetComponent<BoxCollider>();
-            InitCamera();
-            isCounter = false;
+            
         }
         
         
@@ -99,11 +97,10 @@ public class UnitController : MonoBehaviour
         if (isPlayer)
         {
             transform.position = DungeonGenerator.Instance.StartPos;
-            smashTrigger.enabled = false;
-            ChangeAnimation("Unequip");
+            
         }
 
-        weaponTrigger.enabled = false;
+        
     }
 
     private void FixedUpdate()
@@ -121,7 +118,16 @@ public class UnitController : MonoBehaviour
 
     private void OnEnable()
     {
-        if (!isPlayer)
+        weaponTrigger.enabled = false;
+
+        if (isPlayer)
+        {
+            InitCamera();
+            ChangeAnimation("Unequip");
+            isCounter = 0;
+            smashTrigger.enabled = false;
+        }
+        else
         {
             stateMachine?.ChangeState(UnitState.ENEMY_IDLE);
             nearUnitTransform = null;

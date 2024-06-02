@@ -35,6 +35,13 @@ namespace PlayerController
             set { damage = value; }
         }
 
+        [SerializeField] private int maxCounter;
+        public int MaxCounter
+        {
+            get { return maxCounter; }
+            set { maxCounter = value; }
+        }
+
 
         void Start()
         {
