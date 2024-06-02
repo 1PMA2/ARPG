@@ -67,7 +67,10 @@ public class TestBox : MonoBehaviour
     private void Die()
     {
         if(!unitInformation.IsPlayer)
+        {
+            EffectManager.Instance.GetEffect(3, new Vector3(transform.position.x, 1.25f, transform.position.z), Quaternion.identity, 2f);
             MonsterManager.Instance.ReturnMonster(gameObject);
+        }
     }
 
 }

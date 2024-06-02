@@ -11,6 +11,7 @@ public class EffectManager : Singleton<EffectManager>
     private Queue<GameObject> particlePool = new Queue<GameObject>();
     private Queue<GameObject> BrushPool = new Queue<GameObject>();
     private Queue<GameObject> guardParticlePool = new Queue<GameObject>();
+    private Queue<GameObject> impactParticlePool = new Queue<GameObject>();
 
     // Start is called before the first frame update
     void Start()
@@ -20,6 +21,8 @@ public class EffectManager : Singleton<EffectManager>
         InitEffectPool(particleInitialSize, effectPrefabList[1], BrushPool);
 
         InitEffectPool(2, effectPrefabList[2], guardParticlePool);
+
+        InitEffectPool(5, effectPrefabList[3], impactParticlePool);
 
     }
 
@@ -104,11 +107,19 @@ public class EffectManager : Singleton<EffectManager>
         }
         guardParticlePool.Clear();
 
+        foreach (GameObject impactParticle in impactParticlePool)
+        {
+            Destroy(impactParticle);
+        }
+        impactParticlePool.Clear();
+
         InitEffectPool(particleInitialSize, effectPrefabList[0], particlePool);
 
         InitEffectPool(particleInitialSize, effectPrefabList[1], BrushPool);
 
         InitEffectPool(particleInitialSize, effectPrefabList[2], guardParticlePool);
+
+        InitEffectPool(particleInitialSize, effectPrefabList[3], impactParticlePool);
 
         Destroy(gameObject);
     }

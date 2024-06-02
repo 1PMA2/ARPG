@@ -37,6 +37,7 @@ public class MonsterManager : Singleton<MonsterManager>
         monster.transform.position = position;
         monster.transform.rotation = rotation;
 
+        EffectManager.Instance.GetEffect(3, new Vector3(monster.transform.position.x, 1.25f, monster.transform.position.z), Quaternion.identity, 2f);
         return monster;
     }
 

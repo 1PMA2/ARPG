@@ -101,7 +101,6 @@ public class MarbleHit : MonoBehaviour
             //summon effect
             randomPos = new Vector3(randomX, 0f, randomZ);
 
-            //Instantiate(mon, roomPos + randomPos, Quaternion.Euler(0, randomY, 0));
             MonsterManager.Instance.GetMonster(roomPos + randomPos, Quaternion.Euler(0, randomY, 0));
 
             count++;
