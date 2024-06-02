@@ -159,6 +159,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiPrefabList:
   - {fileID: 5582881270052981460, guid: 2252149498a4aef4c8c93333c8f42e33, type: 3}
+  - {fileID: 5582881270052981460, guid: a3f1a72d04a22984e89b849c1bf9f124, type: 3}
 --- !u!4 &211025994
 Transform:
   m_ObjectHideFlags: 0
@@ -722,7 +723,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1874126222}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c31586827af57154aa1925c603cc9aa1, type: 3}
   m_Name: 

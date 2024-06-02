@@ -7,6 +7,7 @@ public class Smash : MonoBehaviour
 {
     public float recoilDuration = 0.2f;
     private float smashDamage = 5f;
+    private int counter;
 
     private Recoil recoil;
     private UnitInformation unitInformation;
@@ -22,6 +23,16 @@ public class Smash : MonoBehaviour
     void Update()
     {
         
+    }
+
+    private void OnEnable()
+    {
+
+    }
+
+    private void OnDisable()
+    {
+
     }
 
     private void OnTriggerEnter(Collider other)
@@ -48,7 +59,7 @@ public class Smash : MonoBehaviour
 
                 enemy.TakeDamage(unitInformation.Damage * smashDamage);
 
-                if(unit.IsCounter == unitInformation.MaxCounter)
+                if(unitInformation.currentState == UnitState.COUNTER)
                     unit.GetComponent<TestBox>().Heal(1);
             }
 

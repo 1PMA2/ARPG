@@ -17,7 +17,8 @@ namespace PlayerController
         {
             controller.animator.applyRootMotion = false;
 
-            controller.UnitInfo.currentState = UnitState.SMASH_01;
+            if(controller.UnitInfo.currentState != UnitState.COUNTER)
+                controller.UnitInfo.currentState = UnitState.SMASH_01;
 
             controller.gameObject.layer = 8;
 
@@ -76,6 +77,7 @@ namespace PlayerController
 
         private void ComboSmash()
         {
+            
 
             controller.animator.CrossFade("Smash01", 0.2f, -1, 0f);
             controller.animator.speed = 2f;
@@ -92,7 +94,7 @@ namespace PlayerController
                 controller.transform.rotation = Quaternion.LookRotation(controller.InputDir);
             }
 
-            controller.IsCounter -= 1;
+            controller.IsCounter--;
         }
     }
 }

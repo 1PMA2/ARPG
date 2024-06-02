@@ -204,6 +204,8 @@ public class UnitController : MonoBehaviour
                 break;
             case UnitState.SMASH_01:
                 break;
+            case UnitState.COUNTER:
+                break;
             default:
                 stateMachine.ChangeState(UnitState.HIT);
                 break;

@@ -7,6 +7,7 @@ public class HealthBar : MonoBehaviour
 {
     public Slider healthSlider;
     public Slider easeHealthSlider;
+    public Slider restoreSlider;
     public float maxHealth = 100;
     public float health;
     private float lerpSpeed = 1f;
@@ -20,12 +21,18 @@ public class HealthBar : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(healthSlider.value != health)
+        if(healthSlider.value > health)//데미지
         {
             healthSlider.value = health;
+            restoreSlider.value = health;
+        }
+        else
+        {
+            healthSlider.value = Mathf.Lerp(healthSlider.value, health, Time.deltaTime * lerpSpeed);
+            restoreSlider.value = health;
         }
 
-        if(healthSlider.value != easeHealthSlider.value)
+        if(healthSlider.value != easeHealthSlider.value)//데미지
         {
             easeHealthSlider.value = Mathf.Lerp(easeHealthSlider.value, health, Time.deltaTime * lerpSpeed);
         }
@@ -45,6 +52,7 @@ public class HealthBar : MonoBehaviour
     {
         healthSlider.maxValue = unitHealth;
         easeHealthSlider.maxValue = unitHealth;
+        restoreSlider.maxValue = unitHealth;
         maxHealth = unitHealth;
         health = maxHealth;
     }

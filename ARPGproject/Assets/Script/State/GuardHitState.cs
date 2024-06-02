@@ -30,10 +30,10 @@ public class GuardHitState : BaseState
     {
         if (controller.IsSmash())
         {
-            
+            controller.UnitInfo.currentState = UnitState.COUNTER;
             controller.stateMachine.ChangeState(UnitState.SMASH_01);
             controller.IsCounter = controller.UnitInfo.MaxCounter;
-            controller.IsCounter -= 1;
+            controller.IsCounter--;
             return;
         }
 

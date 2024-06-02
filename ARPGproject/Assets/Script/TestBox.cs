@@ -14,7 +14,7 @@ public class TestBox : MonoBehaviour
     {
         unitInformation = GetComponent<UnitInformation>();
         maxHealth = unitInformation.Health;
-        healthBar = UIManager.Instance.CreateHpBar(transform, 0.005f, unitInformation.Health);
+        healthBar = UIManager.Instance.CreateHpBar(transform, 0.005f, unitInformation.Health, unitInformation.IsPlayer);
     }
 
     private void OnEnable()

@@ -8,11 +8,11 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private List<GameObject> uiPrefabList;
     private List<Canvas> billboardList = new List<Canvas>();
 
-    float billboardOffset = 3f;
+    float billboardOffset = 2.5f;
     // Start is called before the first frame update
     void Start()
     {
-        
+        billboardOffset = 2.5f;
     }
 
     // Update is called once per frame
@@ -26,16 +26,28 @@ public class UIManager : Singleton<UIManager>
         SetBillboard();
     }
 
-    public HealthBar CreateHpBar(Transform transform, float scale, float unitHealth)
+    public HealthBar CreateHpBar(Transform transform, float scale, float unitHealth, bool isPlayer = false)
     {
-        GameObject obj = Instantiate(uiPrefabList[0], transform);
-            
-        obj.transform.localScale = new Vector3(scale, scale, scale);
+        GameObject obj;
 
-        billboardList.Add(obj.GetComponent<Canvas>());
+        if (isPlayer)
+        {
+            obj = Instantiate(uiPrefabList[1], transform);
+
+            Transform overlayTransform = obj.GetComponentInChildren<Transform>();
+
+
+           
+        }
+        else
+        {
+            obj = Instantiate(uiPrefabList[0], transform);
+            billboardList.Add(obj.GetComponent<Canvas>());
+
+            obj.transform.localScale = new Vector3(scale, scale, scale);
+        }
 
         HealthBar healthBar = obj.GetComponent<HealthBar>();
-
         healthBar.SetHealth(unitHealth);
 
         return healthBar;
