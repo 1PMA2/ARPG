@@ -35,6 +35,13 @@ namespace PlayerController
             set { damage = value; }
         }
 
+        [SerializeField] private float recoilPower;
+        public float RecoilPower
+        {
+            get { return recoilPower; }
+            set { recoilPower = value; }
+        }
+
         [SerializeField] private int maxCounter;
         public int MaxCounter
         {
@@ -42,6 +49,26 @@ namespace PlayerController
             set { maxCounter = value; }
         }
 
+        [SerializeField] private int lightninig;
+        public int Lightninig
+        {
+            get { return lightninig; }
+            set { lightninig = value; }
+        }
+
+        [SerializeField] private int superArmor;
+        public int SuperArmor
+        {
+            get { return superArmor; }
+            set { superArmor = value; }
+        }
+
+        [SerializeField] private float autoGuard;
+        public float AutoGuard
+        {
+            get { return autoGuard; }
+            set { autoGuard = value; }
+        }
 
         void Start()
         {

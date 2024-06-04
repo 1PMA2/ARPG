@@ -5,18 +5,18 @@ using UnityEngine;
 
 public class Smash : MonoBehaviour
 {
-    public float recoilDuration = 0.2f;
     private float smashDamage = 5f;
-    private int counter;
 
-    private Recoil recoil;
+    private UnitController unitController;
     private UnitInformation unitInformation;
+    private Recoil recoil;
     // Start is called before the first frame update
     void Start()
     {
         smashDamage = 5f;
-        recoil = GetComponentInParent<Recoil>();
+        unitController = GetComponentInParent<UnitController>();
         unitInformation = GetComponentInParent<UnitInformation>();
+        recoil = GetComponentInParent<Recoil>();
     }
 
     // Update is called once per frame
@@ -37,32 +37,6 @@ public class Smash : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Enemy"))
-        {
-            recoil.StartRecoil(recoilDuration);
-
-            TestBox enemy = other.gameObject.GetComponent<TestBox>();
-            UnitController unit = GetComponentInParent<UnitController>();
-
-            if (enemy != null)
-            {
-                CameraManager.Instance.ShakeCamera("PlayerCamera", 0.2f, 0.1f);
-
-                Vector3 collisionPoint = other.ClosestPoint(transform.position);
-
-                Vector3 enemyCenter = other.bounds.center;
-
-                Vector3 direction = (enemyCenter - collisionPoint).normalized;
-
-
-                EffectManager.Instance.GetEffect(0, enemyCenter, Quaternion.LookRotation(direction), 1f);
-
-                enemy.TakeDamage(unitInformation.Damage * smashDamage);
-
-                if(unitInformation.currentState == UnitState.COUNTER)
-                    unit.GetComponent<TestBox>().Heal(1);
-            }
-
-        }
+        DamageState.Attack(other, recoil, unitInformation, unitController, transform, smashDamage);
     }
 }

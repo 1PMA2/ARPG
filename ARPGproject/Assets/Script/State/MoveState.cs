@@ -17,6 +17,9 @@ namespace PlayerController
             controller.UnitInfo.currentState = UnitState.MOVE;
 
             controller.animator.applyRootMotion = false;
+
+            controller.DisableSmashTrigger();
+            controller.DisableWeaponTrigger();
         }
 
         public override void OnFixedUpdateState()

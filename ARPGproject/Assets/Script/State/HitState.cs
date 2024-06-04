@@ -16,7 +16,7 @@ public class HitState : BaseState
     {
         controller.UnitInfo.currentState = UnitState.HIT;
 
-        controller.animator.applyRootMotion = false;
+        controller.animator.applyRootMotion = true;
 
         int rand = Random.Range(0, 5);
 
@@ -58,6 +58,7 @@ public class HitState : BaseState
 
         if(hitTime >= maxHitTime)
         {
+            controller.animator.applyRootMotion = false;
             controller.stateMachine.ChangeState(UnitState.IDLE);
             controller.SetEquip(true);
             return;

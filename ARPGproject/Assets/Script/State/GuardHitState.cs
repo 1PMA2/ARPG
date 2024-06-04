@@ -19,6 +19,9 @@ public class GuardHitState : BaseState
         controller.ChangeAnimation("GuardHit", 0f, 0.8f);
 
         controller.animator.applyRootMotion = true;
+
+        controller.DisableSmashTrigger();
+        controller.DisableWeaponTrigger();
     }
 
     public override void OnFixedUpdateState()

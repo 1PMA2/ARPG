@@ -7,7 +7,6 @@ using UnityEngine;
 public class Katana : MonoBehaviour
 {
     private Recoil recoil;
-    public float recoilDuration = 0.2f;
     private UnitInformation unitInformation;
 
     private void Awake()
@@ -19,7 +18,6 @@ public class Katana : MonoBehaviour
     {
         recoil = GetComponentInParent<Recoil>();
         unitInformation = GetComponentInParent<UnitInformation>();
-        recoilDuration = 0.2f;
     }
 
     // Update is called once per frame
@@ -30,29 +28,7 @@ public class Katana : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Enemy"))
-        {
-            recoil.StartRecoil(recoilDuration);
-
-            TestBox enemy = other.gameObject.GetComponent<TestBox>();
-
-            if (enemy != null)
-            {
-                CameraManager.Instance.ShakeCamera("PlayerCamera", 0.2f, 0.1f);
-
-                Vector3 collisionPoint = other.ClosestPoint(transform.position);
-
-                Vector3 enemyCenter = other.bounds.center;
-
-                Vector3 direction = (enemyCenter - collisionPoint).normalized;
-
-
-                EffectManager.Instance.GetEffect(0, collisionPoint, Quaternion.LookRotation(direction), 1f);
-
-                enemy.TakeDamage(unitInformation.Damage);
-            }
- 
-        }
+        DamageState.Attack(other, recoil, unitInformation, transform);
     }
 
 

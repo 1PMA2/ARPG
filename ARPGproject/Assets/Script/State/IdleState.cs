@@ -19,6 +19,9 @@ namespace PlayerController
 
             controller.animator.applyRootMotion = false;
 
+            controller.DisableSmashTrigger();
+            controller.DisableWeaponTrigger();
+
         }
 
         public override void OnFixedUpdateState()

@@ -172,53 +172,15 @@ public class UnitController : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (isPlayer)
-        {
-            if(other.CompareTag("Untagged"))
-                HitChangeState(other);
+        {          
+            DamageState.HitChangeState(other, UnitInfo, transform, stateMachine);
         }
             
     }
-    private void HitChangeState(Collider other)
-    {
-        switch (UnitInfo.currentState)
-        {
-            case UnitState.GUARD_01:
-                if (other != null)
-                {
-                    Vector3 direction = other.gameObject.GetComponentInParent<UnitController>().transform.position - transform.position;
-
-                    direction.y = 0f;
-
-                    if (direction != Vector3.zero)
-                    {
-                        transform.rotation = Quaternion.LookRotation(direction);
-                    }
-                }
-                stateMachine.ChangeState(UnitState.GUARD_02);
-                break;
-            case UnitState.GUARD_02:
-                break;
-            case UnitState.EVADE:
-                break;
-            case UnitState.SMASH_00:
-                break;
-            case UnitState.SMASH_01:
-                break;
-            case UnitState.COUNTER:
-                break;
-            default:
-                stateMachine.ChangeState(UnitState.HIT);
-                break;
-        }
-
-    }
-
-
 
     private void SetGravity()
     {
         //Debug.DrawRay(transform.position, transform.up * -1f, Color.cyan);
-
         if(!Physics.Raycast(transform.position, transform.up * -1f, out hit, 0.01f))
             characterController.Move(Vector3.up * verticalSpeed * Time.deltaTime);
     }

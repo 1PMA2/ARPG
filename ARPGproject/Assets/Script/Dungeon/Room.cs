@@ -228,6 +228,7 @@ public class Room : MonoBehaviour, ITile
         {
             hitMarble.GetGlowEffect().SetGlowIntensity(25f);
             OpenDoor();
+            UIManager.Instance.ActiveItemUI(true);
             isOpen = true;
         }
         else if(!isOpen)

@@ -22,9 +22,7 @@ namespace PlayerController
 
             controller.gameObject.layer = 8;
 
-            controller.animator.Play("Smash01", 0, 0);
-
-            controller.ChangeAnimation("Smash01",0.2f, 2f);
+            controller.ChangeAnimation("Smash01", 0f, 2f);
 
             controller.smashSpeed = initialSmashSpeed;
 

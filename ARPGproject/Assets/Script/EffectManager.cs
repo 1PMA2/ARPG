@@ -12,6 +12,7 @@ public class EffectManager : Singleton<EffectManager>
     private Queue<GameObject> BrushPool = new Queue<GameObject>();
     private Queue<GameObject> guardParticlePool = new Queue<GameObject>();
     private Queue<GameObject> impactParticlePool = new Queue<GameObject>();
+    private Queue<GameObject> lightningPool = new Queue<GameObject>();
 
     // Start is called before the first frame update
     void Start()
@@ -23,6 +24,8 @@ public class EffectManager : Singleton<EffectManager>
         InitEffectPool(2, effectPrefabList[2], guardParticlePool);
 
         InitEffectPool(5, effectPrefabList[3], impactParticlePool);
+
+        InitEffectPool(3, effectPrefabList[4], lightningPool);
 
     }
 
@@ -87,6 +90,21 @@ public class EffectManager : Singleton<EffectManager>
         ReturnObject(effectPools[effectIndex], effect);
     }
 
+    public void HitEffect(Recoil recoil, float recoilDuration, Collider other, int index)
+    {
+        recoil.StartRecoil(recoilDuration);
+
+        CameraManager.Instance.ShakeCamera("PlayerCamera", 0.2f, 0.1f);
+
+        Vector3 collisionPoint = other.ClosestPoint(transform.position);
+
+        Vector3 enemyCenter = other.bounds.center;
+
+        Vector3 direction = (enemyCenter - collisionPoint).normalized;
+
+        GetEffect(index, enemyCenter, Quaternion.LookRotation(direction), 1f);
+    }
+
     public void Restart()
     {
         foreach (GameObject particle in particlePool)
@@ -113,13 +131,21 @@ public class EffectManager : Singleton<EffectManager>
         }
         impactParticlePool.Clear();
 
-        InitEffectPool(particleInitialSize, effectPrefabList[0], particlePool);
+        foreach (GameObject lighthning in lightningPool)
+        {
+            Destroy(lighthning);
+        }
+        impactParticlePool.Clear();
+
+        InitEffectPool(5, effectPrefabList[0], particlePool);
 
         InitEffectPool(particleInitialSize, effectPrefabList[1], BrushPool);
 
-        InitEffectPool(particleInitialSize, effectPrefabList[2], guardParticlePool);
+        InitEffectPool(2, effectPrefabList[2], guardParticlePool);
 
-        InitEffectPool(particleInitialSize, effectPrefabList[3], impactParticlePool);
+        InitEffectPool(5, effectPrefabList[3], impactParticlePool);
+
+        InitEffectPool(3, effectPrefabList[4], lightningPool);
 
         Destroy(gameObject);
     }

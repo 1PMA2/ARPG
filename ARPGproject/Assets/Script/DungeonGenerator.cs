@@ -1,3 +1,4 @@
+using PlayerController;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,7 +11,9 @@ using Random = UnityEngine.Random;
 
 public class DungeonGenerator : Singleton<DungeonGenerator>
 {
-    public GameObject player;
+    [SerializeField] private GameObject player;
+    public UnitInformation playerInfo;
+    public Transform playerTransform;
     enum TILE { ROAD = 0, WALL, CHECK, START, BOSS };
 
     private GameObject roomPrefeb;
@@ -57,7 +60,10 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
         InitGrid();
         StartCoroutine(GenerateRoad());
 
-        Instantiate(player);
+        
+        GameObject createdPlayer = Instantiate(player);
+        playerInfo = createdPlayer.GetComponent<UnitInformation>();
+        playerTransform = createdPlayer.transform;
 
         roomCount = width + height;
     }

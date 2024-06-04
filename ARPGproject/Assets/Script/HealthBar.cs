@@ -18,6 +18,8 @@ public class HealthBar : MonoBehaviour
         lerpSpeed = 1f;
     }
 
+
+
     // Update is called once per frame
     void Update()
     {
@@ -55,5 +57,7 @@ public class HealthBar : MonoBehaviour
         restoreSlider.maxValue = unitHealth;
         maxHealth = unitHealth;
         health = maxHealth;
+
+        healthSlider.value = health;
     }
 }
