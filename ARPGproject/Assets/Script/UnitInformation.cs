@@ -70,6 +70,13 @@ namespace PlayerController
             set { autoGuard = value; }
         }
 
+        [SerializeField] private int drain;
+        public int Drain
+        {
+            get { return drain; }
+            set { drain = value; }
+        }
+
         void Start()
         {
 

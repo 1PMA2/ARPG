@@ -58,18 +58,21 @@ public class Item : MonoBehaviour
             {
                 case ItemData.ItemType.Counter:
                     textLevel.text = "카운터가 " + currentItemData.counts[currentItemData.level] + "회 가능해집니다.";
-                    break;
+                    break;     
                 case ItemData.ItemType.Recoil:
                     textLevel.text = "역경직이 " + ((1 - currentItemData.counts[currentItemData.level]) * 100) + "% 감소합니다.";
                     break;
                 case ItemData.ItemType.Thunder:
-                    textLevel.text = "공격을 맞출시 번개가 내려칩니다.";
+                    textLevel.text = "공격 성공 시 번개가 내려칩니다.";
                     break;
                 case ItemData.ItemType.SuperArmor:
                     textLevel.text = "경직에 대하여 면역이 됩니다.";
                     break;
                 case ItemData.ItemType.AutoGuard:
-                    textLevel.text = (currentItemData.counts[currentItemData.level] * 100) + "% 확률로 자동으로 방어합니다.";
+                    textLevel.text = (currentItemData.counts[currentItemData.level] * 100) + "% 확률로 자동 방어합니다.";
+                    break;
+                case ItemData.ItemType.Drain:
+                    textLevel.text = "카운터 공격 시 체력을 회복합니다.";
                     break;
             }
         }
@@ -99,6 +102,9 @@ public class Item : MonoBehaviour
                 break;
             case ItemData.ItemType.AutoGuard:
                 DungeonGenerator.Instance.playerInfo.AutoGuard = currentItemData.counts[currentItemData.level];
+                break;
+            case ItemData.ItemType.Drain:
+                DungeonGenerator.Instance.playerInfo.Drain = (int)currentItemData.counts[currentItemData.level];
                 break;
         }
         

@@ -10,10 +10,11 @@ using UnityEditor.PackageManager;
 public static class DamageState
 {
     private static readonly float recoilDuration = 0.2f;
-    public static void SetState(Collider other, Recoil recoil, UnitInformation unitInformation) //적이 나를 때릴때
+    public static void SetState(Collider other, Recoil recoil, UnitInformation unitInformation, BoxCollider boxCollider) //적이 나를 때릴때
     {
         if (other.CompareTag("Player"))
         {
+            boxCollider.enabled = false; //다음 물리 업데이트 주기부터 적용 캐릭터는 판정있으니 괜찮음.
             TestBox player = other.gameObject.GetComponent<TestBox>();
 
             if (player != null)
@@ -135,7 +136,7 @@ public static class DamageState
                 if (unitInformation.Lightninig > 0)
                     EffectManager.Instance.GetEffect(4, new Vector3(collisionPoint.x, 0, collisionPoint.z), Quaternion.identity, 2f);
 
-                if (unitInformation.currentState == UnitState.COUNTER)
+                if ((unitInformation.currentState == UnitState.COUNTER) && unitInformation.Drain > 0)
                     unit.GetComponent<TestBox>().Heal(1);
             }
         }

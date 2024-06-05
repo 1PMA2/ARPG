@@ -7,9 +7,11 @@ public class SkeletonSword : MonoBehaviour
 {
     private Recoil recoil;
     private UnitInformation unitInformation;
+    private BoxCollider boxCollider;
     // Start is called before the first frame update
     void Start()
     {
+        boxCollider = GetComponent<BoxCollider>();
         recoil = GetComponentInParent<Recoil>();
         unitInformation = GetComponentInParent<UnitInformation>();
     }
@@ -22,7 +24,7 @@ public class SkeletonSword : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        DamageState.SetState(other, recoil, unitInformation);     
+        DamageState.SetState(other, recoil, unitInformation, boxCollider);
     }
     
 }
