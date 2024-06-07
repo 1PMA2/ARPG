@@ -26,6 +26,7 @@ namespace PlayerController
             controller.animator.applyRootMotion = true;
 
             controller.SetWeaponDamage(comboDamage);
+
         }
 
         public override void OnFixedUpdateState()

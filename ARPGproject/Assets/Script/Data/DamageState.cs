@@ -7,9 +7,15 @@ using Random = UnityEngine.Random;
 #if UNITY_EDITOR
 using UnityEditor.PackageManager;
 #endif
+
 public static class DamageState
 {
     private static readonly float recoilDuration = 0.2f;
+    public static readonly float smashStamina = 20f;
+    public static readonly float evadeStamina = 10f;
+    public static readonly float comboStamina = 5f;
+
+
     public static void SetState(Collider other, Recoil recoil, UnitInformation unitInformation, BoxCollider boxCollider) //적이 나를 때릴때
     {
         if (other.CompareTag("Player"))
@@ -27,6 +33,7 @@ public static class DamageState
                 {
                     case UnitState.GUARD_01:
                         EffectManager.Instance.HitEffect(recoil, recoilDuration, other, 2);
+                        player.UseStamina(5);
                         break;
 
                     case UnitState.GUARD_02:
@@ -149,6 +156,7 @@ public static class DamageState
             recoil.StartRecoil(recoilDuration * unitInformation.RecoilPower);
 
             TestBox enemy = other.gameObject.GetComponent<TestBox>();
+            TestBox player = unitInformation.GetComponent<TestBox>();
 
             if (enemy != null)
             {
@@ -164,6 +172,12 @@ public static class DamageState
                 EffectManager.Instance.GetEffect(0, collisionPoint, Quaternion.LookRotation(direction), 1f);
 
                 enemy.TakeDamage(unitInformation.Damage);
+
+                if(unitInformation.currentState == UnitState.COMBO_03)
+                    player.RestoreStmina(comboStamina * 2f);
+                else
+                    player.RestoreStmina(comboStamina);
+
 
                 if (unitInformation.Lightninig > 0)
                     EffectManager.Instance.GetEffect(4, new Vector3(collisionPoint.x, 0, collisionPoint.z), Quaternion.identity, 2f);

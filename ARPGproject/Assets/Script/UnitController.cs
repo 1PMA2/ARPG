@@ -58,6 +58,14 @@ public class UnitController : MonoBehaviour
         get { return unitInfo; }
         set { unitInfo = value; }
     }
+
+    private TestBox statController;
+    public TestBox StatController
+    {
+        get { return statController; }
+        set { statController = value; }
+    }
+
     private float moveSpeed = 0f;
     private string currentAnimation = "";
     public bool isAnimationFinished = false;
@@ -73,6 +81,9 @@ public class UnitController : MonoBehaviour
     float verticalSpeed = -10f;
     RaycastHit hit;
 
+    private List<KeyValuePair<string, float>> inputBuffer = new List<KeyValuePair<string, float>>();
+    private float bufferTime = 0.2f; // Time in seconds to buffer input
+
     private void Awake()
     {
         
@@ -81,8 +92,9 @@ public class UnitController : MonoBehaviour
         characterController = GetComponent<CharacterController>();
         unitChecker = GetComponent<UnitChecker>();
         unitInfo = GetComponent<UnitInformation>();
+        statController = GetComponent<TestBox>();
 
-        if(isPlayer)
+        if (isPlayer)
         {
             weaponTrigger = kanata.GetComponent<BoxCollider>();
             smashTrigger = smash.GetComponent<BoxCollider>();
@@ -144,6 +156,12 @@ public class UnitController : MonoBehaviour
     {
         if (isPlayer)
         {
+            if (Input.GetKeyDown("a"))
+            {
+                inputBuffer.Add(new KeyValuePair<string, float>("a", Time.time));
+            }
+            inputBuffer.RemoveAll(input => Time.time - input.Value > bufferTime);
+
             if (Input.GetKeyDown("x"))
             {
                 bool isEquip = animator.GetBool("Equip");
@@ -154,6 +172,7 @@ public class UnitController : MonoBehaviour
 
             CheckInputDir();
         }
+
         SetGravity();
 
         nearUnitTransform = unitChecker.InNearUnitTransform();
@@ -208,9 +227,15 @@ public class UnitController : MonoBehaviour
         return false;
     }
 
+    public bool IsBufferedInput(string key)
+    {
+        // Check if the key is in the buffer
+        return inputBuffer.Exists(input => input.Key == key);
+    }
+
     public bool IsGuard()
     {
-        if (Input.GetKey("a") && (0 >= inputDir.magnitude))
+        if (IsBufferedInput("a") && (0 >= inputDir.magnitude))
             return true;
 
         return false;
@@ -218,7 +243,7 @@ public class UnitController : MonoBehaviour
 
     public bool IsEvade()
     {
-        if (Input.GetKey("a") && (0 < inputDir.magnitude))
+        if (IsBufferedInput("a") && (0 < inputDir.magnitude))
             return true;
 
         return false;

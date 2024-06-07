@@ -48,11 +48,7 @@ public class UIManager : Singleton<UIManager>
         if (isPlayer)
         {
             obj = Instantiate(uiPrefabList[1], transform);
-
-            Transform overlayTransform = obj.GetComponentInChildren<Transform>();
-
-
-           
+            
         }
         else
         {
@@ -66,6 +62,18 @@ public class UIManager : Singleton<UIManager>
         healthBar.SetHealth(unitHealth);
 
         return healthBar;
+    }
+
+    public EaseBar CreateBar(int index, float unitStat, Transform transform)
+    {
+        GameObject obj;
+        obj = Instantiate(uiPrefabList[index], transform);
+
+
+        EaseBar bar = obj.GetComponent<EaseBar>();
+        bar.SetStat(unitStat);
+
+        return bar;
     }
 
     public void ActiveItemUI(bool active)

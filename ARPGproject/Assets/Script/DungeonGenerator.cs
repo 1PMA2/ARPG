@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
@@ -47,6 +48,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
         }
     }
 
+    public NavMeshSurface navMeshSurface;
 
     private new void Awake()
     {
@@ -61,6 +63,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
         StartCoroutine(GenerateRoad());
 
         
+
         GameObject createdPlayer = Instantiate(player);
         playerInfo = createdPlayer.GetComponent<UnitInformation>();
         playerTransform = createdPlayer.transform;
@@ -184,7 +187,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
         tile.OpenWall(Vector2Int.up);
         tile.SetType(0);
         Instantiate(bossPrefeb, new Vector3(end.x * tileSize, 0, (end.y + 1) * tileSize + 10), Quaternion.identity).transform.SetParent(transform);
-
+        navMeshSurface.BuildNavMesh();
         stackDir.Clear();
         stackTile.Clear();
     }

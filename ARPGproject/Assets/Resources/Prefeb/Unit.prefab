@@ -9260,7 +9260,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbf2b90a3ed7bc44c9e36a0a72bc803f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  recoilDuration: 0.2
 --- !u!1 &6280545292076675818
 GameObject:
   m_ObjectHideFlags: 0
@@ -16960,7 +16959,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e79dbaa45070d704c92c5611e8ce8c60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  recoilDuration: 0.2
 --- !u!1 &6280545292567856168
 GameObject:
   m_ObjectHideFlags: 0
@@ -17486,10 +17484,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _currentState: 0
   isplayer: 1
+  level: 0
+  exp: 0
+  stamina: 100
   health: 10
   damage: 1
   recoilPower: 1
   maxCounter: 1
+  lightninig: 0
+  superArmor: 0
+  autoGuard: 0
+  drain: 0
 --- !u!114 &5605604160855553131
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -20,6 +20,8 @@ namespace PlayerController
 
             controller.DisableSmashTrigger();
             controller.DisableWeaponTrigger();
+
+            //controller.StatController.RestoreStmina(1, 1);
         }
 
         public override void OnFixedUpdateState()
@@ -37,16 +39,29 @@ namespace PlayerController
             else
             {
                 controller.stateMachine.ChangeState(UnitState.IDLE);
+                return;
             }
 
             if (controller.IsComboAttack())
+            {
                 controller.stateMachine.ChangeState(UnitState.COMBO_01);
+                controller.StatController.StopRestore();
+                return;
+            }
 
-            if (controller.IsSmash())
+            if (controller.IsSmash() && controller.StatController.AbleStamina(DamageState.smashStamina))
+            {
                 controller.stateMachine.ChangeState(UnitState.SMASH_00);
+                controller.StatController.StopRestore();
+                return;
+            }
 
-            if (controller.IsEvade())
+            if (controller.IsEvade() && controller.StatController.AbleStamina(DamageState.evadeStamina))
+            {
                 controller.stateMachine.ChangeState(UnitState.EVADE);
+                controller.StatController.StopRestore();
+                return;
+            }
         }
 
         public override void OnLateUpdateState()

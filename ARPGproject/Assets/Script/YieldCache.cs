@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace PlayerController
 {
-    internal static class DamageState
+    internal static class YieldCache
     {
         class FloatComparer : IEqualityComparer<float>
         {

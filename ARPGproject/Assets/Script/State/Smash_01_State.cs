@@ -8,6 +8,7 @@ namespace PlayerController
     {
         private bool isSmash;
         private float initialSmashSpeed = 50f;
+        private TestBox statController;
         public Smash_01_State(UnitController controller) : base(controller)
         {
             
@@ -28,7 +29,9 @@ namespace PlayerController
 
             isSmash = false;
 
-            
+            statController = controller.GetComponent<TestBox>();
+
+            statController.UseStamina(DamageState.smashStamina);
         }
 
         public override void OnFixedUpdateState()
@@ -46,16 +49,19 @@ namespace PlayerController
 
             if (controller.CheckAnimation())
             {
-                if ((controller.IsCounter > 0) && isSmash)
+                if ((controller.IsCounter > 0) && isSmash && statController.AbleStamina(DamageState.smashStamina))
                 {
                     ComboSmash();
                     isSmash = false;
                     return;
                 }
-
-                controller.IsCounter = 0;
-                controller.stateMachine.ChangeState(UnitState.IDLE);
-                controller.SetEquip(true);
+                else
+                {
+                    controller.IsCounter = 0;
+                    controller.stateMachine.ChangeState(UnitState.IDLE);
+                    controller.SetEquip(true);
+                    return;
+                }
             }
 
 
@@ -75,7 +81,7 @@ namespace PlayerController
 
         private void ComboSmash()
         {
-            
+            statController.UseStamina(DamageState.smashStamina);
 
             controller.animator.CrossFade("Smash01", 0.2f, -1, 0f);
             controller.animator.speed = 2f;

@@ -21,6 +21,8 @@ public class EvadeState : BaseState
         controller.animator.applyRootMotion = true;
 
         controller.gameObject.layer = 8;
+
+        controller.StatController.UseStamina(DamageState.evadeStamina);
     }
 
     public override void OnFixedUpdateState()

@@ -47,7 +47,7 @@ public class EnemyMove : BaseState
 
     public override void OnExitState()
     {
-        
+          
     }
 
     public void MoveTowardsPlayer()

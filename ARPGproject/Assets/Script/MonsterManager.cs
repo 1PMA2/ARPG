@@ -12,7 +12,7 @@ public class MonsterManager : Singleton<MonsterManager>
     private Queue<GameObject> monsterPool = new Queue<GameObject>();
     void Start()
     {
-        InitializePool(initialPoolSize);
+        InitializePool(0);
     }
 
     private void InitializePool(int poolSize)

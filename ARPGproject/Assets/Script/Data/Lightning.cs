@@ -9,11 +9,10 @@ public class Lightning : MonoBehaviour
 {
     private SphereCollider SphereCollider;
     private VisualEffect effect;
-    private int damage;
+    [SerializeField] ItemData data;
     // Start is called before the first frame update
     void Start()
     {
-        damage = 2;
         SphereCollider = GetComponent<SphereCollider>();
         effect = gameObject.GetComponentInChildren<VisualEffect>();
         effect.Play();
@@ -40,9 +39,9 @@ public class Lightning : MonoBehaviour
 
             if (enemy != null)
             {
-                //CameraManager.Instance.ShakeCamera("PlayerCamera", 0.1f, 0.1f);
+                CameraManager.Instance.ShakeCamera("PlayerCamera", 0.1f, 0.1f);
 
-                enemy.TakeDamage(damage);
+                enemy.TakeDamage(data.baseDamage);
 
                 SphereCollider.enabled = false;
             }

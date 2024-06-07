@@ -16,7 +16,7 @@ public class GuardHitState : BaseState
 
         controller.animator.Play("GuardHit", 0, 0);
 
-        controller.ChangeAnimation("GuardHit", 0f, 0.8f);
+        controller.ChangeAnimation("GuardHit", 0f, 1f);
 
         controller.animator.applyRootMotion = true;
 
@@ -31,7 +31,7 @@ public class GuardHitState : BaseState
 
     public override void OnUpdateState()
     {
-        if (controller.IsSmash())
+        if (controller.IsSmash() && controller.StatController.AbleStamina(DamageState.smashStamina))
         {
             controller.UnitInfo.currentState = UnitState.COUNTER;
             controller.stateMachine.ChangeState(UnitState.SMASH_01);

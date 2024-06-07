@@ -21,6 +21,27 @@ namespace PlayerController
             set { isplayer = value; }
         }
 
+        [SerializeField] private int level;
+        public int Level
+        {
+            get { return level; }
+            set { level = value; }
+        }
+
+        [SerializeField] private int exp;
+        public int Exp
+        {
+            get { return exp; }
+            set { exp = value; }
+        }
+
+        [SerializeField] private float stamina;
+        public float Stamina
+        {
+            get { return stamina; }
+            set { stamina = value; }
+        }
+
         [SerializeField] private float health;
         public float Health
         {
@@ -77,6 +98,7 @@ namespace PlayerController
             set { drain = value; }
         }
 
+        
         void Start()
         {
 
