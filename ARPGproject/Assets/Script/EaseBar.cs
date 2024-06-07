@@ -70,6 +70,6 @@ public class EaseBar : MonoBehaviour
         statSlider.value = stat;
 
         Vector3 currentScale = rectTransform.localScale;
-        rectTransform.localScale = new Vector3(currentScale.x + 1.2f, currentScale.y, currentScale.z);
+        rectTransform.localScale = new Vector3(currentScale.x + 0.6f, currentScale.y, currentScale.z);
     }
 }

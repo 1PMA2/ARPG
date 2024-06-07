@@ -16,7 +16,7 @@ public static class DamageState
     public static readonly float comboStamina = 5f;
 
 
-    public static void SetState(Collider other, Recoil recoil, UnitInformation unitInformation, BoxCollider boxCollider) //적이 나를 때릴때
+    public static void SetState(Collider other, Recoil recoil, UnitInformation enemyInformation, BoxCollider boxCollider) //적이 나를 때릴때
     {
         if (other.CompareTag("Player"))
         {
@@ -46,7 +46,7 @@ public static class DamageState
                     case UnitState.SMASH_01:
                     case UnitState.COUNTER:
                         EffectManager.Instance.HitEffect(recoil, recoilDuration, other, 0);
-                        player.TakeDamage(unitInformation.Damage);
+                        player.TakeDamage(enemyInformation.Damage);
                         break;
 
                     case UnitState.HIT:
@@ -61,7 +61,7 @@ public static class DamageState
                         else
                         {
                             EffectManager.Instance.HitEffect(recoil, recoilDuration, other, 0);
-                            player.TakeDamage(unitInformation.Damage);
+                            player.TakeDamage(enemyInformation.Damage);
                         }
 
                         break;
@@ -172,6 +172,8 @@ public static class DamageState
                 EffectManager.Instance.GetEffect(0, collisionPoint, Quaternion.LookRotation(direction), 1f);
 
                 enemy.TakeDamage(unitInformation.Damage);
+
+                Debug.Log(unitInformation.Damage);
 
                 if(unitInformation.currentState == UnitState.COMBO_03)
                     player.RestoreStmina(comboStamina * 2f);
