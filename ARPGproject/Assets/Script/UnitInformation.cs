@@ -28,8 +28,15 @@ namespace PlayerController
             set { level = value; }
         }
 
-        [SerializeField] private int exp;
-        public int Exp
+        [SerializeField] private float maxExp;
+        public float MaxExp
+        {
+            get { return maxExp; }
+            set { maxExp = value; }
+        }
+
+        [SerializeField] private float exp;
+        public float Exp
         {
             get { return exp; }
             set { exp = value; }
@@ -98,7 +105,14 @@ namespace PlayerController
             set { drain = value; }
         }
 
-        
+        [SerializeField] private float combatBreathing;
+        public float CombatBreathing
+        {
+            get { return combatBreathing; }
+            set { combatBreathing = value; }
+        }
+
+
         void Start()
         {
 

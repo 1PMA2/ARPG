@@ -7,7 +7,7 @@ using UnityEngine;
 public class ItemData : ScriptableObject
 {
    
-    public enum ItemType { Counter, Recoil, Thunder, SuperArmor, AutoGuard, Drain }
+    public enum ItemType { Counter, Recoil, Thunder, SuperArmor, AutoGuard, Drain, CombatBreathing }
 
     [Header("#Main Info")]
     public ItemType itemType;

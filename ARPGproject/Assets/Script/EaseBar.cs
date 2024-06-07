@@ -17,6 +17,8 @@ public class EaseBar : MonoBehaviour
     void Start()
     {
         lerpSpeed = 3f;
+
+        statSlider.interactable = false;
     }
 
 
@@ -52,6 +54,17 @@ public class EaseBar : MonoBehaviour
             stat = maxStat;
     }
 
+    public void TakeEXP(float exp)
+    {
+        stat += exp;
+
+        if(stat >= maxStat)
+        {
+            stat = stat - maxStat;
+        }
+    }
+
+
     public void SetStat(float unitstat)
     {
         statSlider.maxValue = unitstat;
@@ -62,7 +75,7 @@ public class EaseBar : MonoBehaviour
         statSlider.value = stat;
     }
 
-    public void LevelUp(float unitstat)
+    public void LevelUpStat(float unitstat)
     {
         statSlider.maxValue = unitstat;
         maxStat = unitstat;
@@ -71,5 +84,11 @@ public class EaseBar : MonoBehaviour
 
         Vector3 currentScale = rectTransform.localScale;
         rectTransform.localScale = new Vector3(currentScale.x + 0.6f, currentScale.y, currentScale.z);
+    }
+
+    public void LevelUpEXP(float unitstat)
+    {
+        statSlider.maxValue = unitstat;
+        maxStat = unitstat;
     }
 }

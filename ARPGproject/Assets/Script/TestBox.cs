@@ -13,6 +13,7 @@ public class TestBox : MonoBehaviour
     private float maxHealth;
     private float maxStamina;
 
+
     private Coroutine restoreCoroutine = null;
 
     void Start()
@@ -25,8 +26,10 @@ public class TestBox : MonoBehaviour
         {
             maxStamina = unitInformation.Stamina;
             staminaBar = UIManager.Instance.CreateBar(3, unitInformation.Stamina, transform);
-            expBar = UIManager.Instance.CreateBar(4, unitInformation.Exp, transform);
+            expBar = UIManager.Instance.CreateBar(4, unitInformation.MaxExp, transform);
         }
+
+      
         
     }
 
@@ -51,9 +54,7 @@ public class TestBox : MonoBehaviour
         {
             if(unitInformation.IsPlayer)
             {
-                maxStamina += 20;
-                unitInformation.Stamina = maxStamina;
-                staminaBar.LevelUp(maxStamina);
+                
             }
         }
     }
@@ -63,7 +64,7 @@ public class TestBox : MonoBehaviour
 
     }
 
-    public void TakeDamage(float damage)
+    public bool TakeDamage(float damage)
     {
         healthBar.TakeDamageHealthBar(damage);
 
@@ -72,17 +73,34 @@ public class TestBox : MonoBehaviour
         if (unitInformation.Health <= 0)
         {
             Die();
+            return true;
+        }
+
+        return false;
+    }
+
+    public void TakeEXP(float exp)
+    {
+        expBar.TakeEXP(exp);
+        unitInformation.Exp += exp;
+
+        if (unitInformation.Exp >= unitInformation.MaxExp)
+        {
+            UIManager.Instance.ActiveLevelUpUI(true);
+
+            unitInformation.Exp = unitInformation.Exp - unitInformation.MaxExp;
+            unitInformation.MaxExp *= 1.2f;
+            expBar.LevelUpEXP(unitInformation.MaxExp);
         }
     }
 
     public void Heal(float heal)
     {
-        if (unitInformation.Health < maxHealth)
-        {
-            healthBar.TakeHealHealthBar(heal);
-            unitInformation.Health += heal;
-        }
+        healthBar.TakeHealHealthBar(heal);
+        unitInformation.Health += heal;
 
+        if (unitInformation.Health > maxHealth)
+            unitInformation.Health = maxHealth;
     }
 
     public void UseStamina(float usage)
@@ -109,8 +127,8 @@ public class TestBox : MonoBehaviour
 
     public void RestoreStmina(float restore)
     {
-        staminaBar.TakeHealStat(restore);
-        unitInformation.Stamina += restore;
+        staminaBar.TakeHealStat(restore * unitInformation.CombatBreathing);
+        unitInformation.Stamina += restore * unitInformation.CombatBreathing;
 
         if (maxStamina <= unitInformation.Stamina)
             unitInformation.Stamina = maxStamina;
@@ -119,7 +137,7 @@ public class TestBox : MonoBehaviour
     {
         if (restoreCoroutine == null)
         {
-            restoreCoroutine = StartCoroutine(Restore(restore, frequency));
+            restoreCoroutine = StartCoroutine(Restore(restore * unitInformation.CombatBreathing, frequency));
         }
     }
 
@@ -139,9 +157,32 @@ public class TestBox : MonoBehaviour
         {
             staminaBar.TakeHealStat(restore);
             unitInformation.Stamina += restore;
+
+            if (maxStamina <= unitInformation.Stamina)
+                unitInformation.Stamina = maxStamina;
+
             yield return YieldCache.WaitForSeconds(frequency);
         }
+
+        unitInformation.Stamina = maxStamina;
         restoreCoroutine = null;
+    }
+    public void MaxHealthUp()
+    {
+        maxHealth += 10;
+        unitInformation.Health = maxHealth;
+        healthBar.LevelUp(maxHealth);
+    }
+    public void MaxStaminaUp()
+    {
+        maxStamina += 20;
+        unitInformation.Stamina = maxStamina;
+        staminaBar.LevelUpStat(maxStamina);
+    }  
+    
+    public void DamageUp()
+    {
+        unitInformation.Damage += 2f;
     }
 
     private void Die()

@@ -16959,6 +16959,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e79dbaa45070d704c92c5611e8ce8c60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  data: {fileID: 11400000, guid: cc600e9a5ce7e32448d8fea94d5b798c, type: 2}
 --- !u!1 &6280545292567856168
 GameObject:
   m_ObjectHideFlags: 0
@@ -17485,16 +17486,18 @@ MonoBehaviour:
   _currentState: 0
   isplayer: 1
   level: 0
+  maxExp: 20
   exp: 0
   stamina: 100
-  health: 10
-  damage: 1
+  health: 100
+  damage: 10
   recoilPower: 1
   maxCounter: 1
   lightninig: 0
   superArmor: 0
   autoGuard: 0
   drain: 0
+  combatBreathing: 1
 --- !u!114 &5605604160855553131
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 #if UNITY_EDITOR
@@ -14,6 +15,7 @@ public class UIManager : Singleton<UIManager>
     private List<ItemData> selectedItems = new List<ItemData>();
 
     private GameObject itemUI;
+    private GameObject levelUpUI;
 
     float billboardOffset = 2.5f;
     // Start is called before the first frame update
@@ -22,12 +24,15 @@ public class UIManager : Singleton<UIManager>
         billboardOffset = 2.5f;
 
         itemUI = Instantiate(uiPrefabList[2]);
+        levelUpUI = Instantiate(uiPrefabList[5]);
         ActiveItemUI(false);
+        ActiveLevelUpUI(false);
     }
 
     private void OnDisable()
     {
         ActiveItemUI(false);
+        ActiveLevelUpUI(false);
     }
 
     // Update is called once per frame
@@ -58,6 +63,7 @@ public class UIManager : Singleton<UIManager>
             obj.transform.localScale = new Vector3(scale, scale, scale);
         }
 
+
         HealthBar healthBar = obj.GetComponent<HealthBar>();
         healthBar.SetHealth(unitHealth);
 
@@ -71,7 +77,11 @@ public class UIManager : Singleton<UIManager>
 
 
         EaseBar bar = obj.GetComponent<EaseBar>();
-        bar.SetStat(unitStat);
+
+        if(index == 4)
+            bar.LevelUpEXP(unitStat);
+        else
+            bar.SetStat(unitStat);
 
         return bar;
     }
@@ -79,13 +89,37 @@ public class UIManager : Singleton<UIManager>
     public void ActiveItemUI(bool active)
     {
         if(itemUI)
+        {
+            if (EventSystem.current != null)
+            {
+                EventSystem.current.SetSelectedGameObject(null);
+            }
             itemUI.SetActive(active);
+        }
 
         if (active)
             Time.timeScale = 0;
         else
             Time.timeScale = 1;
     }
+
+    public void ActiveLevelUpUI(bool active)
+    {
+        if (levelUpUI)
+        {
+            if (EventSystem.current != null)
+            {
+                EventSystem.current.SetSelectedGameObject(null);
+            }
+            levelUpUI.SetActive(active);
+        }
+
+        if (active)
+            Time.timeScale = 0;
+        else
+            Time.timeScale = 1;
+    }
+
     public ItemData SelectRandomItems(ItemData[] allItemDatas)
     {
         int rand = 0;
@@ -139,6 +173,7 @@ public class UIManager : Singleton<UIManager>
         billboardList.Clear();
         selectedItems.Clear();
         Destroy(itemUI);
+        Destroy(levelUpUI);
         Destroy(gameObject);
     }
 

@@ -5,15 +5,13 @@ using UnityEngine;
 
 public class Smash : MonoBehaviour
 {
-    private float smashDamage = 5f;
-
     private UnitController unitController;
     private UnitInformation unitInformation;
     private Recoil recoil;
+    [SerializeField] private ItemData data;
     // Start is called before the first frame update
     void Start()
     {
-        smashDamage = 5f;
         unitController = GetComponentInParent<UnitController>();
         unitInformation = GetComponentInParent<UnitInformation>();
         recoil = GetComponentInParent<Recoil>();
@@ -37,6 +35,6 @@ public class Smash : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        DamageState.Attack(other, recoil, unitInformation, unitController, transform, smashDamage);
+        DamageState.SmashAttack(other, recoil, unitInformation, unitController, transform, data.baseDamage);
     }
 }

@@ -550,14 +550,6 @@ public class UnitController : MonoBehaviour
         }
     }
 
-    public void SetWeaponDamage(int damage)
-    {
-        if (damage <= 1)
-            unitInfo.Damage = 1;
-        else
-            unitInfo.Damage *= damage;
-    }
-
     public void Smash()
     {
         smashSpeed = 0;

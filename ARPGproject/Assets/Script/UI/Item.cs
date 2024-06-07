@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class Item : MonoBehaviour
@@ -74,6 +75,9 @@ public class Item : MonoBehaviour
                 case ItemData.ItemType.Drain:
                     textLevel.text = "카운터 공격 시 체력을 회복합니다.";
                     break;
+                case ItemData.ItemType.CombatBreathing:
+                    textLevel.text = "스테미나 회복량이 " + ((currentItemData.counts[currentItemData.level] - 1) * 100) + "% 증가합니다.";
+                    break;
             }
         }
         else
@@ -105,6 +109,11 @@ public class Item : MonoBehaviour
                 break;
             case ItemData.ItemType.Drain:
                 DungeonGenerator.Instance.playerInfo.Drain = (int)currentItemData.counts[currentItemData.level];
+                break;
+            case ItemData.ItemType.CombatBreathing:
+                DungeonGenerator.Instance.playerInfo.CombatBreathing = currentItemData.counts[currentItemData.level];
+                break;
+            default:
                 break;
         }
         

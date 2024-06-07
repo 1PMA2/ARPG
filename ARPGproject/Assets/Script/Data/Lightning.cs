@@ -2,6 +2,7 @@ using PlayerController;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.VFX;
 
@@ -9,12 +10,14 @@ public class Lightning : MonoBehaviour
 {
     private SphereCollider SphereCollider;
     private VisualEffect effect;
-    [SerializeField] ItemData data;
+    [SerializeField] private ItemData data;
+    private UnitInformation unitInformation;
     // Start is called before the first frame update
     void Start()
     {
         SphereCollider = GetComponent<SphereCollider>();
         effect = gameObject.GetComponentInChildren<VisualEffect>();
+        unitInformation = DungeonGenerator.Instance.playerInfo;
         effect.Play();
     }
 
@@ -41,7 +44,12 @@ public class Lightning : MonoBehaviour
             {
                 CameraManager.Instance.ShakeCamera("PlayerCamera", 0.1f, 0.1f);
 
-                enemy.TakeDamage(data.baseDamage);
+                if(enemy.TakeDamage(unitInformation.Damage * 0.5f))
+                {
+                    TestBox player = unitInformation.gameObject.GetComponent<TestBox>();
+                    UnitInformation enemyInfo = other.gameObject.GetComponent<UnitInformation>();
+                    player.TakeEXP(enemyInfo.Exp);
+                }
 
                 SphereCollider.enabled = false;
             }

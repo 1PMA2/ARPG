@@ -5,17 +5,22 @@ using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour
 {
-    public Slider healthSlider;
-    public Slider easeHealthSlider;
-    public Slider restoreSlider;
+    [SerializeField] private Slider healthSlider;
+    [SerializeField] private Slider easeHealthSlider;
+    [SerializeField] private Slider restoreSlider;
     public float maxHealth = 100;
     public float health;
     private float lerpSpeed = 1f;
+    [SerializeField] private RectTransform[] rectTransforms;
     // Start is called before the first frame update
 
     void Start()
     {
         lerpSpeed = 1f;
+
+        healthSlider.interactable = false;
+        easeHealthSlider.interactable = false;
+        restoreSlider.interactable = false;
     }
 
 
@@ -48,6 +53,9 @@ public class HealthBar : MonoBehaviour
     public void TakeHealHealthBar(float heal)
     {
         health += heal;
+
+        if (health > maxHealth)
+            health = maxHealth;
     }
 
     public void SetHealth(float unitHealth)
@@ -59,5 +67,22 @@ public class HealthBar : MonoBehaviour
         health = maxHealth;
 
         healthSlider.value = health;
+    }
+
+    public void LevelUp(float unitHealth)
+    {
+        healthSlider.maxValue = unitHealth;
+        easeHealthSlider.maxValue = unitHealth;
+        restoreSlider.maxValue = unitHealth;
+        maxHealth = unitHealth;
+        health = maxHealth;
+        healthSlider.value = health;
+
+        Vector3 currentScale = rectTransforms[0].localScale;
+
+        foreach(RectTransform rectTransform in rectTransforms)
+        {
+            rectTransform.localScale = new Vector3(currentScale.x + 0.6f, currentScale.y, currentScale.z);
+        }
     }
 }

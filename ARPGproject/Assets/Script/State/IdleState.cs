@@ -23,7 +23,7 @@ namespace PlayerController
             controller.DisableSmashTrigger();
             controller.DisableWeaponTrigger();
 
-            controller.StatController.RestoreStmina(2f, 0.2f);
+            controller.StatController.RestoreStmina(1.8f, 0.2f);
         }
 
         public override void OnFixedUpdateState()

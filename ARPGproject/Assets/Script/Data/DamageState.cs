@@ -14,6 +14,8 @@ public static class DamageState
     public static readonly float smashStamina = 20f;
     public static readonly float evadeStamina = 10f;
     public static readonly float comboStamina = 5f;
+    private static readonly float smashRatio = 1.5f;
+    private static readonly float comboRatio = 1.2f;
 
 
     public static void SetState(Collider other, Recoil recoil, UnitInformation enemyInformation, BoxCollider boxCollider) //적이 나를 때릴때
@@ -117,7 +119,7 @@ public static class DamageState
     }
 
 
-    public static void Attack(Collider other, Recoil recoil, UnitInformation unitInformation, UnitController unit, Transform transform, float smashDamage) //스매시, 카운터스매시
+    public static void SmashAttack(Collider other, Recoil recoil, UnitInformation unitInformation, UnitController unit, Transform transform, float drain) //스매시, 카운터스매시
     {
         if (other.CompareTag("Enemy"))
         {
@@ -138,13 +140,17 @@ public static class DamageState
 
                 EffectManager.Instance.GetEffect(0, enemyCenter, Quaternion.LookRotation(direction), 1f);
 
-                enemy.TakeDamage(unitInformation.Damage * smashDamage);
+                if (enemy.TakeDamage(unitInformation.Damage * smashRatio))
+                {
+                    unit.GetComponent<TestBox>().TakeEXP(other.gameObject.GetComponent<UnitInformation>().Exp);
+                }
+                
 
                 if (unitInformation.Lightninig > 0)
                     EffectManager.Instance.GetEffect(4, new Vector3(collisionPoint.x, 0, collisionPoint.z), Quaternion.identity, 2f);
 
                 if ((unitInformation.currentState == UnitState.COUNTER) && unitInformation.Drain > 0)
-                    unit.GetComponent<TestBox>().Heal(1);
+                    unit.GetComponent<TestBox>().Heal(drain);
             }
         }
     }
@@ -156,7 +162,7 @@ public static class DamageState
             recoil.StartRecoil(recoilDuration * unitInformation.RecoilPower);
 
             TestBox enemy = other.gameObject.GetComponent<TestBox>();
-            TestBox player = unitInformation.GetComponent<TestBox>();
+            TestBox player = unitInformation.gameObject.GetComponent<TestBox>();
 
             if (enemy != null)
             {
@@ -171,14 +177,24 @@ public static class DamageState
 
                 EffectManager.Instance.GetEffect(0, collisionPoint, Quaternion.LookRotation(direction), 1f);
 
-                enemy.TakeDamage(unitInformation.Damage);
-
-                Debug.Log(unitInformation.Damage);
+                
 
                 if(unitInformation.currentState == UnitState.COMBO_03)
+                {
                     player.RestoreStmina(comboStamina * 2f);
+                    if(enemy.TakeDamage(unitInformation.Damage * comboRatio))
+                    {
+                        player.TakeEXP(other.gameObject.GetComponent<UnitInformation>().Exp);
+                    }
+                }
                 else
+                {
                     player.RestoreStmina(comboStamina);
+                    if(enemy.TakeDamage(unitInformation.Damage))
+                    {
+                        player.TakeEXP(other.gameObject.GetComponent<UnitInformation>().Exp);
+                    }
+                }
 
 
                 if (unitInformation.Lightninig > 0)

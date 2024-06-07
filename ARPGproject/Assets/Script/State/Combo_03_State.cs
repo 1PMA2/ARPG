@@ -6,7 +6,6 @@ namespace PlayerController
 {
     public class Combo_03_State : BaseState
     {
-        private int comboDamage = 3;
         public Combo_03_State(UnitController controller) : base(controller)
         {
             
@@ -23,8 +22,6 @@ namespace PlayerController
             controller.animator.applyRootMotion = true;
 
             controller.DisableWeaponTrigger();
-
-            controller.SetWeaponDamage(comboDamage);
 
         }
 
@@ -55,8 +52,6 @@ namespace PlayerController
         public override void OnExitState()
         {
             controller.SetEquip(true);
-
-            controller.SetWeaponDamage(1);
         }
 
     }
