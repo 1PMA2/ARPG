@@ -17486,7 +17486,7 @@ MonoBehaviour:
   _currentState: 0
   isplayer: 1
   level: 0
-  maxExp: 20
+  maxExp: 25
   exp: 0
   stamina: 100
   health: 100

@@ -12,7 +12,7 @@ public class UIManager : Singleton<UIManager>
 {
     [SerializeField] private List<GameObject> uiPrefabList;
     private List<Canvas> billboardList = new List<Canvas>();
-    private List<ItemData> selectedItems = new List<ItemData>();
+    private HashSet<ItemData> selectedItems = new HashSet<ItemData>();
 
     private GameObject itemUI;
     private GameObject levelUpUI;
@@ -122,32 +122,54 @@ public class UIManager : Singleton<UIManager>
 
     public ItemData SelectRandomItems(ItemData[] allItemDatas)
     {
-        int rand = 0;
-
         bool selected = false;
+
+        ItemData selectedItem = GetRandomItem(allItemDatas);
 
         while (!selected)
         {
-            rand = Random.Range(0, allItemDatas.Length);
 
-            if (!selectedItems.Contains(allItemDatas[rand]))
+            selectedItem = GetRandomItem(allItemDatas);
+
+            if (!selectedItems.Contains(selectedItem))
             {
-                if (allItemDatas[rand].level < allItemDatas[rand].counts.Length)
+                
+                if (selectedItem.level < selectedItem.counts.Length) // 강화 완료 안된 아이템
                 {
-                    selectedItems.Add(allItemDatas[rand]);
+                    selectedItems.Add(selectedItem);
                     selected = true;
                 }
-                else if (Random.value < 0.3f) //완료된 아이템은 낮은확률로 등장 //수정할것
+                else if (Random.value < 0.3f) // 완료된 아이템은 낮은 확률로 등장
                 {
-                    selectedItems.Add(allItemDatas[rand]);
+                    selectedItems.Add(selectedItem);
                     selected = true;
                 }
             }
         }
 
-        return allItemDatas[rand];
+        return selectedItem;
     }
 
+    private ItemData GetRandomItem(ItemData[] items)
+    {
+        float commonProbability = 0.8f; // Common 아이템이 선택될 확률
+        float rareProbability = 0.2f; // Rare 아이템이 선택될 확률
+
+        while (true)
+        {
+            int randIndex = Random.Range(0, items.Length);
+            ItemData item = items[randIndex];
+
+            if (item.itemGrade == ItemData.Grade.COMMON && Random.value < commonProbability)
+            {
+                return item;
+            }
+            else if (item.itemGrade == ItemData.Grade.RARE && Random.value < rareProbability)
+            {
+                return item;
+            }
+        }
+    }
     public void ClearItemList()
     {
         selectedItems.Clear();

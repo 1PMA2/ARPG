@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Super Armor
   m_EditorClassIdentifier: 
   itemType: 3
+  itemGrade: 1
   itemId: 3
   itemName: "\uC288\uD37C\uC544\uBA38"
   itemDesc: 

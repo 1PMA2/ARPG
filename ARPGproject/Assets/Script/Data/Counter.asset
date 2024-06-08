@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Counter
   m_EditorClassIdentifier: 
   itemType: 0
+  itemGrade: 1
   itemId: 0
   itemName: "\uC5F0\uC12C"
   itemDesc: 

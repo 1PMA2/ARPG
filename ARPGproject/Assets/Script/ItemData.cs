@@ -8,9 +8,11 @@ public class ItemData : ScriptableObject
 {
    
     public enum ItemType { Counter, Recoil, Thunder, SuperArmor, AutoGuard, Drain, CombatBreathing }
+    public enum Grade { COMMON, RARE }
 
     [Header("#Main Info")]
     public ItemType itemType;
+    public Grade itemGrade;
     public int itemId;
     public string itemName;
     public string itemDesc;

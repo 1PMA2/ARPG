@@ -13,12 +13,13 @@ MonoBehaviour:
   m_Name: Thunder
   m_EditorClassIdentifier: 
   itemType: 2
+  itemGrade: 1
   itemId: 2
   itemName: "\uC36C\uB354\uBCFC\uD2B8"
   itemDesc: 
   itemIcon: {fileID: 798309987, guid: 132358e9bf26b60458b731bf001e31db, type: 3}
   baseDamage: 5
-  level: 1
+  level: 0
   baseCount: 1
   damages: []
   counts:

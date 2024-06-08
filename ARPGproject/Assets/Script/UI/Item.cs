@@ -15,13 +15,18 @@ public class Item : MonoBehaviour
     public UnitInformation unitInformation;
     private RectTransform rectTransform;
 
-    Image icon;
+    [SerializeField] private Material rareMaterial;
+    
+    private Image icon;
+    private Button button;
+    private Image buttonImage;
     public TMP_Text textLevel;
 
     private void Awake()
     {
         icon = GetComponentsInChildren<Image>()[1];
-
+        button = GetComponent<Button>();
+        buttonImage = button.GetComponent<Image>();
         rectTransform = GetComponentsInChildren<RectTransform>()[2];
         TMP_Text[] texts = GetComponentsInChildren<TMP_Text>();
         textLevel = texts[0]; 
@@ -32,6 +37,13 @@ public class Item : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        
+    }
+
+
+
     private void OnEnable()
     {
         currentItemData = UIManager.Instance.SelectRandomItems(allItemDatas);
@@ -41,6 +53,11 @@ public class Item : MonoBehaviour
 
     private void OnDisable()
     {
+        if (buttonImage.material != null)
+        {
+            buttonImage.material.SetFloat("_UnscaledTime", 0f);
+        }
+
         UIManager.Instance.ClearItemList();
     }
 
@@ -48,6 +65,11 @@ public class Item : MonoBehaviour
 
     private void UpdateItem()
     {
+        if (currentItemData.itemGrade == ItemData.Grade.RARE)
+            buttonImage.material = rareMaterial;
+        else
+            buttonImage.material = null;
+
         icon.sprite = currentItemData.itemIcon;
         rectTransform.sizeDelta = new Vector2(currentItemData.itemIcon.textureRect.width, currentItemData.itemIcon.textureRect.height);
 
@@ -82,10 +104,22 @@ public class Item : MonoBehaviour
         }
         else
         {
-            GetComponent<Button>().interactable = false;
+            button.interactable = false;
             textLevel.text = "강화완료";
         }
     }
+
+    private void Update()
+    {
+        if (buttonImage.material != null)
+        {
+            buttonImage.material.SetFloat("_UnscaledTime", Time.unscaledTime);
+        }
+
+        
+    }
+
+
 
     public void OnClick()
     {

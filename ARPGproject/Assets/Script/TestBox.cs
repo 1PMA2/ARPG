@@ -89,7 +89,7 @@ public class TestBox : MonoBehaviour
             UIManager.Instance.ActiveLevelUpUI(true);
 
             unitInformation.Exp = unitInformation.Exp - unitInformation.MaxExp;
-            unitInformation.MaxExp *= 1.2f;
+            unitInformation.MaxExp *= 2f;
             expBar.LevelUpEXP(unitInformation.MaxExp);
         }
     }
