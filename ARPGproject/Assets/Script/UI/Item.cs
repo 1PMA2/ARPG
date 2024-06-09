@@ -6,17 +6,18 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class Item : MonoBehaviour
+public class Item : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public ItemData[] allItemDatas; // 모든 아이템 데이터 배열
     private List<ItemData> selectedItems = new List<ItemData>(); // 선택된 아이템 데이터 배열
     ItemData currentItemData;
+    public ItemData CurrentItemData { get { return currentItemData; } }
 
     public UnitInformation unitInformation;
     private RectTransform rectTransform;
 
     [SerializeField] private Material rareMaterial;
-    
+    private Material instanceMaterial;
     private Image icon;
     private Button button;
     private Image buttonImage;
@@ -28,13 +29,15 @@ public class Item : MonoBehaviour
         button = GetComponent<Button>();
         buttonImage = button.GetComponent<Image>();
         rectTransform = GetComponentsInChildren<RectTransform>()[2];
-        TMP_Text[] texts = GetComponentsInChildren<TMP_Text>();
-        textLevel = texts[0]; 
 
-        for(int i = 0; i < allItemDatas.Length; ++i)
+        TMP_Text[] texts = GetComponentsInChildren<TMP_Text>();
+        textLevel = texts[0];
+        for (int i = 0; i < allItemDatas.Length; ++i)
         {
             allItemDatas[i].level = 0;
         }
+
+        instanceMaterial = Instantiate(rareMaterial);
     }
 
     private void Start()
@@ -53,11 +56,6 @@ public class Item : MonoBehaviour
 
     private void OnDisable()
     {
-        if (buttonImage.material != null)
-        {
-            buttonImage.material.SetFloat("_UnscaledTime", 0f);
-        }
-
         UIManager.Instance.ClearItemList();
     }
 
@@ -115,8 +113,6 @@ public class Item : MonoBehaviour
         {
             buttonImage.material.SetFloat("_UnscaledTime", Time.unscaledTime);
         }
-
-        
     }
 
 
@@ -156,5 +152,39 @@ public class Item : MonoBehaviour
         currentItemData.level++;
         UIManager.Instance.ActiveItemUI(false);
 
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if ((currentItemData.itemGrade == ItemData.Grade.RARE) && button.interactable)
+        {
+            buttonImage.material = instanceMaterial;
+            StartCoroutine(TransitionColor(1));
+        }
+    }
+
+    // Called when the pointer exits the button area
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if ((currentItemData.itemGrade == ItemData.Grade.RARE) && button.interactable)
+        {
+            StartCoroutine(TransitionColor(0));
+        }
+    }
+
+    private IEnumerator TransitionColor(float targetLerp)
+    {
+        float elapsedTime = 0f;
+        float initialLerp = instanceMaterial.GetFloat("_Lerp");
+
+        while (elapsedTime < 0.1f)
+        {
+            float lerp = Mathf.Lerp(initialLerp, targetLerp, elapsedTime / 0.1f);
+            instanceMaterial.SetFloat("_Lerp", lerp);
+            elapsedTime += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        instanceMaterial.SetFloat("_Lerp", targetLerp);
     }
 }

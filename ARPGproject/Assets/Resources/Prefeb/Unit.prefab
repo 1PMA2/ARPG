@@ -9246,7 +9246,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 10, y: 2, z: 2}
+  m_Size: {x: 12, y: 2, z: 2}
   m_Center: {x: -8, y: 0, z: 0}
 --- !u!114 &6280545292058768668
 MonoBehaviour:
@@ -17486,7 +17486,7 @@ MonoBehaviour:
   _currentState: 0
   isplayer: 1
   level: 0
-  maxExp: 25
+  maxExp: 5
   exp: 0
   stamina: 100
   health: 100

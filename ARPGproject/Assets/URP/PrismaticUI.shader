@@ -11,6 +11,7 @@ Shader "Unlit/Prismatic"
         _alpha("alpha", Float) = 0.5
         _power("power", Float) = 0.8
         _UnscaledTime("UnscaledTime", Float) = 0
+        _Lerp("Lerp", Float) = 0
         [HideInInspector]_QueueOffset("_QueueOffset", Float) = 0
         [HideInInspector]_QueueControl("_QueueControl", Float) = -1
         [HideInInspector][NoScaleOffset]unity_Lightmaps("unity_Lightmaps", 2DArray) = "" {}
@@ -230,6 +231,7 @@ Shader "Unlit/Prismatic"
         float _alpha;
         float _power;
         float _UnscaledTime;
+        float _Lerp;
         CBUFFER_END
         
         // Object and Global properties
@@ -336,6 +338,16 @@ Shader "Unlit/Prismatic"
             Out = A * B;
         }
         
+        void Unity_OneMinus_float3(float3 In, out float3 Out)
+        {
+            Out = 1 - In;
+        }
+        
+        void Unity_Lerp_float3(float3 A, float3 B, float3 T, out float3 Out)
+        {
+            Out = lerp(A, B, T);
+        }
+        
         // Custom interpolators pre vertex
         /* WARNING: $splice Could not find named fragment 'CustomInterpolatorPreVertex' */
         
@@ -418,8 +430,13 @@ Shader "Unlit/Prismatic"
             float _Property_002aeebed8ec4677b27b30c8e69293fd_Out_0 = _Strength;
             float3 _Multiply_19c286fcf62545748c187ffc5d548630_Out_2;
             Unity_Multiply_float3_float3(_Multiply_04cb7c12646f43e88ad98dcaaffdabdf_Out_2, (_Property_002aeebed8ec4677b27b30c8e69293fd_Out_0.xxx), _Multiply_19c286fcf62545748c187ffc5d548630_Out_2);
+            float3 _OneMinus_71855da0a7c84205903262652c0e8d3c_Out_1;
+            Unity_OneMinus_float3(_Multiply_19c286fcf62545748c187ffc5d548630_Out_2, _OneMinus_71855da0a7c84205903262652c0e8d3c_Out_1);
+            float _Property_502eb2b4b3ac422191a480519296c35d_Out_0 = _Lerp;
+            float3 _Lerp_25fca7c1e8b84fcdaa76d7ff4bfd54d0_Out_3;
+            Unity_Lerp_float3(_Multiply_19c286fcf62545748c187ffc5d548630_Out_2, _OneMinus_71855da0a7c84205903262652c0e8d3c_Out_1, (_Property_502eb2b4b3ac422191a480519296c35d_Out_0.xxx), _Lerp_25fca7c1e8b84fcdaa76d7ff4bfd54d0_Out_3);
             float _Property_fd70ac17c42d41869a03c1b612f001cd_Out_0 = _alpha;
-            surface.BaseColor = _Multiply_19c286fcf62545748c187ffc5d548630_Out_2;
+            surface.BaseColor = _Lerp_25fca7c1e8b84fcdaa76d7ff4bfd54d0_Out_3;
             surface.Alpha = _Property_fd70ac17c42d41869a03c1b612f001cd_Out_0;
             return surface;
         }
@@ -697,6 +714,7 @@ Shader "Unlit/Prismatic"
         float _alpha;
         float _power;
         float _UnscaledTime;
+        float _Lerp;
         CBUFFER_END
         
         // Object and Global properties
@@ -803,6 +821,16 @@ Shader "Unlit/Prismatic"
             Out = A * B;
         }
         
+        void Unity_OneMinus_float3(float3 In, out float3 Out)
+        {
+            Out = 1 - In;
+        }
+        
+        void Unity_Lerp_float3(float3 A, float3 B, float3 T, out float3 Out)
+        {
+            Out = lerp(A, B, T);
+        }
+        
         // Custom interpolators pre vertex
         /* WARNING: $splice Could not find named fragment 'CustomInterpolatorPreVertex' */
         
@@ -885,8 +913,13 @@ Shader "Unlit/Prismatic"
             float _Property_002aeebed8ec4677b27b30c8e69293fd_Out_0 = _Strength;
             float3 _Multiply_19c286fcf62545748c187ffc5d548630_Out_2;
             Unity_Multiply_float3_float3(_Multiply_04cb7c12646f43e88ad98dcaaffdabdf_Out_2, (_Property_002aeebed8ec4677b27b30c8e69293fd_Out_0.xxx), _Multiply_19c286fcf62545748c187ffc5d548630_Out_2);
+            float3 _OneMinus_71855da0a7c84205903262652c0e8d3c_Out_1;
+            Unity_OneMinus_float3(_Multiply_19c286fcf62545748c187ffc5d548630_Out_2, _OneMinus_71855da0a7c84205903262652c0e8d3c_Out_1);
+            float _Property_502eb2b4b3ac422191a480519296c35d_Out_0 = _Lerp;
+            float3 _Lerp_25fca7c1e8b84fcdaa76d7ff4bfd54d0_Out_3;
+            Unity_Lerp_float3(_Multiply_19c286fcf62545748c187ffc5d548630_Out_2, _OneMinus_71855da0a7c84205903262652c0e8d3c_Out_1, (_Property_502eb2b4b3ac422191a480519296c35d_Out_0.xxx), _Lerp_25fca7c1e8b84fcdaa76d7ff4bfd54d0_Out_3);
             float _Property_fd70ac17c42d41869a03c1b612f001cd_Out_0 = _alpha;
-            surface.BaseColor = _Multiply_19c286fcf62545748c187ffc5d548630_Out_2;
+            surface.BaseColor = _Lerp_25fca7c1e8b84fcdaa76d7ff4bfd54d0_Out_3;
             surface.Alpha = _Property_fd70ac17c42d41869a03c1b612f001cd_Out_0;
             return surface;
         }

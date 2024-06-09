@@ -24,7 +24,7 @@ public class EnemyAttack : BaseState
 
     public override void OnUpdateState()
     {
-        LookAtPlayer();
+        //LookAtPlayer();
 
         if (controller.CheckAnimation())
             controller.stateMachine.ChangeState(UnitState.ENEMY_IDLE);

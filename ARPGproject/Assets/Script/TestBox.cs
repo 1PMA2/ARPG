@@ -86,10 +86,11 @@ public class TestBox : MonoBehaviour
 
         if (unitInformation.Exp >= unitInformation.MaxExp)
         {
+            unitInformation.Level += 1;
             UIManager.Instance.ActiveLevelUpUI(true);
-
             unitInformation.Exp = unitInformation.Exp - unitInformation.MaxExp;
-            unitInformation.MaxExp *= 2f;
+
+            unitInformation.MaxExp = (int)(0.25f * unitInformation.MaxExp * unitInformation.MaxExp);
             expBar.LevelUpEXP(unitInformation.MaxExp);
         }
     }
@@ -182,7 +183,7 @@ public class TestBox : MonoBehaviour
     
     public void DamageUp()
     {
-        unitInformation.Damage += 2f;
+        unitInformation.Damage += 1f;
     }
 
     private void Die()
