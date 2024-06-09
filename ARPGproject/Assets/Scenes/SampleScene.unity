@@ -216,7 +216,6 @@ MonoBehaviour:
   height: 8
   start: {x: 0, y: 0}
   end: {x: 7, y: 7}
-  navMeshSurface: {fileID: 395061101}
 --- !u!4 &395061100
 Transform:
   m_ObjectHideFlags: 0

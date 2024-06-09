@@ -28,7 +28,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
 
     [SerializeField] private int width = 10;
     [SerializeField] private int height = 10;
-    int roomCount;
+    int roomCount = 0;
     private int[,] map;
 
     private Vector2Int[] direction = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
@@ -48,7 +48,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
         }
     }
 
-    public NavMeshSurface navMeshSurface;
+    //public NavMeshSurface navMeshSurface;
 
     private new void Awake()
     {
@@ -67,8 +67,6 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
         GameObject createdPlayer = Instantiate(player);
         playerInfo = createdPlayer.GetComponent<UnitInformation>();
         playerTransform = createdPlayer.transform;
-
-        roomCount = width + height;
     }
     private void Start()
     {
@@ -168,7 +166,8 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
             }
             else //갈 수 있는 길이 없을 경우
             {
-                tile.SetType(0);
+                
+                tile.Reverse();
                 Vector2Int reverseDir = stackDir.Pop() * -1;
                 map[pos.x, pos.y] = (int)TILE.ROAD; 
                 pos += reverseDir; 
@@ -185,9 +184,10 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
         while (pos != end); //현재 위치가 끝 지점일때 종료
 
         tile.OpenWall(Vector2Int.up);
-        tile.SetType(0);
+        tile.SetTile(ITile.TileType.BOX);
+
         Instantiate(bossPrefeb, new Vector3(end.x * tileSize, 0, (end.y + 1) * tileSize + 10), Quaternion.identity).transform.SetParent(transform);
-        navMeshSurface.BuildNavMesh();
+        //navMeshSurface.BuildNavMesh();
         stackDir.Clear();
         stackTile.Clear();
     }
@@ -212,17 +212,25 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
         if(x == 0 && z == 0) //시작점은 방
             rand = 0;
 
+
         if (rand == 0)
         {
             GameObject room = Instantiate(roomPrefeb, pos, Quaternion.identity);
             room.transform.SetParent(transform);
             tile = room.GetComponent<Room>();
 
-            int r = 1;//Random.Range(0, 2);
+            if(roomCount > 0)
+            {
+                tile.SetTile(ITile.TileType.MARBLE);
+                roomCount--;
+            }
+            else
+            {
+                tile.SetTile(ITile.TileType.BOX);
+                roomCount = 2;
+            }
 
-            tile.SetType((ITile.TileType)r);
 
-        
         }
         else
         {

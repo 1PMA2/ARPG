@@ -25,40 +25,6 @@ public class CameraManager : Singleton<CameraManager>
 
     private Dictionary<string, GameObject> cameras = new Dictionary<string, GameObject>(new StringComparer());
 
-    public CameraManager()
-    {
-        
-    }
-    private void Start()
-    {
-        //cachedCameraPrefab = Resources.Load("Prefeb/CameraArm") as GameObject;
-        //cachedMinimapPrefab = Resources.Load("Prefeb/Minimap") as GameObject;
-        //CreateCamera();
-
-    }
-
-    //private void CreateCamera()
-    //{
-    //    foreach (var key in cameras.Keys.ToArray())
-    //    {
-    //        GameObject unitCamera = Instantiate(cachedCameraPrefab);
-    //        unitCamera.name = key;
-    //        UnitController unit = cameras[key].GetComponent<UnitController>();
-
-    //        if (unit == null)
-    //        {
-    //            Debug.LogWarning("UnitController component not found on camera with key: " + key);
-    //            continue;
-    //        }
-
-    //        unit.StickCamera(unitCamera);
-    //        cameras[key] = unitCamera; // µñ¼Å³Ê¸® ¾÷µ¥ÀÌÆ®
-    //    }
-
-    //    //Instantiate(cachedMinimapPrefab);
-
-    //}
-
     public void CamRegister(string name, GameObject unit)
     {
         if (!cameras.ContainsKey(name))
@@ -98,6 +64,12 @@ public class CameraManager : Singleton<CameraManager>
 
         while (elapsed < duration)
         {
+
+            if (Time.timeScale == 0)
+            {
+                yield return new WaitUntil(() => Time.timeScale != 0);
+            }
+
             float x = Random.Range(-1f, 1f) * magnitude * (1f - elapsed / duration);
             float y = Random.Range(-1f, 1f) * magnitude * (1f - elapsed / duration);
             float z = Random.Range(-1f, 1f) * magnitude * (1f - elapsed / duration);

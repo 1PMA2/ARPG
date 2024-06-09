@@ -6,9 +6,7 @@ public class MarbleHit : MonoBehaviour
 {
     private GlowEffect glowEffect;
     private Coroutine shakeCoroutine;
-    private Coroutine summonCoroutine;
 
-    public GameObject mon;
     public float duration = 0.5f; // 진동 지속 시간
     public float magnitude = 0.05f; // 진동 강도
 
@@ -57,25 +55,6 @@ public class MarbleHit : MonoBehaviour
         }
     }
 
-    //private void SummomMonster(int num)
-    //{
-    //    Vector3 randomPos;
-    //    int randomX;
-    //    int randomY;
-    //    int randomZ;
-
-        
-    //    for (int i = 0; i < num; i++)
-    //    {
-    //        randomX = Random.Range(-9, 10);
-    //        randomY = Random.Range(0, 360);
-    //        randomZ = Random.Range(-9, 10);
-    //        //summon effect
-    //        randomPos = new Vector3(randomX, 0f, randomZ);
-    //        MonsterManager.Instance.GetMonster(Vector3.zero, Quaternion.Euler(0, randomY, 0));
-    //    }
-    //}
-
     private void ShakeMarble()
     {
         if (shakeCoroutine != null)
@@ -95,9 +74,9 @@ public class MarbleHit : MonoBehaviour
 
         while (count < num)
         {
-            randomX = Random.Range(-8, 9);
+            randomX = Random.Range(-7, 8);
             randomY = Random.Range(0, 360);
-            randomZ = Random.Range(-8, 9);
+            randomZ = Random.Range(-7, 8);
             //summon effect
             randomPos = new Vector3(randomX, 0f, randomZ);
 

@@ -18,8 +18,8 @@ using UnityEngine;
         void OpenWall(Vector2Int dir);
         void CloseDoor(Vector2Int dir);
         void OpenDoor();
-        void SetType(TileType tileType);
-        void Dest();
+        void SetTile(TileType tileType);
+        void Reverse();
 
     }
 

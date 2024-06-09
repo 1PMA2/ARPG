@@ -94,7 +94,7 @@ public class UIManager : Singleton<UIManager>
             {
                 EventSystem.current.SetSelectedGameObject(null);
             }
-            itemUI.SetActive(active);
+            itemUI.SetActive(active);          
         }
 
         if (active)

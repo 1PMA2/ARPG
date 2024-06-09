@@ -9,7 +9,6 @@ using UnityEngine.UI;
 public class Item : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public ItemData[] allItemDatas; // 모든 아이템 데이터 배열
-    private List<ItemData> selectedItems = new List<ItemData>(); // 선택된 아이템 데이터 배열
     ItemData currentItemData;
     public ItemData CurrentItemData { get { return currentItemData; } }
 
@@ -52,6 +51,8 @@ public class Item : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         currentItemData = UIManager.Instance.SelectRandomItems(allItemDatas);
 
         UpdateItem(); // 초기 아이템 설정
+
+        
     }
 
     private void OnDisable()

@@ -17,6 +17,7 @@ public class Room : MonoBehaviour, ITile
     private bool up, down, left, right = false;
 
     private TileType roomType;
+    public TileType RoomType { get { return roomType; } } 
 
     [SerializeField] private GameObject upDoor;
     [SerializeField] private GameObject downDoor;
@@ -27,6 +28,9 @@ public class Room : MonoBehaviour, ITile
     [SerializeField] private GameObject marble_1;
     [SerializeField] private GameObject marble_2;
     [SerializeField] private GameObject marble_3;
+
+
+    [SerializeField] private GameObject box;
 
     private GameObject correctMarble;
     private bool isOpen = false;
@@ -157,36 +161,44 @@ public class Room : MonoBehaviour, ITile
         door.SetActive(false);
     }
 
-
-    public void SetType(TileType tileType)
+    public void SetTile(TileType tileType)
     {
-        roomType = tileType;
-
-        marble_0.SetActive(false);
-        marble_1.SetActive(false);
-        marble_2.SetActive(false);
-        marble_3.SetActive(false);
-
+        
         OpenDoor();
 
-        if (tileType == TileType.MARBLE)
+        switch(tileType)
         {
-            marble_0.SetActive(true);
-            marble_1.SetActive(true);
-            marble_2.SetActive(true);
-            marble_3.SetActive(true);
+            case TileType.MARBLE:
+                marble_0.SetActive(true);
+                marble_1.SetActive(true);
+                marble_2.SetActive(true);
+                marble_3.SetActive(true);
 
-            SetRandomColorMarble();
-            SetRandomCorrectMarble();
+                SetRandomColorMarble();
+                SetRandomCorrectMarble();
+                isOpen = false;
+                break;
 
-            isOpen = false;
+            case TileType.BOX:
+                box.SetActive(true);
+                marble_0.SetActive(false);
+                marble_1.SetActive(false);
+                marble_2.SetActive(false);
+                marble_3.SetActive(false);
+                break;
+
+            default:
+                marble_0.SetActive(false);
+                marble_1.SetActive(false);
+                marble_2.SetActive(false);
+                marble_3.SetActive(false);
+                break;
         }
-        else
-        {
-            
-            
-        }
+
+        roomType = tileType;
     }
+
+
     private void SetRandomColorMarble()
     {
         float r = Random.Range(0f, 1f);
@@ -228,7 +240,6 @@ public class Room : MonoBehaviour, ITile
         {
             hitMarble.GetGlowEffect().SetGlowIntensity(25f);
             OpenDoor();
-            UIManager.Instance.ActiveItemUI(true);
             isOpen = true;
         }
         else if(!isOpen)
@@ -239,84 +250,20 @@ public class Room : MonoBehaviour, ITile
 
     }
 
-    public void Dest()
+    public void Reverse()
     {
-        if(roomType == TileType.MARBLE)
-            Destroy(gameObject);
+        OpenDoor();
+        if (roomType == TileType.MARBLE)
+        {
+            marble_0.SetActive(false);
+            marble_1.SetActive(false);
+            marble_2.SetActive(false);
+            marble_3.SetActive(false);
+
+            roomType = TileType.NONE;
+        }
     }
 
-    //[Header("Boxcast Property")]
-    //[SerializeField] private Vector3 boxSize;
-    //[SerializeField] private float maxDistance;
-    //[SerializeField] private LayerMask layer;
-
-    //[Header("Debug")]
-    //[SerializeField] private bool drawGizmo;
-
-    //private List<Vector3> detectedPositions = new List<Vector3>();
-
-    //private void OnDrawGizmos()
-    //{
-    //    if (!drawGizmo) return;
-
-    //    Gizmos.color = Color.cyan;
-    //    Gizmos.DrawCube(transform.position - transform.up * maxDistance, boxSize);
-    //}
-
-    //public bool IsInUnit()
-    //{
-    //    Collider[] colliders = Physics.OverlapBox(transform.position, boxSize / 2, transform.rotation, layer);
-
-    //    detectedPositions.Clear();
-
-    //    foreach (var hitCollider in colliders)
-    //    {
-    //        // 감지된 각 콜라이더의 위치를 가져오기
-    //        Vector3 detectedObjectPosition = hitCollider.transform.position;
-    //        detectedPositions.Add(detectedObjectPosition);
-    //    }
-
-    //    return colliders.Length > 0;
-    //}
-
-    //void Start()
-    //{
-    //    r_rtcamera = Instantiate(_rtcamera, new Vector3(transform.position.x, 20, transform.position.z), _rtcamera.transform.rotation);
-    //}
-
-    //void Update()
-    //{
-    //    if (Input.GetKeyDown(KeyCode.Mouse0))
-    //    {
-    //        if (IsInUnit())
-    //        {
-    //            if (r_rtcamera != null && !r_rtcamera.activeSelf)
-    //                r_rtcamera.SetActive(true);
-
-    //            if (_particle != null)
-    //            {
-    //                foreach(var hitCollider in detectedPositions)
-    //                {
-    //                    GameObject renderTextureParticle = Instantiate(_particle, hitCollider, Quaternion.identity);
-
-    //                    Destroy(renderTextureParticle, 2f);
-    //                }
-
-    //            }
-    //            else
-    //            {
-    //                Debug.LogError("Particle prefab is not assigned!");
-    //            }
-
-    //        }
-    //        else
-    //        {
-    //            if (r_rtcamera != null && r_rtcamera.activeSelf)
-    //                r_rtcamera.SetActive(false);
-
-    //        }
-    //    }
-    //}
 
 
 }

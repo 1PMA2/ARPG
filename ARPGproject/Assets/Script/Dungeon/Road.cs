@@ -54,11 +54,11 @@ public class Road : MonoBehaviour, ITile
 
     }
 
-    public void SetType(TileType tileType)
+    public void SetTile(TileType tileType)
     {
 
     }
-    public void Dest()
+    public void Reverse()
     {
 
     }
