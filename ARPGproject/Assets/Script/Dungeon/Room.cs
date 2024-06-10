@@ -137,6 +137,18 @@ public class Room : MonoBehaviour, ITile
         
     }
 
+    public void CloseDoorUp()
+    {
+        if(!upWall.activeSelf)
+            StartCoroutine(OpenUp(upDoor));
+        if (!downWall.activeSelf)
+            StartCoroutine(OpenUp(downDoor));
+        if (!leftWall.activeSelf)
+            StartCoroutine(OpenUp(leftDoor));
+        if (!rightWall.activeSelf)
+            StartCoroutine(OpenUp(rightDoor));
+    }
+
     private IEnumerator OpenDown(GameObject door)
     {
         float targetY = -0.3f;
@@ -159,6 +171,32 @@ public class Room : MonoBehaviour, ITile
         }
 
         door.SetActive(false);
+    }
+
+    private IEnumerator OpenUp(GameObject door)
+    {
+        
+        door.transform.localPosition = new Vector3(door.transform.localPosition.x, -0.3f, door.transform.localPosition.z);
+        door.SetActive(true);
+
+        float targetY = 2.5f;
+        float speed = 0f;
+        float acceleration = 9.8f;
+        float elapsedTime = 0f;
+
+        while (door.transform.localPosition.y < targetY)
+        {
+            elapsedTime += Time.deltaTime;
+            speed += acceleration * Time.deltaTime;
+            float newY = door.transform.localPosition.y + speed * Time.deltaTime;
+
+
+            if (newY > targetY)
+                newY = targetY;
+
+            door.transform.localPosition = new Vector3(door.transform.localPosition.x, newY, door.transform.localPosition.z);
+            yield return null;
+        }
     }
 
     public void SetTile(TileType tileType)

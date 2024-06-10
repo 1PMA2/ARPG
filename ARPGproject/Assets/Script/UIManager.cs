@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using System;
+using Random = UnityEngine.Random;
 
 #if UNITY_EDITOR
 using static UnityEditor.Progress;
@@ -18,16 +20,17 @@ public class UIManager : Singleton<UIManager>
     private GameObject levelUpUI;
 
     float billboardOffset = 2.5f;
+    int firstRare = 1;
     // Start is called before the first frame update
     void Start()
     {
-        billboardOffset = 2.5f;
-
         itemUI = Instantiate(uiPrefabList[2]);
         levelUpUI = Instantiate(uiPrefabList[5]);
+        firstRare = 1;
         ActiveItemUI(false);
         ActiveLevelUpUI(false);
     }
+
 
     private void OnDisable()
     {
@@ -103,6 +106,7 @@ public class UIManager : Singleton<UIManager>
             Time.timeScale = 1;
     }
 
+    public event Action OnLevelUpUIClose;
     public void ActiveLevelUpUI(bool active)
     {
         if (levelUpUI)
@@ -118,13 +122,18 @@ public class UIManager : Singleton<UIManager>
             Time.timeScale = 0;
         else
             Time.timeScale = 1;
+
+        if (!active)
+        {
+            OnLevelUpUIClose?.Invoke();
+        }
     }
 
     public ItemData SelectRandomItems(ItemData[] allItemDatas)
     {
         bool selected = false;
 
-        ItemData selectedItem = GetRandomItem(allItemDatas);
+        ItemData selectedItem = allItemDatas[0];
 
         while (!selected)
         {
@@ -152,9 +161,22 @@ public class UIManager : Singleton<UIManager>
 
     private ItemData GetRandomItem(ItemData[] items)
     {
-        float commonProbability = 0.8f; // Common 아이템이 선택될 확률
-        float rareProbability = 0.2f; // Rare 아이템이 선택될 확률
+        float commonProbability;
+        float rareProbability;
 
+        if (firstRare > 0)
+        {
+            commonProbability = 0f;
+            rareProbability = 1f;
+            firstRare--;
+        }
+        else
+        {
+            commonProbability = 0.8f;
+            rareProbability = 0.2f;
+        }
+        
+        
         while (true)
         {
             int randIndex = Random.Range(0, items.Length);
@@ -165,7 +187,7 @@ public class UIManager : Singleton<UIManager>
                 return item;
             }
             else if (item.itemGrade == ItemData.Grade.RARE && Random.value < rareProbability)
-            {
+            {        
                 return item;
             }
         }
@@ -192,6 +214,7 @@ public class UIManager : Singleton<UIManager>
 
     public void Restart()
     {
+        firstRare = 1;
         billboardList.Clear();
         selectedItems.Clear();
         Destroy(itemUI);

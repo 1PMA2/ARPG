@@ -9,6 +9,8 @@ public class BoxOpen : MonoBehaviour
     // Start is called before the first frame update
     [SerializeField] private Transform boxUp;
     [SerializeField] private Transform room;
+
+    List<GameObject> monsters = new List<GameObject>();
     void Start()
     {
         
@@ -25,6 +27,11 @@ public class BoxOpen : MonoBehaviour
         transform.rotation = Quaternion.Euler(0, randomY, 0);
     }
 
+    private void OnDisable()
+    {
+        monsters.Clear();
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -36,6 +43,7 @@ public class BoxOpen : MonoBehaviour
         if (other.CompareTag("Attack"))
         {
             UIManager.Instance.ActiveItemUI(true);
+            room.GetComponent<Room>().CloseDoorUp();
             StartCoroutine(BoxLidOpen());
             Invoke(nameof(InvokeSummonMonsterCoroutine), 0.2f);
             gameObject.GetComponent<BoxCollider>().enabled = false;
@@ -45,17 +53,18 @@ public class BoxOpen : MonoBehaviour
     private IEnumerator BoxLidOpen()
     {
         float elapsedTime = 0f;
-        float lidAngle = boxUp.rotation.eulerAngles.x;
+        float lidAngle = boxUp.localRotation.eulerAngles.x;
+       
 
         while (elapsedTime < 0.5f)
         {
             float lerp = Mathf.Lerp(lidAngle, 45, elapsedTime / 0.5f);
-            boxUp.rotation = Quaternion.Euler(new Vector3(lerp, 0, 0));
+            boxUp.localRotation = Quaternion.Euler(new Vector3(lerp, 0, 0));
             elapsedTime += Time.deltaTime;
             yield return null;
         }
 
-        boxUp.rotation = Quaternion.Euler(new Vector3(45, 0, 0));
+        boxUp.localRotation = Quaternion.Euler(new Vector3(45, 0, 0));
     }
 
     private void InvokeSummonMonsterCoroutine()
@@ -79,7 +88,11 @@ public class BoxOpen : MonoBehaviour
             //summon effect
             randomPos = new Vector3(randomX, 0f, randomZ);
 
-            MonsterManager.Instance.GetMonster(room.position + randomPos, Quaternion.Euler(0, randomY, 0));
+            GameObject monster = MonsterManager.Instance.GetMonster(room.position + randomPos, Quaternion.Euler(0, randomY, 0));
+            monsters.Add(monster);
+
+            UnitChecker unitChecker = monster.GetComponent<UnitChecker>();
+            unitChecker.OnDisabled += OnMonsterDisabled;
 
             count++;
             yield return null;
@@ -88,4 +101,26 @@ public class BoxOpen : MonoBehaviour
         count = 0;
         StopCoroutine(SummonMonster(num));
     }
+
+    private void OnMonsterDisabled()
+    {
+        if (monsters.TrueForAll(monster => monster == null || !monster.gameObject.activeSelf))
+        {
+            foreach (var monster in monsters)
+            {
+                if (monster != null)
+                {
+                    monster.GetComponent<UnitChecker>().OnDisabled -= OnMonsterDisabled;
+                }
+            }
+
+            if (room != null)
+                room.GetComponent<Room>().OpenDoor();
+
+            monsters.Clear();
+
+
+        }
+    }
+
 }

@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class UnitChecker : MonoBehaviour
 {
+    public event Action OnDisabled;
 
     [Header("Cast Property")]
     [SerializeField] private float radius;
@@ -46,5 +48,10 @@ public class UnitChecker : MonoBehaviour
         }
 
         return nearestTransform;
+    }
+
+    private void OnDisable()
+    {
+        OnDisabled?.Invoke();
     }
 }

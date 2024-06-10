@@ -1489,7 +1489,7 @@ GameObject:
   - component: {fileID: 6280545291456074849}
   - component: {fileID: 6280545291456074780}
   - component: {fileID: 6280545291456074783}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Evil_spirit_sheath
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9130,7 +9130,7 @@ GameObject:
   - component: {fileID: 6280545291822880404}
   - component: {fileID: 6280545291822880406}
   - component: {fileID: 6280545291822880407}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Evil_spirit_tying
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9304,7 +9304,7 @@ GameObject:
   - component: {fileID: 6280545292079585587}
   - component: {fileID: 6280545292079585585}
   - component: {fileID: 6280545292079585582}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Evil_spirit_sheath
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17135,7 +17135,7 @@ GameObject:
   - component: {fileID: 6280545292705969451}
   - component: {fileID: 6280545292705969453}
   - component: {fileID: 6280545292705969450}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Evil_spirit_tying
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17637,7 +17637,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7997791964977251162}
   - component: {fileID: 4722382417763505202}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17966,7 +17966,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3695264013258098242}
   - component: {fileID: 5508485100331465790}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Joints
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18390,6 +18390,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PalmKatana
       objectReference: {fileID: 0}
+    - target: {fileID: 6306863255461070599, guid: 02130b4f5887a7e4f867cbc3a5299da9, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 7641568824304925885, guid: 02130b4f5887a7e4f867cbc3a5299da9, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -18445,6 +18449,14 @@ PrefabInstance:
     - target: {fileID: 7641568824304925885, guid: 02130b4f5887a7e4f867cbc3a5299da9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 170.717
+      objectReference: {fileID: 0}
+    - target: {fileID: 9147337878663211788, guid: 02130b4f5887a7e4f867cbc3a5299da9, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 9147644931411251974, guid: 02130b4f5887a7e4f867cbc3a5299da9, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 9187992088965775769, guid: 02130b4f5887a7e4f867cbc3a5299da9, type: 3}
       propertyPath: m_AABB.m_Center.x
@@ -18544,6 +18556,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Evil_spirit_katana 1 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3340535983930208023, guid: 31f3d67946fcb38429bea95e2ef36973, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 31f3d67946fcb38429bea95e2ef36973, type: 3}
 --- !u!4 &8752940117635193945 stripped
@@ -18561,6 +18577,10 @@ PrefabInstance:
     - target: {fileID: 4853346850298097596, guid: 02130b4f5887a7e4f867cbc3a5299da9, type: 3}
       propertyPath: m_Name
       value: New Prefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 6306863255461070599, guid: 02130b4f5887a7e4f867cbc3a5299da9, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 7641568824304925885, guid: 02130b4f5887a7e4f867cbc3a5299da9, type: 3}
       propertyPath: m_RootOrder
@@ -18617,6 +18637,14 @@ PrefabInstance:
     - target: {fileID: 7641568824304925885, guid: 02130b4f5887a7e4f867cbc3a5299da9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 9147337878663211788, guid: 02130b4f5887a7e4f867cbc3a5299da9, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 9147644931411251974, guid: 02130b4f5887a7e4f867cbc3a5299da9, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 9187992088965775769, guid: 02130b4f5887a7e4f867cbc3a5299da9, type: 3}
       propertyPath: m_AABB.m_Center.x

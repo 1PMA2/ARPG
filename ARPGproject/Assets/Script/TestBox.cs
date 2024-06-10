@@ -12,7 +12,7 @@ public class TestBox : MonoBehaviour
     private UnitInformation unitInformation;
     private float maxHealth;
     private float maxStamina;
-
+    int levelUps = 0;
 
     private Coroutine restoreCoroutine = null;
 
@@ -84,15 +84,40 @@ public class TestBox : MonoBehaviour
         expBar.TakeEXP(exp);
         unitInformation.Exp += exp;
 
-        if (unitInformation.Exp >= unitInformation.MaxExp)
+        while (unitInformation.Exp >= unitInformation.MaxExp)
         {
             unitInformation.Level += 1;
-            UIManager.Instance.ActiveLevelUpUI(true);
-            unitInformation.Exp = unitInformation.Exp - unitInformation.MaxExp;
+            levelUps++;
+            unitInformation.Exp -= unitInformation.MaxExp;
+
 
             unitInformation.MaxExp = (int)(0.25f * unitInformation.MaxExp * unitInformation.MaxExp);
             expBar.LevelUpEXP(unitInformation.MaxExp);
         }
+
+        if(levelUps > 0)
+        {
+            UIManager.Instance.OnLevelUpUIClose += ShowLevelUpUI;
+            ShowLevelUpUI();
+        }
+    }
+
+    private void ShowLevelUpUI()
+    {
+        if(levelUps > 0)
+        {
+            Invoke("AcivateUI", 0.5f);
+        }
+        else
+        {
+            UIManager.Instance.OnLevelUpUIClose -= ShowLevelUpUI;
+        }
+    }
+
+    private void AcivateUI()
+    {
+        UIManager.Instance.ActiveLevelUpUI(true);
+        levelUps--;
     }
 
     public void Heal(float heal)
