@@ -15,7 +15,8 @@ namespace PlayerController
         {
             controller.UnitInfo.currentState = UnitState.COMBO_03;
 
-            controller.ChangeAnimation("Combo3", 0.02f, 1.5f);
+            controller.IsAnimationStart();
+            controller.ChangeAnimation("Combo3", 0.05f, 1.5f);
             
             controller.LookForward();
 
@@ -32,7 +33,11 @@ namespace PlayerController
 
         public override void OnUpdateState()
         {
-            
+            if (controller.IsEvade() && controller.StatController.AbleStamina(DamageState.evadeStamina))
+            {
+                controller.stateMachine.ChangeState(UnitState.EVADE);
+                return;
+            }
 
             if (controller.CheckAnimation())
             {
@@ -51,7 +56,7 @@ namespace PlayerController
 
         public override void OnExitState()
         {
-            controller.SetEquip(true);
+            controller.ExitComnbo();
         }
 
     }

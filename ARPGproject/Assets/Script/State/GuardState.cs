@@ -12,11 +12,16 @@ public class GuardState : BaseState
 
     public override void OnEnterState()
     {
+        controller.animator.applyRootMotion = false;
+        controller.DisableSmashTrigger();
+        controller.DisableWeaponTrigger();
+
         controller.UnitInfo.currentState = UnitState.GUARD_01;
 
         controller.LookForward();
 
-        controller.ChangeAnimation("Guard", 0.2f, 1f);
+        controller.IsAnimationStart();
+        controller.ChangeAnimation("Guard", 0.1f, 1f);
     }
 
     public override void OnFixedUpdateState()
@@ -31,6 +36,7 @@ public class GuardState : BaseState
             controller.stateMachine.ChangeState(UnitState.IDLE);
             return;
         }
+
     }
 
     public override void OnLateUpdateState()
@@ -40,6 +46,7 @@ public class GuardState : BaseState
 
     public override void OnExitState()
     {
+        controller.StartGuardCooldown();
         controller.SetEquip(true);
     }
 }

@@ -168,7 +168,7 @@ public class UnitController : MonoBehaviour
 
                 animator.SetBool("IsFinished", false);
                 animator.SetBool("Equip", !isEquip);
-            }
+            }        
 
             CheckInputDir();
         }
@@ -235,11 +235,34 @@ public class UnitController : MonoBehaviour
 
     public bool IsGuard()
     {
-        if (IsBufferedInput("a") && (0 >= inputDir.magnitude))
+        if (IsBufferedInput("a") && (0 >= inputDir.magnitude) && !isGuardCooldown)
             return true;
 
         return false;
     }
+
+    
+    private bool isGuardCooldown = false;
+
+    public void StartGuardCooldown()
+    {
+        isGuardCooldown = true;
+        StartCoroutine(GuardCooldown());
+    }
+
+    private IEnumerator GuardCooldown()
+    {
+        yield return YieldCache.WaitForSeconds(0.3f);
+        isGuardCooldown = false; 
+    }
+
+    //public bool EmergencyGuard()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.Tab) && (0 >= inputDir.magnitude))
+    //        return true;
+
+    //    return false;
+    //}
 
     public bool IsEvade()
     {
@@ -500,6 +523,11 @@ public class UnitController : MonoBehaviour
     public void AbleComboSmashFrame()
     {
         isSmash = true;
+    }
+
+    public void ExitComnbo()
+    {
+        isCombo = false;
     }
 
     public bool CheckAnimation()

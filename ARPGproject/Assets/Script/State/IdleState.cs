@@ -23,7 +23,7 @@ namespace PlayerController
             controller.DisableSmashTrigger();
             controller.DisableWeaponTrigger();
 
-            controller.StatController.RestoreStmina(1.8f, 0.2f);
+            controller.StatController.RestoreStmina(4f, 0.5f);
         }
 
         public override void OnFixedUpdateState()
@@ -64,9 +64,8 @@ namespace PlayerController
                 return;
             }
 
-            if (controller.IsGuard() && !isGuardCooldown)
+            if (controller.IsGuard())
             {
-                StartGuardCooldown();
                 controller.stateMachine.ChangeState(UnitState.GUARD_01);
                 controller.StatController.StopRestore();
                 return;
@@ -84,24 +83,6 @@ namespace PlayerController
         }
 
 
-        private float guardCooldown = 0f;
-        private bool isGuardCooldown = false;
-
-        private void StartGuardCooldown()
-        {
-            isGuardCooldown = true;
-            controller.StartCoroutine(GuardCooldown());
-        }
-
-        private IEnumerator GuardCooldown()
-        {
-            guardCooldown = 0.5f; // Set the cooldown duration
-            while (guardCooldown > 0)
-            {
-                guardCooldown -= Time.deltaTime;
-                yield return null;
-            }
-            isGuardCooldown = false; // Reset the cooldown flag
-        }
+        
     }
 }

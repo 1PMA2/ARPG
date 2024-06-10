@@ -20,13 +20,13 @@ public class UIManager : Singleton<UIManager>
     private GameObject levelUpUI;
 
     float billboardOffset = 2.5f;
-    int firstRare = 1;
+    int firstRare = 3;
     // Start is called before the first frame update
     void Start()
     {
         itemUI = Instantiate(uiPrefabList[2]);
         levelUpUI = Instantiate(uiPrefabList[5]);
-        firstRare = 1;
+        firstRare = 3;
         ActiveItemUI(false);
         ActiveLevelUpUI(false);
     }
@@ -155,7 +155,7 @@ public class UIManager : Singleton<UIManager>
                 }
             }
         }
-
+        firstRare--;
         return selectedItem;
     }
 
@@ -168,7 +168,6 @@ public class UIManager : Singleton<UIManager>
         {
             commonProbability = 0f;
             rareProbability = 1f;
-            firstRare--;
         }
         else
         {
@@ -187,7 +186,7 @@ public class UIManager : Singleton<UIManager>
                 return item;
             }
             else if (item.itemGrade == ItemData.Grade.RARE && Random.value < rareProbability)
-            {        
+            {
                 return item;
             }
         }
@@ -214,7 +213,7 @@ public class UIManager : Singleton<UIManager>
 
     public void Restart()
     {
-        firstRare = 1;
+        firstRare = 3;
         billboardList.Clear();
         selectedItems.Clear();
         Destroy(itemUI);

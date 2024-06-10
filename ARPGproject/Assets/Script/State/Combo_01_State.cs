@@ -16,6 +16,7 @@ namespace PlayerController
         {
             controller.UnitInfo.currentState = UnitState.COMBO_01;
 
+            controller.IsAnimationStart();
             controller.ChangeAnimation("Combo1", 0.2f, 1.2f);         
 
             isCombo = false;
@@ -33,6 +34,11 @@ namespace PlayerController
 
         public override void OnUpdateState()
         {
+            if (controller.IsEvade() && controller.StatController.AbleStamina(DamageState.evadeStamina))
+            {
+                controller.stateMachine.ChangeState(UnitState.EVADE);
+                return;
+            }
 
             if (controller.IsComboAttack())
                 isCombo = true;
@@ -48,6 +54,7 @@ namespace PlayerController
             {
                 controller.stateMachine.ChangeState(UnitState.IDLE);
                 controller.SetEquip(true);
+                return;
             }
         }
 

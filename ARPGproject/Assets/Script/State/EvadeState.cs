@@ -12,11 +12,14 @@ public class EvadeState : BaseState
 
     public override void OnEnterState()
     {
-        controller.UnitInfo.currentState = UnitState.EVADE;
+        controller.ExitComnbo();
+        controller.DisableSmashTrigger();
+        controller.DisableWeaponTrigger();
 
+        controller.UnitInfo.currentState = UnitState.EVADE;
         controller.LookForward();
 
-        controller.ChangeAnimation("Evade", 0.2f, 1.5f);
+        controller.ChangeAnimation("Evade", 0f, 1.5f);
 
         controller.animator.applyRootMotion = true;
 
