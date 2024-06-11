@@ -12,6 +12,12 @@
 **/[Aa]ssets/Resources/
 **/[Aa]ssets/JMO Assets/
 **/[Aa]ssets/ImportAssets/
+**/[Aa]ssets/Animation/
+**/[Aa]ssets/URP/
+**/[Aa]ssets/Textures/
+**/[Aa]ssets/TextMesh Pro/
+**/[Aa]ssets/Plugins/
+**/[Aa]ssets/NavMeshComponents/
 
 
 
