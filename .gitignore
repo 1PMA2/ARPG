@@ -69,6 +69,7 @@ ExportedObj/
 *.anim.meta
 *.fbx.meta
 *.meta
+*.asset
 
 # Unity3D generated file on crash reports
 sysinfo.txt
