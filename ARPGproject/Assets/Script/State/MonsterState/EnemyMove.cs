@@ -60,7 +60,7 @@ public class EnemyMove : BaseState
             controller.characterController.Move(direction * Time.deltaTime * 3.0f); // 이동 속도
 
             Quaternion targetRotation = Quaternion.LookRotation(controller.nearUnitTransform.position - controller.transform.position);
-            controller.transform.rotation = Quaternion.Slerp(controller.transform.rotation, targetRotation, 2f * Time.deltaTime);
+            controller.transform.rotation = Quaternion.Slerp(controller.transform.rotation, Quaternion.Euler(targetRotation.x, 0f, targetRotation.z), 2f * Time.deltaTime);
         }
 
         

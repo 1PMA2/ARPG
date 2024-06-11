@@ -54,7 +54,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _CycleTime: 3
+    - _CycleTime: 1.8
     - _Frequency: 1
     - _Lerp: 0
     - _Power: 10
@@ -62,7 +62,7 @@ Material:
     - _QueueOffset: 0
     - _Rotate: -0.5
     - _Strength: 1
-    - _UnscaledTime: 35.054146
+    - _UnscaledTime: 1.22
     - _alpha: 0.5
     - _power: 1
     - _wavespeed: 1

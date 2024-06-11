@@ -35,6 +35,8 @@ public class EvadeState : BaseState
 
     public override void OnUpdateState()
     {
+        controller.animator.speed = 1.5f;
+
         if (controller.CheckAnimation())
             controller.stateMachine.ChangeState(UnitState.IDLE);
     }
