@@ -237,7 +237,6 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
             GameObject road = Instantiate(roadPrefeb, pos, Quaternion.identity);
             road.transform.SetParent(transform);
             tile = road.GetComponent<Road>();
-
         }
 
         
