@@ -2,21 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace PlayerController
+namespace Controller
 {
-    public class Smash_00_State : BaseState
+    public class Smash_00_State : PlayerState
     {
         private int hashMoveAnimation;
-        public Smash_00_State(UnitController controller) : base(controller)
+        public Smash_00_State(Player controller) : base(controller)
         {
             
         }
 
         public override void OnEnterState()
         {
-            controller.UnitInfo.currentState = UnitState.SMASH_00;
+            playerController.UnitInfo.currentState = UnitState.SMASH_00;
 
-            controller.ChangeAnimation("Smash00", 0.2f, 0.8f);
+            playerController.ChangeAnimation("Smash00", 0.2f, 0.8f);
         }
 
         public override void OnFixedUpdateState()
@@ -26,10 +26,10 @@ namespace PlayerController
 
         public override void OnUpdateState()
         {
-            controller.LookDiraction();
+            playerController.LookDiraction();
 
-            if (controller.CheckAnimation())
-                controller.stateMachine.ChangeState(UnitState.SMASH_01);
+            if (playerController.CheckAnimation())
+                playerController.stateMachine.ChangeState(UnitState.SMASH_01);
 
         }
 

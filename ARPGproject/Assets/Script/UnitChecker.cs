@@ -14,8 +14,6 @@ public class UnitChecker : MonoBehaviour
     [Header("Debug")]
     [SerializeField] private bool drawGizmo;
 
-    private List<Transform> detectedTransform = new List<Transform>();
-
     private void OnDrawGizmos()
     {
         if (!drawGizmo) return;

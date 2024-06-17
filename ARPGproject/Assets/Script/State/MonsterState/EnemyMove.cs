@@ -1,19 +1,19 @@
-using PlayerController;
+using Controller;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyMove : BaseState
+public class EnemyMove : SkeletonState
 {
-    public EnemyMove(UnitController controller) : base(controller)
+    public EnemyMove(Skeleton controller) : base(controller)
     {
 
     }
 
     public override void OnEnterState()
     {
-        
-        controller.ChangeAnimation("Walk", 0.2f, 1f);
+
+        skeletonController.ChangeAnimation("Walk", 0.2f, 1f);
 
     }
 
@@ -24,15 +24,15 @@ public class EnemyMove : BaseState
 
     public override void OnUpdateState()
     {
-        if(controller.nearUnitTransform == null)
+        if(skeletonController.nearUnitTransform == null)
         {
-            controller.stateMachine.ChangeState(UnitState.ENEMY_IDLE);
+            skeletonController.stateMachine.ChangeState(UnitState.ENEMY_IDLE);
             return;
         }
 
-        if (Vector3.Distance(controller.transform.position, controller.nearUnitTransform.position) < 2f)
+        if (Vector3.Distance(skeletonController.transform.position, skeletonController.nearUnitTransform.position) < 2f)
         {
-            controller.stateMachine.ChangeState(UnitState.ENEMY_ATTACK);
+            skeletonController.stateMachine.ChangeState(UnitState.ENEMY_ATTACK);
         }
         else
         {
@@ -54,13 +54,13 @@ public class EnemyMove : BaseState
     {
         
 
-        if (controller.nearUnitTransform != null)
+        if (skeletonController.nearUnitTransform != null)
         {
-            Vector3 direction = (controller.nearUnitTransform.position - controller.transform.position).normalized;
-            controller.characterController.Move(direction * Time.deltaTime * 3.0f); // 이동 속도
+            Vector3 direction = (skeletonController.nearUnitTransform.position - skeletonController.transform.position).normalized;
+            skeletonController.characterController.Move(direction * Time.deltaTime * 3.0f); // 이동 속도
 
-            Quaternion targetRotation = Quaternion.LookRotation(controller.nearUnitTransform.position - controller.transform.position);
-            controller.transform.rotation = Quaternion.Slerp(controller.transform.rotation, Quaternion.Euler(targetRotation.x, 0f, targetRotation.z), 2f * Time.deltaTime);
+            Quaternion targetRotation = Quaternion.LookRotation(skeletonController.nearUnitTransform.position - skeletonController.transform.position);
+            skeletonController.transform.rotation = Quaternion.Slerp(skeletonController.transform.rotation, targetRotation, 2f * Time.deltaTime);
         }
 
         

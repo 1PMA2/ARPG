@@ -1,27 +1,24 @@
-using PlayerController;
+using Controller;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GuardState : BaseState
+public class GuardState : PlayerState
 {
-    public GuardState(UnitController controller) : base(controller)
+    public GuardState(Player controller) : base(controller)
     {
 
     }
 
     public override void OnEnterState()
     {
-        controller.animator.applyRootMotion = false;
-        controller.DisableSmashTrigger();
-        controller.DisableWeaponTrigger();
-
-        controller.UnitInfo.currentState = UnitState.GUARD_01;
-
-        controller.LookForward();
-
-        controller.IsAnimationStart();
-        controller.ChangeAnimation("Guard", 0.1f, 1f);
+        playerController.UnitInfo.currentState = UnitState.GUARD_01;
+        playerController.ChangeAnimation("Guard", 0.1f, 1f);
+        playerController.IsAnimationStart();
+        playerController.DisableWeaponTrigger();
+        playerController.DisableSmashTrigger();
+        playerController.LookForward();
+        playerController.animator.applyRootMotion = false;
     }
 
     public override void OnFixedUpdateState()
@@ -31,9 +28,9 @@ public class GuardState : BaseState
 
     public override void OnUpdateState()
     {
-        if (controller.CheckAnimation())
+        if (playerController.CheckAnimation())
         {
-            controller.stateMachine.ChangeState(UnitState.IDLE);
+            playerController.stateMachine.ChangeState(UnitState.IDLE);
             return;
         }
 
@@ -46,7 +43,7 @@ public class GuardState : BaseState
 
     public override void OnExitState()
     {
-        controller.StartGuardCooldown();
-        controller.SetEquip(true);
+        playerController.StartGuardCooldown();
+        playerController.SetEquip(true);
     }
 }

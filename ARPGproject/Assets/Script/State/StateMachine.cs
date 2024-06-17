@@ -5,7 +5,7 @@ using UnityEngine;
 
 
 
-namespace PlayerController
+namespace Controller
 {
     public class StateMachine
     {

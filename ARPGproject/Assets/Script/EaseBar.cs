@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using PlayerController;
+using Controller;
 using UnityEditor;
 
 public class EaseBar : MonoBehaviour

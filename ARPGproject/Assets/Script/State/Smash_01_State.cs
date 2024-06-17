@@ -2,35 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace PlayerController
+namespace Controller
 {
-    public class Smash_01_State : BaseState
+    public class Smash_01_State : PlayerState
     {
         private bool isSmash;
         private float initialSmashSpeed = 50f;
         private TestBox statController;
-        public Smash_01_State(UnitController controller) : base(controller)
+        public Smash_01_State(Player controller) : base(controller)
         {
             
         }
 
         public override void OnEnterState()
         {
-            controller.animator.applyRootMotion = false;
-
-            if(controller.UnitInfo.currentState != UnitState.COUNTER)
-                controller.UnitInfo.currentState = UnitState.SMASH_01;
-
-            controller.gameObject.layer = 8;
-
-            controller.ChangeAnimation("Smash01", 0f, 2f);
-
-            controller.smashSpeed = initialSmashSpeed;
-
+            if(playerController.UnitInfo.currentState != UnitState.COUNTER)
+                playerController.UnitInfo.currentState = UnitState.SMASH_01;
+            playerController.ChangeAnimation("Smash01", 0f, 2f);
+            playerController.animator.applyRootMotion = false;
+            playerController.smashSpeed = initialSmashSpeed;
+            playerController.gameObject.layer = 8;
             isSmash = false;
 
-            statController = controller.GetComponent<TestBox>();
-
+            statController = playerController.GetComponent<TestBox>();
             statController.UseStamina(DamageState.smashStamina);
         }
 
@@ -41,13 +35,13 @@ namespace PlayerController
 
         public override void OnUpdateState()
         {
-            if (controller.IsSmash())
+            if (playerController.IsSmash())
                 isSmash = true;
 
-            if(controller.IsSmashMoveStart())
-                controller.SmashMove();
+            if(playerController.IsSmashMoveStart())
+                playerController.SmashMove();
 
-            if (controller.CheckAnimation())
+            if (playerController.CheckAnimation())
             {
                 if ((controller.IsCounter > 0) && isSmash && statController.AbleStamina(DamageState.smashStamina))
                 {
@@ -57,16 +51,12 @@ namespace PlayerController
                 }
                 else
                 {
-                    controller.IsCounter = 0;
-                    controller.stateMachine.ChangeState(UnitState.IDLE);
-                    controller.SetEquip(true);
+                    playerController.IsCounter = 0;
+                    playerController.stateMachine.ChangeState(UnitState.IDLE);
+                    playerController.SetEquip(true);
                     return;
                 }
             }
-
-
-
-
         }
 
         public override void OnLateUpdateState()
@@ -76,29 +66,29 @@ namespace PlayerController
 
         public override void OnExitState()
         {
-            controller.gameObject.layer = 7;
+            playerController.gameObject.layer = 7;
         }
 
         private void ComboSmash()
         {
             statController.UseStamina(DamageState.smashStamina);
 
-            controller.animator.CrossFade("Smash01", 0.2f, -1, 0f);
-            controller.animator.speed = 2f;
-            controller.smashSpeed = 50f;
+            playerController.animator.CrossFade("Smash01", 0.2f, -1, 0f);
+            playerController.animator.speed = 2f;
+            playerController.smashSpeed = 50f;
 
-            if(controller.InputDir.magnitude <= 0)
+            if(playerController.InputDir.magnitude <= 0)
             {
-                Vector3 currentRotation = controller.transform.rotation.eulerAngles;
+                Vector3 currentRotation = playerController.transform.rotation.eulerAngles;
                 currentRotation.y += 180;
-                controller.transform.rotation = Quaternion.Euler(currentRotation);
+                playerController.transform.rotation = Quaternion.Euler(currentRotation);
             }
             else
             {
-                controller.transform.rotation = Quaternion.LookRotation(controller.InputDir);
+                playerController.transform.rotation = Quaternion.LookRotation(playerController.InputDir);
             }
 
-            controller.IsCounter--;
+            playerController.IsCounter--;
         }
     }
 }

@@ -2,28 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace PlayerController
+namespace Controller
 {
-    public class Combo_02_State : BaseState
+    public class Combo_02_State : PlayerState
     {
         private bool isCombo;
-        public Combo_02_State(UnitController controller) : base(controller)
+        public Combo_02_State(Player controller) : base(controller)
         {
-            
+
         }
 
         public override void OnEnterState()
         {
-            controller.UnitInfo.currentState = UnitState.COMBO_02;
-
-            controller.IsAnimationStart();
-            controller.ChangeAnimation("Combo2", 0.05f, 1f);
-
+            playerController.UnitInfo.currentState = UnitState.COMBO_02;
+            playerController.ChangeAnimation("Combo2", 0.05f, 1f);
+            playerController.IsAnimationStart();
+            playerController.DisableWeaponTrigger();
+            playerController.LookForward();
+            playerController.animator.applyRootMotion = true;
             isCombo = false;
-
-            controller.LookForward();
-
-            controller.animator.applyRootMotion = true;
         }
 
         public override void OnFixedUpdateState()
@@ -33,28 +30,7 @@ namespace PlayerController
 
         public override void OnUpdateState()
         {
-            if (controller.IsEvade() && controller.StatController.AbleStamina(DamageState.evadeStamina))
-            {
-                controller.stateMachine.ChangeState(UnitState.EVADE);
-                return;
-            }
-
-            if (controller.IsComboAttack())
-                isCombo = true;
-
-            if (controller.CheckComboAnimation() && isCombo)
-            {
-                controller.stateMachine.ChangeState(UnitState.COMBO_03);
-                return;
-            }
-
-
-            if (controller.CheckAnimation())
-            {
-                controller.stateMachine.ChangeState(UnitState.IDLE);
-                controller.SetEquip(true);
-                return;
-            }
+            StateBranch();
         }
 
         public override void OnLateUpdateState()
@@ -64,8 +40,33 @@ namespace PlayerController
 
         public override void OnExitState()
         {
-            controller.ExitComnbo();
+            //controller.ExitComnbo();
         }
 
+        private void StateBranch()
+        {
+            if (playerController.IsEvade() && playerController.StatController.AbleStamina(DamageState.evadeStamina))
+            {
+                playerController.stateMachine.ChangeState(UnitState.EVADE);
+                return;
+            }
+
+            if (playerController.IsComboAttack())
+                isCombo = true;
+
+            if (playerController.CheckComboAnimation() && isCombo)
+            {
+                playerController.stateMachine.ChangeState(UnitState.COMBO_03);
+                return;
+            }
+
+
+            if (playerController.CheckAnimation())
+            {
+                playerController.stateMachine.ChangeState(UnitState.IDLE);
+                playerController.SetEquip(true);
+                return;
+            }
+        }
     }
 }

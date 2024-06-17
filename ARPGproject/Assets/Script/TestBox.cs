@@ -1,4 +1,4 @@
-using PlayerController;
+using Controller;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -81,32 +81,35 @@ public class TestBox : MonoBehaviour
 
     public void TakeEXP(float exp)
     {
-        expBar.TakeEXP(exp);
-        unitInformation.Exp += exp;
-
-        while (unitInformation.Exp >= unitInformation.MaxExp)
+        if (expBar != null)
         {
-            unitInformation.Level += 1;
-            levelUps++;
-            unitInformation.Exp -= unitInformation.MaxExp;
+            expBar.TakeEXP(exp);
+            unitInformation.Exp += exp;
+
+            while (unitInformation.Exp >= unitInformation.MaxExp)
+            {
+                unitInformation.Level += 1;
+                levelUps++;
+                unitInformation.Exp -= unitInformation.MaxExp;
 
 
-            unitInformation.MaxExp = (int)(0.25f * unitInformation.MaxExp * unitInformation.MaxExp);
-            expBar.LevelUpEXP(unitInformation.MaxExp);
-        }
+                unitInformation.MaxExp = (int)(0.25f * unitInformation.MaxExp * unitInformation.MaxExp);
+                expBar.LevelUpEXP(unitInformation.MaxExp);
+            }
 
-        if(levelUps > 0)
-        {
-            UIManager.Instance.OnLevelUpUIClose += ShowLevelUpUI;
-            ShowLevelUpUI();
+            if (levelUps > 0)
+            {
+                UIManager.Instance.OnLevelUpUIClose += ShowLevelUpUI;
+                ShowLevelUpUI();
+            }
         }
     }
 
     private void ShowLevelUpUI()
     {
-        if(levelUps > 0)
+        if(levelUps > 0 && expBar != null)
         {
-            Invoke("AcivateUI", 0.5f);
+            Invoke(nameof(AcivateUI), 0.5f);
         }
         else
         {
@@ -116,8 +119,8 @@ public class TestBox : MonoBehaviour
 
     private void AcivateUI()
     {
-        UIManager.Instance.ActiveLevelUpUI(true);
-        levelUps--;
+            UIManager.Instance.ActiveLevelUpUI(true);
+            levelUps--;
     }
 
     public void Heal(float heal)

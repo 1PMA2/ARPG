@@ -1,27 +1,23 @@
-using PlayerController;
+using Controller;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GuardHitState : BaseState
+public class GuardHitState : PlayerState
 {
-    public GuardHitState(UnitController controller) : base(controller)
+    public GuardHitState(Player controller) : base(controller)
     {
 
     }
 
     public override void OnEnterState()
     {
-        controller.UnitInfo.currentState = UnitState.GUARD_02;
-
-        controller.animator.Play("GuardHit", 0, 0);
-
-        controller.ChangeAnimation("GuardHit", 0f, 1f);
-
-        controller.animator.applyRootMotion = true;
-
-        controller.DisableSmashTrigger();
-        controller.DisableWeaponTrigger();
+        playerController.UnitInfo.currentState = UnitState.GUARD_02;
+        playerController.ChangeAnimation("GuardHit", 0f, 1f);
+        playerController.animator.Play("GuardHit", 0, 0);
+        playerController.DisableSmashTrigger();
+        playerController.DisableWeaponTrigger();
+        playerController.animator.applyRootMotion = true;
     }
 
     public override void OnFixedUpdateState()
@@ -31,18 +27,18 @@ public class GuardHitState : BaseState
 
     public override void OnUpdateState()
     {
-        if (controller.IsSmash() && controller.StatController.AbleStamina(DamageState.smashStamina))
+        if (playerController.IsSmash() && playerController.StatController.AbleStamina(DamageState.smashStamina))
         {
-            controller.UnitInfo.currentState = UnitState.COUNTER;
-            controller.stateMachine.ChangeState(UnitState.SMASH_01);
-            controller.IsCounter = controller.UnitInfo.MaxCounter;
-            controller.IsCounter--;
+            playerController.UnitInfo.currentState = UnitState.COUNTER;
+            playerController.stateMachine.ChangeState(UnitState.SMASH_01);
+            playerController.IsCounter = playerController.UnitInfo.MaxCounter;
+            playerController.IsCounter--;
             return;
         }
 
-        if (controller.CheckAnimation())
+        if (playerController.CheckAnimation())
         {
-            controller.stateMachine.ChangeState(UnitState.IDLE);
+            playerController.stateMachine.ChangeState(UnitState.IDLE);
             return;
         }
 
@@ -55,6 +51,6 @@ public class GuardHitState : BaseState
 
     public override void OnExitState()
     {
-        controller.SetEquip(true);
+        playerController.SetEquip(true);
     }
 }

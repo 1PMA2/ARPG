@@ -1,21 +1,21 @@
-using PlayerController;
+using Controller;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyIdle : BaseState
+public class EnemyIdle : SkeletonState
 {
     private float idleTime;
     private float maxIdleTime;
-    public EnemyIdle(UnitController controller) : base(controller)
+    public EnemyIdle(Skeleton controller) : base(controller)
     {
 
     }
 
     public override void OnEnterState()
     {
-        
-        controller.ChangeAnimation("Idle", 0.2f, 1f);
+
+        skeletonController.ChangeAnimation("Idle", 0.2f, 1f);
         idleTime = 0;
 
         maxIdleTime = Random.Range(2f, 4f);
@@ -35,9 +35,9 @@ public class EnemyIdle : BaseState
 
             if (idleTime >= maxIdleTime)
             {
-                if (controller.nearUnitTransform != null)
+                if (skeletonController.nearUnitTransform != null)
                 {
-                    controller.stateMachine.ChangeState(UnitState.ENEMY_PATROL);         
+                    skeletonController.stateMachine.ChangeState(UnitState.ENEMY_PATROL);         
                 }
             }
     }

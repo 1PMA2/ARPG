@@ -2,25 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace PlayerController
+namespace Controller
 {
-    public class MoveState : BaseState
+    public class MoveState : PlayerState
     {
         private int hashMoveAnimation;
-       public MoveState(UnitController controller) : base(controller)
+       public MoveState(Player controller) : base(controller)
         {
             
         }
 
         public override void OnEnterState()
         {
-            controller.UnitInfo.currentState = UnitState.MOVE;
-
-            controller.animator.applyRootMotion = false;
-
-            controller.DisableSmashTrigger();
-            controller.DisableWeaponTrigger();
-
+            playerController.UnitInfo.currentState = UnitState.MOVE;
+            playerController.DisableWeaponTrigger();
+            playerController.DisableSmashTrigger();
+            playerController.animator.applyRootMotion = false;
             //controller.StatController.RestoreStmina(1, 1);
         }
 
@@ -31,37 +28,7 @@ namespace PlayerController
 
         public override void OnUpdateState()
         {
-            if (controller.IsMove())
-            {
-                controller.Move();
-                controller.LookDiraction();
-            }
-            else
-            {
-                controller.stateMachine.ChangeState(UnitState.IDLE);
-                return;
-            }
-
-            if (controller.IsComboAttack())
-            {
-                controller.stateMachine.ChangeState(UnitState.COMBO_01);
-                controller.StatController.StopRestore();
-                return;
-            }
-
-            if (controller.IsSmash() && controller.StatController.AbleStamina(DamageState.smashStamina))
-            {
-                controller.stateMachine.ChangeState(UnitState.SMASH_00);
-                controller.StatController.StopRestore();
-                return;
-            }
-
-            if (controller.IsEvade() && controller.StatController.AbleStamina(DamageState.evadeStamina))
-            {
-                controller.stateMachine.ChangeState(UnitState.EVADE);
-                controller.StatController.StopRestore();
-                return;
-            }
+            StateBranch();
         }
 
         public override void OnLateUpdateState()
@@ -74,7 +41,48 @@ namespace PlayerController
             
         }
 
-       
-      
+        private void StateBranch()
+        {
+            if (playerController.IsMove())
+            {
+                playerController.Move();
+                playerController.LookDiraction();
+            }
+            else
+            {
+                playerController.stateMachine.ChangeState(UnitState.IDLE);
+                return;
+            }
+
+            if (playerController.IsComboAttack())
+            {
+                playerController.stateMachine.ChangeState(UnitState.COMBO_01);
+                playerController.StatController.StopRestore();
+                return;
+            }
+
+            if (playerController.IsSmash() && playerController.StatController.AbleStamina(DamageState.smashStamina))
+            {
+                playerController.stateMachine.ChangeState(UnitState.SMASH_00);
+                playerController.StatController.StopRestore();
+                return;
+            }
+
+            if (playerController.IsEvade() && playerController.StatController.AbleStamina(DamageState.evadeStamina))
+            {
+                playerController.stateMachine.ChangeState(UnitState.EVADE);
+                playerController.StatController.StopRestore();
+                return;
+            }
+
+            if (playerController.IsGuard())
+            {
+                playerController.stateMachine.ChangeState(UnitState.GUARD_01);
+                playerController.StatController.StopRestore();
+                return;
+            }
+        }
+
+
     }
 }

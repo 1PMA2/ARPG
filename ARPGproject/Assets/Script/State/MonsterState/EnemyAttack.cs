@@ -1,11 +1,11 @@
-using PlayerController;
+using Controller;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyAttack : BaseState
+public class EnemyAttack : SkeletonState
 {
-    public EnemyAttack(UnitController controller) : base(controller)
+    public EnemyAttack(Skeleton controller) : base(controller)
     {
 
     }
@@ -13,7 +13,7 @@ public class EnemyAttack : BaseState
     public override void OnEnterState()
     {
         
-        controller.ChangeAnimation("Attack", 0.2f, 0.5f);
+        skeletonController.ChangeAnimation("Attack", 0.2f, 0.5f);
 
     }
 
@@ -26,8 +26,8 @@ public class EnemyAttack : BaseState
     {
         LookAtPlayer();
 
-        if (controller.CheckAnimation())
-            controller.stateMachine.ChangeState(UnitState.ENEMY_IDLE);
+        if (skeletonController.CheckAnimation())
+            skeletonController.stateMachine.ChangeState(UnitState.ENEMY_IDLE);
 
     }
 
@@ -43,10 +43,10 @@ public class EnemyAttack : BaseState
 
     private void LookAtPlayer()
     {
-        if (controller.nearUnitTransform != null)
+        if (skeletonController.nearUnitTransform != null)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(controller.nearUnitTransform.position - controller.transform.position);
-            controller.transform.rotation = Quaternion.Slerp(controller.transform.rotation, targetRotation, 2f * Time.deltaTime);
+            Quaternion targetRotation = Quaternion.LookRotation(skeletonController.nearUnitTransform.position - skeletonController.transform.position);
+            skeletonController.transform.rotation = Quaternion.Slerp(skeletonController.transform.rotation, targetRotation, 2f * Time.deltaTime);
         }
     }
 }

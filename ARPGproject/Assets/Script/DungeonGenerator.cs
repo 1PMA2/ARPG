@@ -1,4 +1,4 @@
-using PlayerController;
+using Controller;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -162,7 +162,7 @@ public class DungeonGenerator : Singleton<DungeonGenerator>
                 map[pos.x, pos.y] = (int)TILE.CHECK; 
                 CreateRoom(pos.x, pos.y); 
                 tile.OpenWall(direction[index] * -1);
-                tile.CloseDoor(direction[index] * -1);
+                //tile.CloseDoor(direction[index] * -1);
             }
             else //갈 수 있는 길이 없을 경우
             {

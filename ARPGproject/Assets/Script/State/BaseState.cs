@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-namespace PlayerController
+namespace Controller
 {
     public enum UnitState
     {
@@ -23,6 +23,15 @@ namespace PlayerController
         ENEMY_MOVE,
         ENEMY_PATROL,
         ENEMY_ATTACK,
+        END
+    }
+
+    public enum UnitType
+    {
+        PLAYER = 200,
+        USER,
+        SKELLETON,
+        BOSS,
         END
     }
 

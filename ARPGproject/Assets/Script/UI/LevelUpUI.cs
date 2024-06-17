@@ -19,19 +19,19 @@ public class LevelUpUI : MonoBehaviour
 
     public void OnHealthButtonClick()
     {
-        box.MaxHealthUp();
+        box?.MaxHealthUp();
         UIManager.Instance.ActiveLevelUpUI(false);
     }
 
     public void OnStaminaButtonClick()
     {
-        box.MaxStaminaUp();
+        box?.MaxStaminaUp();
         UIManager.Instance.ActiveLevelUpUI(false);
     }
 
     public void OnDamageButtonClick()
     {
-        box.DamageUp();
+        box?.DamageUp();
         UIManager.Instance.ActiveLevelUpUI(false);
     }
 }

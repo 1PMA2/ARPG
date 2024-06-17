@@ -2,10 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace PlayerController
+namespace Controller
 {
     public class UnitInformation : MonoBehaviour
     {
+        [SerializeField] private UnitType unitType;
+        public UnitType UnitType
+        {
+            get { return unitType; }
+            set { unitType = value; }
+        }
+
 
         [SerializeField] private UnitState _currentState; 
         public UnitState currentState

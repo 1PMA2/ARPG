@@ -1,50 +1,47 @@
-using PlayerController;
+using Controller;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HitState : BaseState
+public class HitState : PlayerState
 {
     float hitTime = 0f;
     float maxHitTime = 0.2f;
-    public HitState(UnitController controller) : base(controller)
+    public HitState(Player controller) : base(controller)
     {
 
     }
 
     public override void OnEnterState()
     {
-        controller.UnitInfo.currentState = UnitState.HIT;
-
-        controller.animator.applyRootMotion = true;
-
+        playerController.UnitInfo.currentState = UnitState.HIT;
         int rand = Random.Range(0, 5);
-
         switch(rand)
         {
             case 0:
-                controller.ChangeAnimation("Hit1", 0f, 1.5f);
+                playerController.ChangeAnimation("Hit1", 0f, 1.5f);
                 break;
             case 1:
-                controller.ChangeAnimation("Hit2", 0f, 1.5f);
+                playerController.ChangeAnimation("Hit2", 0f, 1.5f);
                 break;
             case 2:
-                controller.ChangeAnimation("Hit3", 0f, 1.5f);
+                playerController.ChangeAnimation("Hit3", 0f, 1.5f);
                 break;
             case 3:
-                controller.ChangeAnimation("Hit4", 0f, 1.5f);
+                playerController.ChangeAnimation("Hit4", 0f, 1.5f);
                 break;
             case 4:
-                controller.ChangeAnimation("Hit5", 0f, 1.5f);
+                playerController.ChangeAnimation("Hit5", 0f, 1.5f);
                 break;
         }
-
+        playerController.IsAnimationStart();
+        playerController.DisableWeaponTrigger();
+        playerController.DisableSmashTrigger();
+        playerController.animator.applyRootMotion = true;
         hitTime = 0f;
         maxHitTime = 0.2f;
 
-        controller.DisableWeaponTrigger();
-        controller.DisableSmashTrigger();
-        controller.IsAnimationStart();
+        
     }
 
     public override void OnFixedUpdateState()
@@ -58,9 +55,9 @@ public class HitState : BaseState
 
         if(hitTime >= maxHitTime)
         {
-            controller.animator.applyRootMotion = false;
-            controller.stateMachine.ChangeState(UnitState.IDLE);
-            controller.SetEquip(true);
+            playerController.animator.applyRootMotion = false;
+            playerController.stateMachine.ChangeState(UnitState.IDLE);
+            playerController.SetEquip(true);
             return;
         }
 
@@ -73,6 +70,6 @@ public class HitState : BaseState
 
     public override void OnExitState()
     {
-        controller.SetEquip(true);
+        playerController.SetEquip(true);
     }
 }
