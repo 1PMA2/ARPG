@@ -92,19 +92,14 @@ public class Player : UnitController
     {
         stateMachine = new StateMachine(UnitState.IDLE, new IdleState(this));
         stateMachine.AddState(UnitState.MOVE, new MoveState(this));
-
         stateMachine.AddState(UnitState.COMBO_01, new Combo_01_State(this));
         stateMachine.AddState(UnitState.COMBO_02, new Combo_02_State(this));
         stateMachine.AddState(UnitState.COMBO_03, new Combo_03_State(this));
-
         stateMachine.AddState(UnitState.SMASH_00, new Smash_00_State(this));
         stateMachine.AddState(UnitState.SMASH_01, new Smash_01_State(this));
-
         stateMachine.AddState(UnitState.GUARD_01, new GuardState(this));
         stateMachine.AddState(UnitState.GUARD_02, new GuardHitState(this));
-
         stateMachine.AddState(UnitState.HIT, new HitState(this));
-
         stateMachine.AddState(UnitState.EVADE, new EvadeState(this));
     }
 

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Controller;
 
 public class Recoil : MonoBehaviour
 {
@@ -28,7 +29,7 @@ public class Recoil : MonoBehaviour
             animator.speed = 0;
 
             // 지정된 시간 동안 대기 (실제 시간 기준)
-            yield return new WaitForSecondsRealtime(duration);
+            yield return YieldCache.WaitForSecondsRealTime(duration);
 
             // 애니메이터 속도를 원래 속도로 복원
             animator.speed = originalSpeed;

@@ -26,9 +26,9 @@ public class UIManager : Singleton<UIManager>
     {
         itemUI = Instantiate(uiPrefabList[2]);
         levelUpUI = Instantiate(uiPrefabList[5]);
-        firstRare = 3;
-        ActiveItemUI(false);
         ActiveLevelUpUI(false);
+        ActiveItemUI(false);
+        firstRare = 3;
     }
 
 
@@ -55,8 +55,7 @@ public class UIManager : Singleton<UIManager>
 
         if (isPlayer)
         {
-            obj = Instantiate(uiPrefabList[1], transform);
-            
+            obj = Instantiate(uiPrefabList[1], transform);           
         }
         else
         {

@@ -17,8 +17,6 @@ public class Katana : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
-
         recoil = GetComponentInParent<Recoil>();
         unitInformation = GetComponentInParent<UnitInformation>();
 
@@ -27,7 +25,6 @@ public class Katana : MonoBehaviour
         {
             multiColliderManager.OnTriggerEnterEvent += OnMultiTriggerEnter;
         }
-
     }
 
     // Update is called once per frame

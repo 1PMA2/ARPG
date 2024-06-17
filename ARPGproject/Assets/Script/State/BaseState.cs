@@ -23,6 +23,10 @@ namespace Controller
         ENEMY_MOVE,
         ENEMY_PATROL,
         ENEMY_ATTACK,
+        BEAR_IDLE,
+        BEAR_MOVE,
+        BEAR_PATROL,
+        BEAR_ATTACK,
         END
     }
 
